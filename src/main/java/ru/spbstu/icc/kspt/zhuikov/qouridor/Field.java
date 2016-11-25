@@ -58,7 +58,6 @@ public class Field {
     }
 
 
-
     public boolean foo(Coordinates marker, int rowNumber) { // todo: rename
 
         boolean used[][] = new boolean[realSize][realSize];

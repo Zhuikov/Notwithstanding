@@ -49,6 +49,14 @@ public enum Player {
         if (barriersNumber == 0) {
             throw new NoBarriersException("you have no barriers");
         }
+
+        if (!field.foo(TOP.getMarker().getCoordinates(), 16)) {
+            throw new ImpossibleToSetException("you can't place barrier here. TOP player is locked");
+        }
+        if (!field.foo(BOTTOM.getMarker().getCoordinates(), 0)) {
+            throw new ImpossibleToSetException("you can't place barrier here. BOTTOM player is locked");
+        } // todo потом, когда 4 будет надо еще их проверять
+
         setItem(checkPlace(vertical, horizontal, position), position);
     }
 
