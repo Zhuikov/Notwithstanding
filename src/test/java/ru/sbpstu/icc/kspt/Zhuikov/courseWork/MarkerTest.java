@@ -86,6 +86,7 @@ public class MarkerTest {
 
         Field field = new Field(9);
         Player player = Player.BOTTOM;
+        player.createPlayer(field);
         Barrier barrier = new Barrier(15, 8, BarrierPosition.HORIZONTAL);
         field.setItem(barrier);
 
