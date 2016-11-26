@@ -5,7 +5,7 @@ import org.junit.Test;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.CellColor;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.Field;
-import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.ItemFieldException;
+import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.items.Barrier;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.items.BarrierPosition;
 
@@ -33,7 +33,7 @@ public class FieldTest {
     }
 
     @Test
-    public void testPathBetweenCells2() throws ItemFieldException { // "перегородка" по вертикали
+    public void testPathBetweenCells2() throws FieldItemException { // "перегородка" по вертикали
 
         Field field = new Field(9);
 
@@ -49,7 +49,7 @@ public class FieldTest {
     }
 
     @Test
-    public void testPathBetweenCells3() throws ItemFieldException { // "перегородка" по горизонтали
+    public void testPathBetweenCells3() throws FieldItemException { // "перегородка" по горизонтали
 
         Field field = new Field(9);
         for (int i = 1; i <= 13; i+=4) {
@@ -64,7 +64,7 @@ public class FieldTest {
     }
 
     @Test
-    public void testPathBetweenCells4() throws ItemFieldException { // закрытая фишка
+    public void testPathBetweenCells4() throws FieldItemException { // закрытая фишка
 
         Field field = new Field(9);
         field.setItem(new Barrier(15, 7, BarrierPosition.VERTICAL));

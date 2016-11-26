@@ -1,6 +1,6 @@
 package ru.spbstu.icc.kspt.zhuikov.qouridor;
 
-import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.ItemFieldException;
+import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.items.BarrierPosition;
 
@@ -36,7 +36,7 @@ public class Quoridor {
 
     public boolean isEnd() { return false; } // todo это <---
 
-    public void moveMarker(int vertical, int horizontal) throws ItemFieldException {
+    public void moveMarker(int vertical, int horizontal) throws FieldItemException {
 
         players.get(currentPlayer).makeMove(vertical, horizontal);
         if (++currentPlayer == players.size()) {
@@ -46,7 +46,7 @@ public class Quoridor {
     }
 
     public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
-            throws ItemFieldException, NoBarriersException{
+            throws FieldItemException, NoBarriersException{
 
         players.get(currentPlayer).makeMove(vertical, horizontal, position);
         if (++currentPlayer == players.size()) {

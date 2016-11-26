@@ -38,13 +38,13 @@ public enum Player {
 
     public List<Barrier> getBarriers() { return barriers; }
 
-    public void makeMove(int vertical, int horizontal) throws ItemFieldException {
+    public void makeMove(int vertical, int horizontal) throws FieldItemException {
 
         checkPlace(vertical, horizontal);
         setItem(vertical, horizontal);
     }
 
-    public void makeMove(int vertical, int horizontal, BarrierPosition position) throws ItemFieldException, NoBarriersException {
+    public void makeMove(int vertical, int horizontal, BarrierPosition position) throws FieldItemException, NoBarriersException {
 
         if (barriersNumber == 0) {
             throw new NoBarriersException("you have no barriers");
@@ -61,7 +61,7 @@ public enum Player {
         setItem(vertical, horizontal, position);
     }
 
-    private void checkPlace(int vertical, int horizontal) throws ItemFieldException {
+    private void checkPlace(int vertical, int horizontal) throws FieldItemException {
 
         try {
             field.getItem(vertical, horizontal);
@@ -92,7 +92,7 @@ public enum Player {
         }
     }
 
-    private void checkPlace(int vertical, int horizontal, BarrierPosition position) throws ItemFieldException {
+    private void checkPlace(int vertical, int horizontal, BarrierPosition position) throws FieldItemException {
 
         if (position == BarrierPosition.VERTICAL) {                      //todo что-то сделать
             for (int i = vertical - Barrier.length + 1; i <= vertical + Barrier.length - 1; i++) {
