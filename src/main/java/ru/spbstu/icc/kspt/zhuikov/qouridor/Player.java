@@ -21,6 +21,7 @@ public enum Player {
     private int barriersNumber = 10;
     private List<Barrier> barriers = new ArrayList<Barrier>();
     private Field field;
+    private boolean isActive = false;
 
     Player(int initialVertical, int initialHorizontal) {
         this.initialVertical = initialVertical;
@@ -29,7 +30,10 @@ public enum Player {
 
     public void createPlayer(Field field) {
         this.field = field;
+        this.isActive = true;
+       // barriersNumber = 10;
         marker = new Marker(initialVertical, initialHorizontal);
+        field.setItem(marker);
     }
 
     public Marker getMarker() { return marker; }
@@ -50,12 +54,13 @@ public enum Player {
             throw new NoBarriersException("you have no barriers");
         }
 
-        if (!field.foo(TOP.getMarker().getCoordinates(), 16)) {
+        if (TOP.isActive && !field.foo(TOP.getMarker().getCoordinates(), 16)) {
             throw new ImpossibleToSetException("you can't place barrier here. TOP player is locked");
         }
-        if (!field.foo(BOTTOM.getMarker().getCoordinates(), 0)) {
+        if (BOTTOM.isActive && !field.foo(BOTTOM.getMarker().getCoordinates(), 0)) {
             throw new ImpossibleToSetException("you can't place barrier here. BOTTOM player is locked");
-        } // todo потом, когда 4 будет надо как-то еще их проверять
+        }
+//        if (RIGHT.isActive && !field.foo(RIGHT.getMarker().getCoordinates(), ?????????)) //todo изменить логику
 
         checkPlace(vertical, horizontal, position);
         setItem(vertical, horizontal, position);

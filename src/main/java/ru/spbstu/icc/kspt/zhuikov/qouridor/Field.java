@@ -26,7 +26,10 @@ public class Field {
                 }
             }
         }
+    }
 
+    public Field() {
+        this(9);
     }
 
     private class Cell {
