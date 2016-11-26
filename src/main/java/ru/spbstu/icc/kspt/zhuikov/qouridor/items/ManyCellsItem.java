@@ -10,8 +10,10 @@ abstract public class ManyCellsItem extends Item {
 
     protected List<Coordinates> coordinates = new ArrayList<Coordinates>();
 
-    public ManyCellsItem(List<Coordinates> coordinates) { this.coordinates.addAll(coordinates); }
+    public ManyCellsItem() { }
 
-    public List<Coordinates> getCoordinates() { return coordinates; }
+    public List<Coordinates> getCoordinates() {
+        return coordinates;
+    } //todo может return new ArrayList<Coordinates>.addAll(coordinates);
 
 }

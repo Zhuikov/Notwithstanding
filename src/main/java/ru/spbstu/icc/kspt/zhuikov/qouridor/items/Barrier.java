@@ -3,22 +3,29 @@ package ru.spbstu.icc.kspt.zhuikov.qouridor.items;
 
 import ru.spbstu.icc.kspt.zhuikov.qouridor.Coordinates;
 
-import java.util.List;
-
 public class Barrier extends ManyCellsItem {
 
     public final static int length = 2;
 
-    private BarrierPosition position;
-
-    public Barrier(List<Coordinates> coordinates, BarrierPosition position) {
-        super(coordinates);
-        this.position = position;
+    public Barrier(int vertical, int horizontal, BarrierPosition position) {
+        super();
         this.type = ItemType.BARRIER;
-    }
 
-    public void placeBarrier(int vertical, int horizontal, BarrierPosition position) {
-        this.position = position;
+        if (position == BarrierPosition.VERTICAL) {
+            for (int i = vertical - length + 1; i <= vertical + length - 1; i++) {
+                this.coordinates.add(new Coordinates(i, horizontal));
+            }
+        } else if (position == BarrierPosition.HORIZONTAL) {
+            for (int i = horizontal - length + 1; i <= horizontal + length - 1; i++) {
+                this.coordinates.add(new Coordinates(vertical, i));
+            }
+        }
+
+//        if (coordinates.size() != realLength) {
+//            throw new IllegalArgumentException("too long barrier. Its size must be equals to " + length);
+//        }
+
+
     }
 
 }

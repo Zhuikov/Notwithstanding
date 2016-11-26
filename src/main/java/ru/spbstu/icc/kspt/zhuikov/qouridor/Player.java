@@ -55,9 +55,10 @@ public enum Player {
         }
         if (!field.foo(BOTTOM.getMarker().getCoordinates(), 0)) {
             throw new ImpossibleToSetException("you can't place barrier here. BOTTOM player is locked");
-        } // todo потом, когда 4 будет надо еще их проверять
+        } // todo потом, когда 4 будет надо как-то еще их проверять
 
-        setItem(checkPlace(vertical, horizontal, position), position);
+        checkPlace(vertical, horizontal, position);
+        setItem(vertical, horizontal, position);
     }
 
     private void checkPlace(int vertical, int horizontal) throws ItemFieldException {
@@ -82,7 +83,7 @@ public enum Player {
 
         if (Math.sqrt((vertical - marker.getCoordinates().getVertical()) * (vertical - marker.getCoordinates().getVertical()) +
                 (horizontal - marker.getCoordinates().getHorizontal()) * (horizontal - marker.getCoordinates().getHorizontal())) > 2.1) {
-            throw new TooLongDistanceException("you can move just nearby cells");
+            throw new TooLongDistanceException("you can move just nearby cells");  // todo не только на nearby
         }
 
         if (field.getItem((marker.getCoordinates().getVertical() + vertical) / 2,
@@ -91,9 +92,7 @@ public enum Player {
         }
     }
 
-    private List<Coordinates> checkPlace(int vertical, int horizontal, BarrierPosition position) throws ItemFieldException {
-
-        List<Coordinates> coordinates = new ArrayList<Coordinates>();
+    private void checkPlace(int vertical, int horizontal, BarrierPosition position) throws ItemFieldException {
 
         if (position == BarrierPosition.VERTICAL) {                      //todo что-то сделать
             for (int i = vertical - Barrier.length + 1; i <= vertical + Barrier.length - 1; i++) {
@@ -108,8 +107,6 @@ public enum Player {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     throw new FieldCoordinatesException("impossible to place barrier on " + vertical + " " + horizontal);
                 }
-
-                coordinates.add(new Coordinates(i, horizontal));
             }
 
         } else if (position == BarrierPosition.HORIZONTAL) {
@@ -125,14 +122,9 @@ public enum Player {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     throw new FieldCoordinatesException("impossible to place barrier on " + vertical + " " + horizontal);
                 }
-
-                coordinates.add(new Coordinates(vertical, i));
             }
         }
-
-        return coordinates;
     }
-
 
     private void setItem(int vertical, int horizontal) {
 
@@ -140,9 +132,9 @@ public enum Player {
         marker.moveTo(vertical, horizontal);
     }
 
-    private void setItem(List<Coordinates> coordinates, BarrierPosition position) {
+    private void setItem(int vertical, int horizontal, BarrierPosition position) {
 
-        Barrier barrier = new Barrier(coordinates, position);
+        Barrier barrier = new Barrier(vertical, horizontal, position);
         field.setItem(barrier);
         barriers.add(barrier);
         barriersNumber--;

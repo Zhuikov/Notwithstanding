@@ -17,12 +17,12 @@ public class Field {
 
         realSize = size * 2 - 1;
         field = new Cell[realSize][realSize];
-        for (int i = 0; i < realSize - 1; i++) {
-            for (int j = 0; j < realSize - 1; j++) {
+        for (int i = 0; i <= realSize - 1; i++) {
+            for (int j = 0; j <= realSize - 1; j++) {
                 if ((i % 2 == 0) && (j % 2 == 0)) {
-                    field[i][j] = new Cell(CellColor.WHITE, new Empty(i, j));
-                } else {
                     field[i][j] = new Cell(CellColor.BLACK, new Empty(i, j));
+                } else {
+                    field[i][j] = new Cell(CellColor.WHITE, new Empty(i, j));
                 }
             }
         }
