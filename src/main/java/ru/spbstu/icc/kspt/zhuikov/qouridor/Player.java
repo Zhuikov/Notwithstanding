@@ -42,6 +42,8 @@ public enum Player {
 
     public List<Barrier> getBarriers() { return barriers; }
 
+    public boolean isActive() { return isActive; }
+
     public void makeMove(int vertical, int horizontal) throws FieldItemException {
 
         checkPlace(vertical, horizontal);

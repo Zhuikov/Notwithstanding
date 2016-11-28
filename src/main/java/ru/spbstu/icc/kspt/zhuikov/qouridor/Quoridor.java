@@ -3,8 +3,12 @@ package ru.spbstu.icc.kspt.zhuikov.qouridor;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.items.BarrierPosition;
+import ru.spbstu.icc.kspt.zhuikov.qouridor.items.ItemType;
+import ru.spbstu.icc.kspt.zhuikov.qouridor.returningClasses.Cell;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Quoridor {
@@ -34,7 +38,23 @@ public class Quoridor {
         return players.get(currentPlayer);
     }
 
-    public boolean isEnd() { return false; } // todo это <---
+
+    public List<Cell> getField() {
+
+        List<Cell> cells = new LinkedList<Cell>();
+        for (int i = 0; i <= field.getRealSize(); i++) {
+            for (int j = 0; j < field.getRealSize(); j++) {
+                if (field.getItem(i, j).getType() == ItemType.MARKER) {
+                    cells.add()
+                }
+                cells.add(new Cell(i, j, field.getItem(i, j).getType(), ))
+            }
+        }
+
+        return cells;
+    }
+
+    public boolean isEnd() { return false; } // todo это <--- player.isActive();...
 
     public void moveMarker(int vertical, int horizontal) throws FieldItemException {
 

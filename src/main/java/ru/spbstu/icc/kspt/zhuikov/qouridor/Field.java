@@ -60,6 +60,9 @@ public class Field {
         return field[vertical][horizontal].color;
     }
 
+    public int getRealSize() {
+        return realSize;
+    }
 
     public boolean foo(Coordinates marker, int rowNumber) { // todo: rename
 
