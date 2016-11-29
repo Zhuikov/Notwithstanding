@@ -39,20 +39,20 @@ public class Quoridor {
     }
 
 
-    public List<Cell> getField() {
-
-        List<Cell> cells = new LinkedList<Cell>();
-        for (int i = 0; i <= field.getRealSize(); i++) {
-            for (int j = 0; j < field.getRealSize(); j++) {
-                if (field.getItem(i, j).getType() == ItemType.MARKER) {
-                    cells.add()
-                }
-                cells.add(new Cell(i, j, field.getItem(i, j).getType(), ))
-            }
-        }
-
-        return cells;
-    }
+//    public List<Cell> getField() {
+//
+//        List<Cell> cells = new LinkedList<Cell>();
+//        for (int i = 0; i <= field.getRealSize(); i++) {
+//            for (int j = 0; j < field.getRealSize(); j++) {
+//                if (field.getItem(i, j).getType() == ItemType.MARKER) {
+//                    cells.add()
+//                }
+//                cells.add(new Cell(i, j, field.getItem(i, j).getType(), ))
+//            }
+//        }
+//
+//        return cells;
+//    }
 
     public boolean isEnd() { return false; } // todo это <--- player.isActive();...
 

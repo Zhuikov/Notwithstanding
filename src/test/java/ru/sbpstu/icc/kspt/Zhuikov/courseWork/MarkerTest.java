@@ -3,12 +3,13 @@ package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
 
 import org.junit.Test;
 
-import ru.spbstu.icc.kspt.zhuikov.qouridor.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.Field;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.Player;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.*;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.items.Barrier;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.items.BarrierPosition;
+import ru.spbstu.icc.kspt.zhuikov.qouridor.items.ItemType;
+import ru.spbstu.icc.kspt.zhuikov.qouridor.items.Marker;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,8 +24,8 @@ public class MarkerTest {
         player1.createPlayer(field);
         player2.createPlayer(field);
 
-        assertEquals(new Coordinates(0, 8), player1.getMarker().getCoordinates());
-        assertEquals(new Coordinates(16, 8), player2.getMarker().getCoordinates());
+        assertEquals(ItemType.MARKER, field.getItem(0, 8).getType());
+        assertEquals(ItemType.MARKER, field.getItem(16, 8).getType());
     }
 
     @Test
@@ -36,7 +37,7 @@ public class MarkerTest {
 
         player.makeMove(14, 8);
 
-        assertEquals(new Coordinates(14, 8), player.getMarker().getCoordinates());
+        assertEquals(ItemType.MARKER, field.getItem(14, 8).getType());
 
     }
 
@@ -71,7 +72,7 @@ public class MarkerTest {
         player.makeMove(15, 8);
     }
 
-    @Test (expected = SetToSameCellException.class)
+    @Test (expected = ImpossibleToSetException.class)
     public void testMovingToMarkerCell() throws FieldItemException {
 
         Field field = new Field(9);
@@ -91,5 +92,53 @@ public class MarkerTest {
         field.setItem(barrier);
 
         player.makeMove(14, 8);
+    }
+
+    @Test
+    public void testJumpOverMarker_Forward() throws FieldItemException {
+
+        Field field = new Field(9);
+        Player player = Player.BOTTOM;
+        player.createPlayer(field);
+        field.setItem(new Marker(14, 8));
+
+        player.makeMove(12, 8);
+        assertEquals(ItemType.MARKER, field.getItem(12, 8).getType());
+    }
+
+    @Test
+    public void testJumpOverMarker_Diagonal() throws FieldItemException {
+
+        Field field = new Field(9);
+        Player player = Player.BOTTOM;
+        player.createPlayer(field);
+        field.setItem(new Marker(14, 8));
+
+        player.makeMove(14, 10);
+        assertEquals(ItemType.MARKER, field.getItem(14, 10).getType());
+    }
+
+    @Test (expected = ImpossibleToSetException.class)
+    public void testImpossibleJumpOverMarker_Forward() throws FieldItemException {
+
+        Field field = new Field(9);
+        Player player = Player.BOTTOM;
+        player.createPlayer(field);
+        field.setItem(new Marker(14, 8));
+        field.setItem(new Barrier(13, 8, BarrierPosition.HORIZONTAL));
+
+        player.makeMove(12, 8);
+    }
+
+    @Test (expected = ImpossibleToSetException.class)
+    public void testImpossibleJumpOverMarker_Diagonal() throws FieldItemException {
+
+        Field field = new Field(9);
+        Player player = Player.BOTTOM;
+        player.createPlayer(field);
+        field.setItem(new Marker(14, 8));
+        field.setItem(new Barrier(15, 9, BarrierPosition.VERTICAL));
+
+        player.makeMove(14, 10);
     }
 }

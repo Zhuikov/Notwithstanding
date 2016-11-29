@@ -17,36 +17,36 @@ public class ConsoleDrawer {
         this.game = game;
     }
 
-    public void drawField() {
-
-        for (int i = 0; i < game.getField().getRealSize(); i++) {
-            for (int j = 0; j < game.getField().getRealSize(); j++) {
-                switch (game.getField().getItem(i, j).getType()) {
-                    case EMPTY:
-                        if (game.getField().getColor(i, j) == CellColor.BLACK) {
-                            System.out.print("O");
-                        } else {
-                            System.out.print(" ");
-                        }
-                        break;
-                    case BARRIER:
-                        System.out.print("#");
-                        break;
-                    case MARKER:
-                        System.out.print("@");
-                }
-            }
-            System.out.println();
-        }
-
-    }
-
-    public void drawPlayerInformation(Player playerPosition) {
-
-        System.out.println("Player " + playerPosition +
-                ". Barriers: " + game.getPlayerInformation(playerPosition).getBarriers());
-
-    }
+//    public void drawField() {
+//
+//        for (int i = 0; i < game.getField().getRealSize(); i++) {
+//            for (int j = 0; j < game.getField().getRealSize(); j++) {
+//                switch (game.getField().getItem(i, j).getType()) {
+//                    case EMPTY:
+//                        if (game.getField().getColor(i, j) == CellColor.BLACK) {
+//                            System.out.print("O");
+//                        } else {
+//                            System.out.print(" ");
+//                        }
+//                        break;
+//                    case BARRIER:
+//                        System.out.print("#");
+//                        break;
+//                    case MARKER:
+//                        System.out.print("@");
+//                }
+//            }
+//            System.out.println();
+//        }
+//
+//    }
+//
+//    public void drawPlayerInformation(Player playerPosition) {
+//
+//        System.out.println("Player " + playerPosition +
+//                ". Barriers: " + game.getPlayerInformation(playerPosition).getBarriers());
+//
+//    }
 
     public void drawTurn() {
 

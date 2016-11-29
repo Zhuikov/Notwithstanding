@@ -36,7 +36,7 @@ public enum Player {
         field.setItem(marker);
     }
 
-    public Marker getMarker() { return marker; }
+    private Marker getMarker() { return marker; }
 
     public int getBarriersNumber() { return barriersNumber; }
 
@@ -77,7 +77,7 @@ public enum Player {
         }
 
         if (marker.getCoordinates().equals(new Coordinates(vertical, horizontal))) {
-            throw new SetToSameCellException("impossible to move to the same cell");
+            throw new ImpossibleToSetException("impossible to move to the same cell");
         }
 
         if (field.getColor(vertical, horizontal) == CellColor.WHITE) {
@@ -88,14 +88,86 @@ public enum Player {
             throw new CellIsNotEmptyException("cell " + vertical + horizontal + " is not empty");
         }
 
-        if (Math.sqrt((vertical - marker.getCoordinates().getVertical()) * (vertical - marker.getCoordinates().getVertical()) +
-                (horizontal - marker.getCoordinates().getHorizontal()) * (horizontal - marker.getCoordinates().getHorizontal())) > 2.1) {
-            throw new TooLongDistanceException("you can move just nearby cells");  // todo не только на nearby
+        if (Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical, horizontal)) > 2.1) {
+
+            if (!jumpOverMarker(vertical, horizontal)) {
+                throw new TooLongDistanceException("you can move just nearby cells");
+            }
+//            if (Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical, horizontal)) < 4.01 &&
+//                    Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical,horizontal)) > 3.99) {
+//                jumpForward(vertical, horizontal);
+//            }
+//
+//            if (Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical, horizontal)) < 2.83 &&
+//                    Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical,horizontal)) > 2.81) {
+//                jumpDiagonal(vertical, horizontal);
+//            }
+//
+//            throw new TooLongDistanceException("you can move just nearby cells");
         }
 
         if (field.getItem((marker.getCoordinates().getVertical() + vertical) / 2,
                 (marker.getCoordinates().getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER) {
             throw new ImpossibleToSetException("impossible to jump over the barrier");
+        }
+    }
+
+    private boolean jumpOverMarker(int vertical, int horizontal) throws FieldItemException {
+
+        // если "прыгают" прямо:
+        if (Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical, horizontal)) < 4.01 &&
+                Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical,horizontal)) > 3.99) {
+
+            jumpForward(vertical, horizontal);
+        }
+
+        // если "прыгают" по диагонали:
+        if (Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical, horizontal)) < 2.83 &&
+                Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical,horizontal)) > 2.81) {
+
+            jumpDiagonal(vertical, horizontal);
+        }
+
+        return true;
+    }
+
+    private void jumpForward(int vertical, int horizontal) throws FieldItemException {
+
+        Coordinates midCoordinates = new Coordinates( (marker.getCoordinates().getVertical() + vertical) / 2,
+                (marker.getCoordinates().getHorizontal() + horizontal) / 2);
+
+        if (field.getItem(midCoordinates.getVertical(), midCoordinates.getHorizontal()).getType() == ItemType.MARKER) {
+
+            if ( (field.getItem( (midCoordinates.getVertical() + marker.getCoordinates().getVertical()) / 2,
+                 (midCoordinates.getHorizontal() + marker.getCoordinates().getHorizontal()) / 2).getType() == ItemType.BARRIER) ||
+                    (field.getItem( (midCoordinates.getVertical() + vertical) / 2,
+                    (midCoordinates.getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER) ) {
+
+                throw new ImpossibleToSetException("impossible to set marker on " + vertical + " " + horizontal);
+            }
+        }
+    }
+
+    private void jumpDiagonal(int vertical, int horizontal) throws FieldItemException {
+
+        Coordinates opponentsMarker = new Coordinates(0, 0);
+
+        if (field.getItem(marker.getCoordinates().getVertical(), horizontal).getType() == ItemType.MARKER) {
+            opponentsMarker.setVertical(marker.getCoordinates().getVertical());
+            opponentsMarker.setHorizontal(horizontal);
+        } else if (field.getItem(vertical, marker.getCoordinates().getHorizontal()).getType() == ItemType.MARKER) {
+            opponentsMarker.setVertical(vertical);
+            opponentsMarker.setHorizontal(marker.getCoordinates().getHorizontal());
+        } else { throw new TooLongDistanceException("you can move just nearby cells"); }
+
+
+        if ( (field.getItem( (opponentsMarker.getVertical() + marker.getCoordinates().getVertical()) / 2,
+                (opponentsMarker.getHorizontal() + marker.getCoordinates().getHorizontal()) / 2).getType() == ItemType.BARRIER)
+                ||
+                (field.getItem( (opponentsMarker.getVertical() + vertical) / 2,
+                        (opponentsMarker.getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER)) {
+
+            throw new ImpossibleToSetException("impossible to set marker on " + vertical + " " + horizontal);
         }
     }
 
@@ -137,6 +209,7 @@ public enum Player {
 
         field.setItem(new Empty(marker.getCoordinates().getVertical(), marker.getCoordinates().getHorizontal()));
         marker.moveTo(vertical, horizontal);
+        field.setItem(marker);
     }
 
     private void setItem(int vertical, int horizontal, BarrierPosition position) {

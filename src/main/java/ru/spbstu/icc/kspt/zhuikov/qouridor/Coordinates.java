@@ -6,6 +6,14 @@ public class Coordinates {
     private int vertical;
     private int horizontal;
 
+    public static double pathBetween(Coordinates coordinates1, Coordinates coordinates2) {
+
+        return Math.sqrt((coordinates1.getVertical() - coordinates2.getVertical()) *
+                         (coordinates1.getVertical() - coordinates2.getVertical()) +
+                        (coordinates1.getHorizontal() - coordinates2.getHorizontal()) *
+                        (coordinates1.getHorizontal() - coordinates2.getHorizontal()));
+    }
+
     public int getVertical() {
         return vertical;
     }
