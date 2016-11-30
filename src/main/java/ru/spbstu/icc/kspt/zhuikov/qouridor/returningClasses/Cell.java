@@ -15,5 +15,21 @@ public class Cell {
         this.itemType = itemType;
         this.owner = owner;
     }
+
+    public int getVertical() {
+        return vertical;
+    }
+
+    public int getHorizontal() {
+        return horizontal;
+    }
+
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    public Owner getOwner() {
+        return owner;
+    }
 }
 

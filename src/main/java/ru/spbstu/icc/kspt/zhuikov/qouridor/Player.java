@@ -7,6 +7,8 @@ import ru.spbstu.icc.kspt.zhuikov.qouridor.items.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// todo разбить бы весь этот огромный класс. Мб сделать отдельный класс с логикой
 public enum Player {
 
     TOP(0, 8),
@@ -56,14 +58,6 @@ public enum Player {
             throw new NoBarriersException("you have no barriers");
         }
 
-        if (TOP.isActive && !field.foo(TOP.getMarker().getCoordinates(), 16)) {
-            throw new ImpossibleToSetException("you can't place barrier here. TOP player is locked");
-        }
-        if (BOTTOM.isActive && !field.foo(BOTTOM.getMarker().getCoordinates(), 0)) {
-            throw new ImpossibleToSetException("you can't place barrier here. BOTTOM player is locked");
-        }
-//        if (RIGHT.isActive && !field.foo(RIGHT.getMarker().getCoordinates(), ?????????)) //todo изменить логику
-
         checkPlace(vertical, horizontal, position);
         setItem(vertical, horizontal, position);
     }
@@ -93,17 +87,6 @@ public enum Player {
             if (!jumpOverMarker(vertical, horizontal)) {
                 throw new TooLongDistanceException("you can move just nearby cells");
             }
-//            if (Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical, horizontal)) < 4.01 &&
-//                    Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical,horizontal)) > 3.99) {
-//                jumpForward(vertical, horizontal);
-//            }
-//
-//            if (Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical, horizontal)) < 2.83 &&
-//                    Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical,horizontal)) > 2.81) {
-//                jumpDiagonal(vertical, horizontal);
-//            }
-//
-//            throw new TooLongDistanceException("you can move just nearby cells");
         }
 
         if (field.getItem((marker.getCoordinates().getVertical() + vertical) / 2,
@@ -203,6 +186,19 @@ public enum Player {
                 }
             }
         }
+
+        Barrier probableBarrier = new Barrier(vertical, horizontal, position);
+        field.setItem(probableBarrier);
+
+        if (TOP.isActive && !field.foo(TOP.getMarker().getCoordinates(), 16)) {
+            throw new ImpossibleToSetException("you can't place barrier here. TOP player is locked");
+        }
+        if (BOTTOM.isActive && !field.foo(BOTTOM.getMarker().getCoordinates(), 0)) {
+            throw new ImpossibleToSetException("you can't place barrier here. BOTTOM player is locked");
+        }
+//        if (RIGHT.isActive && !field.foo(RIGHT.getMarker().getCoordinates(), ?????????)) //todo изменить логику
+
+        field.clearCells(probableBarrier.getCoordinates());
     }
 
     private void setItem(int vertical, int horizontal) {

@@ -5,6 +5,7 @@ import org.junit.Test;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.Field;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.Player;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.*;
+import ru.spbstu.icc.kspt.zhuikov.qouridor.items.Barrier;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.qouridor.items.ItemType;
 
@@ -85,5 +86,20 @@ public class BarrierTest {
         player.makeMove(5, 3, BarrierPosition.VERTICAL);
 
         player.makeMove(5, 5, BarrierPosition.VERTICAL);
+    }
+
+    @Test (expected = ImpossibleToSetException.class)
+    public void testPlayerBlock() throws FieldItemException, NoBarriersException {
+
+        Field field = new Field(9);
+        Player bottom = Player.BOTTOM;
+        Player top = Player.TOP;
+        bottom.createPlayer(field);
+        top.createPlayer(field);
+
+        field.setItem(new Barrier(1, 7, BarrierPosition.VERTICAL));
+        field.setItem(new Barrier(1, 9, BarrierPosition.VERTICAL));
+
+        bottom.makeMove(3, 8, BarrierPosition.HORIZONTAL);
     }
 }

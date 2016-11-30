@@ -66,7 +66,7 @@ public class Quoridor {
     }
 
     public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
-            throws FieldItemException, NoBarriersException{
+            throws FieldItemException, NoBarriersException {
 
         players.get(currentPlayer).makeMove(vertical, horizontal, position);
         if (++currentPlayer == players.size()) {

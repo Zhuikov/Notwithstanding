@@ -52,8 +52,19 @@ public class Field {
         }
     }
 
+    public void clearCell(int vertical, int horizontal) {
+        field[vertical][horizontal].item = new Empty(vertical, horizontal);
+    }
+
+    public void clearCells(List<Coordinates> coordinatesList) {
+        for (Coordinates coordinates : coordinatesList) {
+            field[coordinates.getVertical()][coordinates.getHorizontal()].item
+                    = new Empty(coordinates.getVertical(), coordinates.getHorizontal());
+        }
+    }
+
     public Item getItem(int vertical, int horizontal) {
-        return field[vertical][horizontal].item;
+        return field[vertical][horizontal].item;  // todo мб return new ...
     }
 
     public CellColor getColor(int vertical, int horizontal) {
