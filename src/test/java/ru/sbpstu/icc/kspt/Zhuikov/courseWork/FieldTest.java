@@ -2,12 +2,12 @@ package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
 
 
 import org.junit.Test;
-import ru.spbstu.icc.kspt.zhuikov.qouridor.CellColor;
-import ru.spbstu.icc.kspt.zhuikov.qouridor.Coordinates;
-import ru.spbstu.icc.kspt.zhuikov.qouridor.Field;
-import ru.spbstu.icc.kspt.zhuikov.qouridor.exceptions.FieldItemException;
-import ru.spbstu.icc.kspt.zhuikov.qouridor.items.Barrier;
-import ru.spbstu.icc.kspt.zhuikov.qouridor.items.BarrierPosition;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.CellColor;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.Coordinates;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Barrier;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +16,7 @@ public class FieldTest {
     @Test
     public void testInitialization() {
 
-        Field field = new Field(9);
+        QuoridorField field = new QuoridorField(9);
 
         assertEquals(CellColor.BLACK, field.getColor(0, 0));
         assertEquals(CellColor.WHITE, field.getColor(0, 1));
@@ -27,7 +27,7 @@ public class FieldTest {
     @Test
     public void testPathBetweenCells1() {  // пустое поле
 
-        Field field = new Field(9);
+        QuoridorField field = new QuoridorField(9);
         assertEquals(true, field.foo(new Coordinates(16, 8), 0));
         assertEquals(true, field.foo(new Coordinates(0, 8), 10));
     }
@@ -35,7 +35,7 @@ public class FieldTest {
     @Test
     public void testPathBetweenCells2() throws FieldItemException { // "перегородка" по вертикали
 
-        Field field = new Field(9);
+        QuoridorField field = new QuoridorField(9);
 
         for (int i = 1; i <= 13; i+=4) {
             field.setItem(new Barrier(i, 7, BarrierPosition.VERTICAL));
@@ -51,7 +51,7 @@ public class FieldTest {
     @Test
     public void testPathBetweenCells3() throws FieldItemException { // "перегородка" по горизонтали
 
-        Field field = new Field(9);
+        QuoridorField field = new QuoridorField(9);
         for (int i = 1; i <= 13; i+=4) {
             field.setItem(new Barrier(7, i, BarrierPosition.HORIZONTAL));
         }
@@ -66,7 +66,7 @@ public class FieldTest {
     @Test
     public void testPathBetweenCells4() throws FieldItemException { // закрытая фишка
 
-        Field field = new Field(9);
+        QuoridorField field = new QuoridorField(9);
         field.setItem(new Barrier(15, 7, BarrierPosition.VERTICAL));
         field.setItem(new Barrier(15, 9, BarrierPosition.VERTICAL));
         field.setItem(new Barrier(13, 8, BarrierPosition.HORIZONTAL));
