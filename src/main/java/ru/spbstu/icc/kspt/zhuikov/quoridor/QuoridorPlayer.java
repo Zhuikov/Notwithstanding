@@ -32,7 +32,7 @@ public enum QuoridorPlayer {
         this.owner = owner;
     }
 
-    public void createPlayer(QuoridorField field) {
+    public void createPlayer(QuoridorField field) {          //TODO смущает, что чтобы создать игрока ему нужно передать поле
         this.field = field;
         this.isActive = true;
        // barriersNumber = 10;
@@ -56,8 +56,10 @@ public enum QuoridorPlayer {
 
     public void makeMove(int vertical, int horizontal, BarrierPosition position) throws FieldItemException, NoBarriersException {
 
+        //TODO зачем называть метод makeMove, когда совершается placeBarrier (это имя метода из Quoridor)
+
         if (barriersNumber == 0) {
-            throw new NoBarriersException("you have no barriers");
+            throw new NoBarriersException("you have no barriers");       //TODO можно ещё передать у кого из игроков
         }
 
         checkPlace(vertical, horizontal, position);
@@ -165,6 +167,8 @@ public enum QuoridorPlayer {
 
     private void checkPlace(int vertical, int horizontal, BarrierPosition position) throws FieldItemException {
 
+        //TODO я бы переименовал в checkPlaceForBarrier
+
         if (position == BarrierPosition.VERTICAL) {                      //todo что-то сделать
             for (int i = vertical - Barrier.length + 1; i <= vertical + Barrier.length - 1; i++) {
                 try {
@@ -214,12 +218,16 @@ public enum QuoridorPlayer {
 
     private void setItem(int vertical, int horizontal) {
 
+        //TODO это можно было бы назвать setMarker(~)
+
         field.setItem(new Empty(marker.getCoordinates().getVertical(), marker.getCoordinates().getHorizontal()));
         marker.moveTo(vertical, horizontal);
         field.setItem(marker);
     }
 
     private void setItem(int vertical, int horizontal, BarrierPosition position) {
+
+        //TODO два setItem с разными параметрами, по моему должны делать примерно одно и тоже, а у тебя при добавление BarrierPosition изменяется тип добавляемого элемента, предлагаю переименовать метод
 
         Barrier barrier = new Barrier(vertical, horizontal, position);
         field.setItem(barrier);

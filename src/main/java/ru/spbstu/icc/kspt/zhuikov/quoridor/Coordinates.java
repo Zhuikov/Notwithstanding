@@ -8,6 +8,8 @@ public class Coordinates {
 
     public static double pathBetween(Coordinates coordinates1, Coordinates coordinates2) {
 
+
+        //TODO конечно бред, но можно выделить private метод, возведения в квадрат, по крайней мере, понятность кода увеличится
         return Math.sqrt((coordinates1.getVertical() - coordinates2.getVertical()) *
                          (coordinates1.getVertical() - coordinates2.getVertical()) +
                         (coordinates1.getHorizontal() - coordinates2.getHorizontal()) *
@@ -23,6 +25,7 @@ public class Coordinates {
     }
 
     public void setVertical(int vertical) {
+        //TODO зачем set(), простая структурка данных, проще создать заново
         this.vertical = vertical;
     }
 
@@ -36,15 +39,14 @@ public class Coordinates {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) {   //TODO однобуквенное имя выглядит не очень
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         Coordinates that = (Coordinates) o;
 
-        if (vertical != that.vertical) return false;
+        if (vertical != that.vertical) return false;  //TODO как-то криво, предлагаю объединить в одно return условие;
         return horizontal == that.horizontal;
-
     }
 
     @Override
