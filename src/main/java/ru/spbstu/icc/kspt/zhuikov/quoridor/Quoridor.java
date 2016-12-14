@@ -6,30 +6,34 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoWinnerException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
-
-import javax.print.attribute.standard.PrinterLocation;
 import java.util.ArrayList;
 import java.util.List;
+
+
+//TODO мне не хватает документации к коду
+//TODO также хотелось бы, чтобы ядро с логикой было выделенно, если не в отдельный модуль, то хотябы в отдельный пакет(в отдельный относительно UI)
 
 public class Quoridor {
 
     private static QuoridorField field = new QuoridorField(9);
     private List<QuoridorPlayer> players = new ArrayList<QuoridorPlayer>(); //todo мб убрать этот ненужный список
-    private short currentPlayer;
+
+    //TODO возможно есть смысл поменять на enum, с методом nextPlayer();
+    private short currentPlayer; //TODO чем продиктовано использование short? Если хочешь меньше памяти занять есть byte, но по-моему, это всё извращения, лучше использовать int
 
     public Quoridor(int playersNumber) {
 
         if (playersNumber == 2) {
             QuoridorPlayer player = QuoridorPlayer.TOP;
             player.createPlayer(field);
-            currentPlayer = 0;
+            currentPlayer = 0;                     //TODO несколько не очевидная строчка, может логичнее  = 1;
             players.add(player);
 
             player = QuoridorPlayer.BOTTOM;
             player.createPlayer(field);
             players.add(player);
 
-        } else {
+        } else {            //TODO тут больше подойёт исключение типа UnsupportedOperationException
             throw new AssertionError("пока рано еще думать о чем-то большем...");
         }
     }
@@ -71,7 +75,7 @@ public class Quoridor {
         }
     }
 
-    public boolean isEnd() {
+    public boolean isEnd() {              //TODO возможно следует подумать об использование шаблона Наблюдатель
 
         if (QuoridorPlayer.TOP.getMarker().getCoordinates().getVertical() == field.getRealSize() - 1) {
             return true;
@@ -85,7 +89,7 @@ public class Quoridor {
         return false;
     }
 
-    public Player getWinner() throws NoWinnerException {
+    public Player getWinner() throws NoWinnerException {   //TODO по-моему, при использование Наблюдателя метод атрофируется
 
         if (isEnd()) {
             if (QuoridorPlayer.TOP.getMarker().getCoordinates().getVertical() == field.getRealSize() - 1) {
@@ -100,7 +104,7 @@ public class Quoridor {
         throw new NoWinnerException("There is no winner");
     }
 
-    public void moveMarker(int vertical, int horizontal) throws FieldItemException {
+    public void moveMarker(int vertical, int horizontal) throws FieldItemException {  //TODO странное название у исключения, возможно есть смысл переименовать в Выход за границу поля, но это не точно
 
         players.get(currentPlayer).makeMove(vertical, horizontal);
         if (++currentPlayer == players.size()) {

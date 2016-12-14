@@ -19,11 +19,11 @@ public class Field {
         }
     }
 
-    public int getRealSize() {
+    public int getRealSize() {  //TODO можно мне нереальный размер ( предлагаю переименовать в getSize() )
         return realSize;
     }
 
-    public Cell getCell(int vertical, int horizontal) {
+    public Cell getCell(int vertical, int horizontal) {  //TODO возможно некорректное поведение этой структуры, при изменение получаемого объекта
         return cells[vertical][horizontal];
     }
 }

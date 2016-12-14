@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.Queue;
 
 public class QuoridorField {
+    //TODO я бы засунул этот класс в пакет связаный с полем (да и вообще всё, что свзяано с полем засунул в один пакет)
 
     private final int realSize;
-    private Cell[][] field;
+    private Cell[][] field;    //TODO почему бы не использовать, какую-нибудь коллекцию? (конечно банально, но например, List<List<~>>)
 
     public QuoridorField(int size) {
 
@@ -64,6 +65,9 @@ public class QuoridorField {
     }
 
     public Item getItem(int vertical, int horizontal) {
+
+        //TODO к примеру, здесь был бы get(), он, по идее, безопаснее
+
         return field[vertical][horizontal].item;  // todo мб return new ...
     }
 
@@ -71,11 +75,13 @@ public class QuoridorField {
         return field[vertical][horizontal].color;
     }
 
-    public int getRealSize() {
+    public int getRealSize() {  //TODO не вижу смысла, в слове Real, юезр поля не должен знать, что тут творится (у тебя же нет другого метода получения размера поля), мне бы больше понравился простой getSize()
         return realSize;
     }
 
     public boolean foo(Coordinates marker, int rowNumber) { // todo: rename
+
+        //TODO конечно круто, что есть todo переименовать, но без имени и без документации достаточно трудно понять что?, где?, когда?
 
         boolean used[][] = new boolean[realSize][realSize];
         Queue<Coordinates> queue = new LinkedList<Coordinates>();
@@ -111,7 +117,7 @@ public class QuoridorField {
         return false;
     }
 
-    private List<Coordinates> getNeighbours(Coordinates init) {
+    private List<Coordinates> getNeighbours(Coordinates init) {   //TODO не понял почему init ?
 
         List<Coordinates> neighbours = new ArrayList<Coordinates>();
 
