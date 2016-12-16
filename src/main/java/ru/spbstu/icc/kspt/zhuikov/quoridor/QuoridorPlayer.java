@@ -71,15 +71,15 @@ public enum QuoridorPlayer {
         try {
             field.getItem(vertical, horizontal);
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new FieldCoordinatesException("impossible to place marker on " + vertical + " " + horizontal);
+            throw new FieldBoundsException("impossible to place marker on " + vertical + " " + horizontal);
         }
 
         if (marker.getCoordinates().equals(new Coordinates(vertical, horizontal))) {
-            throw new ImpossibleToSetException("impossible to move to the same cell");
+            throw new ImpossibleToSetItemException("impossible to move to the same cell");
         }
 
         if (field.getColor(vertical, horizontal) == CellColor.WHITE) {
-            throw new ImpossibleToSetException("impossible to set marker on white cell");
+            throw new ImpossibleToSetItemException("impossible to set marker on white cell");
         }
 
         if (field.getItem(vertical, horizontal).getType() != ItemType.EMPTY) {
@@ -95,7 +95,7 @@ public enum QuoridorPlayer {
 
         if (field.getItem((marker.getCoordinates().getVertical() + vertical) / 2,
                 (marker.getCoordinates().getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER) {
-            throw new ImpossibleToSetException("impossible to jump over the barrier");
+            throw new ImpossibleToSetItemException("impossible to jump over the barrier");
         }
     }
 
@@ -130,7 +130,7 @@ public enum QuoridorPlayer {
                     (field.getItem( (midCoordinates.getVertical() + vertical) / 2,
                     (midCoordinates.getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER) ) {
 
-                throw new ImpossibleToSetException("impossible to set marker on " + vertical + " " + horizontal +
+                throw new ImpossibleToSetItemException("impossible to set marker on " + vertical + " " + horizontal +
                         " because of barrier");
             }
 
@@ -142,14 +142,12 @@ public enum QuoridorPlayer {
 
     private boolean jumpDiagonal(int vertical, int horizontal) throws FieldItemException {
 
-        Coordinates opponentsMarker = new Coordinates(0, 0);
+        Coordinates opponentsMarker;
 
         if (field.getItem(marker.getCoordinates().getVertical(), horizontal).getType() == ItemType.MARKER) {
-            opponentsMarker.setVertical(marker.getCoordinates().getVertical());
-            opponentsMarker.setHorizontal(horizontal);
+            opponentsMarker = new Coordinates(marker.getCoordinates().getVertical(), horizontal);
         } else if (field.getItem(vertical, marker.getCoordinates().getHorizontal()).getType() == ItemType.MARKER) {
-            opponentsMarker.setVertical(vertical);
-            opponentsMarker.setHorizontal(marker.getCoordinates().getHorizontal());
+            opponentsMarker = new Coordinates(vertical, marker.getCoordinates().getHorizontal());
         } else { return false; }
 
         if ( (field.getItem( (opponentsMarker.getVertical() + marker.getCoordinates().getVertical()) / 2,
@@ -158,7 +156,7 @@ public enum QuoridorPlayer {
                 (field.getItem( (opponentsMarker.getVertical() + vertical) / 2,
                         (opponentsMarker.getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER)) {
 
-            throw new ImpossibleToSetException("impossible to set marker on " + vertical + " " + horizontal +
+            throw new ImpossibleToSetItemException("impossible to set marker on " + vertical + " " + horizontal +
                     " because of barrier");
         }
 
@@ -177,10 +175,10 @@ public enum QuoridorPlayer {
                                 vertical + " " + horizontal);
                     }
                     if (field.getColor(i, horizontal) == CellColor.BLACK) {
-                        throw new ImpossibleToSetException("impossible to set barrier on black cell");
+                        throw new ImpossibleToSetItemException("impossible to set barrier on black cell");
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    throw new FieldCoordinatesException("impossible to place barrier on " + vertical + " " + horizontal);
+                    throw new FieldBoundsException("impossible to place barrier on " + vertical + " " + horizontal);
                 }
             }
 
@@ -192,10 +190,10 @@ public enum QuoridorPlayer {
                                 vertical + " " + horizontal);
                     }
                     if (field.getColor(vertical, i) == CellColor.BLACK) {
-                        throw new ImpossibleToSetException("impossible to set barrier on black cell");
+                        throw new ImpossibleToSetItemException("impossible to set barrier on black cell");
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    throw new FieldCoordinatesException("impossible to place barrier on " + vertical + " " + horizontal);
+                    throw new FieldBoundsException("impossible to place barrier on " + vertical + " " + horizontal);
                 }
             }
         }
@@ -203,15 +201,15 @@ public enum QuoridorPlayer {
         Barrier probableBarrier = new Barrier(vertical, horizontal, position);
         field.setItem(probableBarrier);
 
-        if (TOP.isActive && !field.foo(TOP.getMarker().getCoordinates(), 16)) {
+        if (TOP.isActive && !field.isRowAvailable(TOP.getMarker().getCoordinates(), 16)) {
             field.clearCells(probableBarrier.getCoordinates());
-            throw new ImpossibleToSetException("you can't place barrier here. TOP player is locked");
+            throw new ImpossibleToSetItemException("you can't place barrier here. TOP player is locked");
         }
-        if (BOTTOM.isActive && !field.foo(BOTTOM.getMarker().getCoordinates(), 0)) {
+        if (BOTTOM.isActive && !field.isRowAvailable(BOTTOM.getMarker().getCoordinates(), 0)) {
             field.clearCells(probableBarrier.getCoordinates());
-            throw new ImpossibleToSetException("you can't place barrier here. BOTTOM player is locked");
+            throw new ImpossibleToSetItemException("you can't place barrier here. BOTTOM player is locked");
         }
-//        if (RIGHT.isActive && !field.foo(RIGHT.getMarker().getCoordinates(), ?????????)) //todo изменить логику
+//        if (RIGHT.isActive && !field.isRowAvailable(RIGHT.getMarker().getCoordinates(), ?????????)) //todo изменить логику
 
         field.clearCells(probableBarrier.getCoordinates());
     }
@@ -228,7 +226,7 @@ public enum QuoridorPlayer {
     private void setItem(int vertical, int horizontal, BarrierPosition position) {
 
         //TODO два setItem с разными параметрами, по моему должны делать примерно одно и тоже, а у тебя при добавление BarrierPosition изменяется тип добавляемого элемента, предлагаю переименовать метод
-
+        // это фича же
         Barrier barrier = new Barrier(vertical, horizontal, position);
         field.setItem(barrier);
         barriers.add(barrier);

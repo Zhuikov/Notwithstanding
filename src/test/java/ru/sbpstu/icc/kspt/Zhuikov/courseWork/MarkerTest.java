@@ -41,7 +41,7 @@ public class MarkerTest {
 
     }
 
-    @Test (expected = FieldCoordinatesException.class)
+    @Test (expected = FieldBoundsException.class)
     public void testMovingOutOfBounds() throws FieldItemException {
 
         QuoridorField field = new QuoridorField(9);
@@ -62,7 +62,7 @@ public class MarkerTest {
         player.makeMove(14, 6);
     }
 
-    @Test (expected = ImpossibleToSetException.class)
+    @Test (expected = ImpossibleToSetItemException.class)
     public void testImpossibleMoving() throws FieldItemException {
 
         QuoridorField field = new QuoridorField(9);
@@ -72,7 +72,7 @@ public class MarkerTest {
         player.makeMove(15, 8);
     }
 
-    @Test (expected = ImpossibleToSetException.class)
+    @Test (expected = ImpossibleToSetItemException.class)
     public void testMovingToMarkerCell() throws FieldItemException {
 
         QuoridorField field = new QuoridorField(9);
@@ -82,7 +82,7 @@ public class MarkerTest {
         player.makeMove(16, 8);
     }
 
-    @Test (expected = ImpossibleToSetException.class)
+    @Test (expected = ImpossibleToSetItemException.class)
     public void testJumpOverBarrier() throws FieldItemException {
 
         QuoridorField field = new QuoridorField(9);
@@ -118,7 +118,7 @@ public class MarkerTest {
         assertEquals(ItemType.MARKER, field.getItem(14, 10).getType());
     }
 
-    @Test (expected = ImpossibleToSetException.class)
+    @Test (expected = ImpossibleToSetItemException.class)
     public void testImpossibleJumpOverMarker_Forward() throws FieldItemException {
 
         QuoridorField field = new QuoridorField(9);
@@ -130,7 +130,7 @@ public class MarkerTest {
         player.makeMove(12, 8);
     }
 
-    @Test (expected = ImpossibleToSetException.class)
+    @Test (expected = ImpossibleToSetItemException.class)
     public void testImpossibleJumpOverMarker_Diagonal() throws FieldItemException {
 
         QuoridorField field = new QuoridorField(9);

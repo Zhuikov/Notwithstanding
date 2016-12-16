@@ -8,7 +8,7 @@ public class Barrier extends ManyCellsItem {
     public final static int length = 2;
 
     public Barrier(int vertical, int horizontal, BarrierPosition position) {
-        super();                            //TODO зачем это делать? (без этого работает)
+//        super();                            //TODO зачем это делать? (без этого работает)
         this.type = ItemType.BARRIER;
 
         if (position == BarrierPosition.VERTICAL) {

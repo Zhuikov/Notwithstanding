@@ -34,7 +34,7 @@ public class BarrierTest {
     }
 
 
-    @Test(expected = ImpossibleToSetException.class)
+    @Test(expected = ImpossibleToSetItemException.class)
     public void testBlackCellSet() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
@@ -43,7 +43,7 @@ public class BarrierTest {
         player.makeMove(2, 8, BarrierPosition.HORIZONTAL);
     }
 
-    @Test(expected = ImpossibleToSetException.class)
+    @Test(expected = ImpossibleToSetItemException.class)
     public void testSetBetweenBlackCells() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
@@ -52,7 +52,7 @@ public class BarrierTest {
         player.makeMove(7, 12, BarrierPosition.VERTICAL);
     }
 
-    @Test(expected = FieldCoordinatesException.class)
+    @Test(expected = FieldBoundsException.class)
     public void testWrongCoordinates() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
@@ -88,7 +88,7 @@ public class BarrierTest {
         player.makeMove(5, 5, BarrierPosition.VERTICAL);
     }
 
-    @Test (expected = ImpossibleToSetException.class)
+    @Test (expected = ImpossibleToSetItemException.class)
     public void testPlayerBlock() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);

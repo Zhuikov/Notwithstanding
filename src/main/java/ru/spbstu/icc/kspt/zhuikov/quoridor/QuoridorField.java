@@ -79,7 +79,7 @@ public class QuoridorField {
         return realSize;
     }
 
-    public boolean foo(Coordinates marker, int rowNumber) { // todo: rename
+    public boolean isRowAvailable(Coordinates marker, int rowNumber) {
 
         //TODO конечно круто, что есть todo переименовать, но без имени и без документации достаточно трудно понять что?, где?, когда?
 
@@ -117,14 +117,14 @@ public class QuoridorField {
         return false;
     }
 
-    private List<Coordinates> getNeighbours(Coordinates init) {   //TODO не понял почему init ?
+    private List<Coordinates> getNeighbours(Coordinates coordinates) {
 
         List<Coordinates> neighbours = new ArrayList<Coordinates>();
 
-        neighbours.add(new Coordinates(init.getVertical() - 2, init.getHorizontal()));
-        neighbours.add(new Coordinates(init.getVertical(), init.getHorizontal() - 2));
-        neighbours.add(new Coordinates(init.getVertical() + 2, init.getHorizontal()));
-        neighbours.add(new Coordinates(init.getVertical(), init.getHorizontal() + 2));
+        neighbours.add(new Coordinates(coordinates.getVertical() - 2, coordinates.getHorizontal()));
+        neighbours.add(new Coordinates(coordinates.getVertical(), coordinates.getHorizontal() - 2));
+        neighbours.add(new Coordinates(coordinates.getVertical() + 2, coordinates.getHorizontal()));
+        neighbours.add(new Coordinates(coordinates.getVertical(), coordinates.getHorizontal() + 2));
 
         return neighbours;
     }

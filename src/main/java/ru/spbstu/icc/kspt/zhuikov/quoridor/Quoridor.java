@@ -19,7 +19,7 @@ public class Quoridor {
     private List<QuoridorPlayer> players = new ArrayList<QuoridorPlayer>(); //todo мб убрать этот ненужный список
 
     //TODO возможно есть смысл поменять на enum, с методом nextPlayer();
-    private short currentPlayer; //TODO чем продиктовано использование short? Если хочешь меньше памяти занять есть byte, но по-моему, это всё извращения, лучше использовать int
+    private int currentPlayer;
 
     public Quoridor(int playersNumber) {
 
@@ -33,8 +33,8 @@ public class Quoridor {
             player.createPlayer(field);
             players.add(player);
 
-        } else {            //TODO тут больше подойёт исключение типа UnsupportedOperationException
-            throw new AssertionError("пока рано еще думать о чем-то большем...");
+        } else {
+            throw new UnsupportedOperationException("пока рано еще думать о чем-то большем...");
         }
     }
 

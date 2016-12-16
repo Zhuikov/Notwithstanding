@@ -8,8 +8,6 @@ import java.util.List;
 
 abstract public class ManyCellsItem extends Item {
 
-    //TODO many - это две? тогда может хранить две координаты, а не массив (сомневаюсь, что понадобится хранить три координаты)
-
     protected List<Coordinates> coordinates = new ArrayList<Coordinates>();
 
     public ManyCellsItem() { }

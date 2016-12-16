@@ -1,6 +1,8 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.items;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.Coordinates;
+
 public class Marker extends OneCellItem {
 
     public Marker(int vertical, int horizontal) {
@@ -14,7 +16,6 @@ public class Marker extends OneCellItem {
     }
 
     public void moveTo(int vertical, int horizontal) {
-        coordinates.setVertical(vertical);
-        coordinates.setHorizontal(horizontal);
+        coordinates = new Coordinates(vertical, horizontal);
     }
 }
