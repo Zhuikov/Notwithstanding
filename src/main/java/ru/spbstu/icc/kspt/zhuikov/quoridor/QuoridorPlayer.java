@@ -35,7 +35,7 @@ public enum QuoridorPlayer {
     public void createPlayer(QuoridorField field) {          //TODO смущает, что чтобы создать игрока ему нужно передать поле
         this.field = field;
         this.isActive = true;
-       // barriersNumber = 10;
+        barriersNumber = 10;
         marker = new Marker(initialVertical, initialHorizontal, owner);
         field.setItem(marker);
     }
@@ -130,8 +130,7 @@ public enum QuoridorPlayer {
                     (field.getItem( (midCoordinates.getVertical() + vertical) / 2,
                     (midCoordinates.getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER) ) {
 
-                throw new ImpossibleToSetItemException("impossible to set marker on " + vertical + " " + horizontal +
-                        " because of barrier");
+                throw new ImpossibleToSetItemException("impossible to set marker because of barrier");
             }
 
             return true;
@@ -156,8 +155,7 @@ public enum QuoridorPlayer {
                 (field.getItem( (opponentsMarker.getVertical() + vertical) / 2,
                         (opponentsMarker.getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER)) {
 
-            throw new ImpossibleToSetItemException("impossible to set marker on " + vertical + " " + horizontal +
-                    " because of barrier");
+            throw new ImpossibleToSetItemException("impossible to set marker because of barrier");
         }
 
         return true;
@@ -171,14 +169,13 @@ public enum QuoridorPlayer {
             for (int i = vertical - Barrier.length + 1; i <= vertical + Barrier.length - 1; i++) {
                 try {
                     if (field.getItem(i, horizontal).getType() != ItemType.EMPTY) {
-                        throw new CellIsNotEmptyException("impossible to place barrier on cell " +
-                                vertical + " " + horizontal);
+                        throw new CellIsNotEmptyException("impossible to place barrier here");
                     }
                     if (field.getColor(i, horizontal) == CellColor.BLACK) {
                         throw new ImpossibleToSetItemException("impossible to set barrier on black cell");
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    throw new FieldBoundsException("impossible to place barrier on " + vertical + " " + horizontal);
+                    throw new FieldBoundsException("impossible to place barrier here");
                 }
             }
 
@@ -186,14 +183,13 @@ public enum QuoridorPlayer {
             for (int i = horizontal - Barrier.length + 1; i <= horizontal + Barrier.length - 1; i++) {
                 try {
                     if (field.getItem(vertical, i).getType() != ItemType.EMPTY) {
-                        throw new CellIsNotEmptyException("impossible to place barrier on field " +
-                                vertical + " " + horizontal);
+                        throw new CellIsNotEmptyException("impossible to place barrier here");
                     }
                     if (field.getColor(vertical, i) == CellColor.BLACK) {
                         throw new ImpossibleToSetItemException("impossible to set barrier on black cell");
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    throw new FieldBoundsException("impossible to place barrier on " + vertical + " " + horizontal);
+                    throw new FieldBoundsException("impossible to place barrier here");
                 }
             }
         }
@@ -203,11 +199,11 @@ public enum QuoridorPlayer {
 
         if (TOP.isActive && !field.isRowAvailable(TOP.getMarker().getCoordinates(), 16)) {
             field.clearCells(probableBarrier.getCoordinates());
-            throw new ImpossibleToSetItemException("you can't place barrier here. TOP player is locked");
+            throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
         }
         if (BOTTOM.isActive && !field.isRowAvailable(BOTTOM.getMarker().getCoordinates(), 0)) {
             field.clearCells(probableBarrier.getCoordinates());
-            throw new ImpossibleToSetItemException("you can't place barrier here. BOTTOM player is locked");
+            throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
         }
 //        if (RIGHT.isActive && !field.isRowAvailable(RIGHT.getMarker().getCoordinates(), ?????????)) //todo изменить логику
 

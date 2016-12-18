@@ -7,28 +7,26 @@ import java.awt.event.*;
 
 public class MenuPanel extends JPanel {
 
-    private JButton button;
+    private JButton startButton = new JButton("Start game");
+    private JButton exitButton = new JButton("Exit");
     private MainFrame frame;
-    private JLabel label = new JLabel("dddddd");
-    private Font font = new Font("Arial", Font.BOLD, 20);
+    private Image bg = new ImageIcon("pictures/gamePics/background_menu1.jpg").getImage();
 
     MenuPanel(MainFrame frame) {
-        super();
 
         this.frame = frame;
-
         setLayout(null);
-        button = new JButton("ffff");
-        button.setLocation(100, 50);
-        button.setSize(180, 40);
 
-        button.addMouseListener(new MyListener());
-        this.add(button);
+        startButton.setLocation(225, 220);
+        startButton.setSize(200, 30);
+        startButton.addMouseListener(new MyListener());
 
-        label.setSize(100, 20);
-        label.setFont(font);
-        label.setLocation(300, 100);
-        this.add(label);
+        exitButton.setLocation(225, 270);
+        exitButton.setSize(200, 30);
+        exitButton.addActionListener(new ExitListener());
+
+        add(startButton);
+        add(exitButton);
 
     }
 
@@ -36,25 +34,43 @@ public class MenuPanel extends JPanel {
         super.paint(g);
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+
+        super.paintComponent(g);
+        g.drawImage(bg, 0, 0, null);
+    }
+
     private class MyListener implements MouseListener {
-
-        public void mouseEntered(MouseEvent e) {
-        }
-
+        @Override
         public void mouseClicked(MouseEvent e) {
-         //   button.setVisible(false);
             frame.setContentPane(new GamePanel(frame));
         }
 
-        public void mouseExited(MouseEvent e) {
-        }
-
+        @Override
         public void mousePressed(MouseEvent e) {
-            button.setText("Pressed");
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
-            button.setText("Realeased");
+            startButton.setText("d"); // ?????????????????????? (без этого не работает!)
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+    }
+
+    private class ExitListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
         }
     }
 }
