@@ -6,11 +6,13 @@ public class Field {
 
     private final Cell[][] cells;
     private final int realSize;
+    private final int size;
 
     public Field(QuoridorField field) {
 
         cells = new Cell[field.getRealSize()][field.getRealSize()];
         realSize = field.getRealSize();
+        size = field.getSize();
 
         for (int i = 0; i < field.getRealSize(); i++) {
             for (int j = 0; j < field.getRealSize(); j++) {
@@ -21,6 +23,10 @@ public class Field {
 
     public int getRealSize() {  //TODO можно мне нереальный размер ( предлагаю переименовать в getSize() )
         return realSize;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public Cell getCell(int vertical, int horizontal) {  //TODO возможно некорректное поведение этой структуры, при изменение получаемого объекта

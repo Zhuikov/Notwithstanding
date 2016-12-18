@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Quoridor {
 
-    private static QuoridorField field = new QuoridorField(9);
+    private QuoridorField field = new QuoridorField(9);
     private List<QuoridorPlayer> players = new ArrayList<QuoridorPlayer>(); //todo мб убрать этот ненужный список
 
     //TODO возможно есть смысл поменять на enum, с методом nextPlayer();

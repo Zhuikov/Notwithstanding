@@ -12,10 +12,12 @@ public class QuoridorField {
     //TODO я бы засунул этот класс в пакет связаный с полем (да и вообще всё, что свзяано с полем засунул в один пакет)
 
     private final int realSize;
+    private final int size;
     private Cell[][] field;    //TODO почему бы не использовать, какую-нибудь коллекцию? (конечно банально, но например, List<List<~>>)
 
     public QuoridorField(int size) {
 
+        this.size = size;
         realSize = size * 2 - 1;
         field = new Cell[realSize][realSize];
         for (int i = 0; i <= realSize - 1; i++) {
@@ -77,6 +79,10 @@ public class QuoridorField {
 
     public int getRealSize() {  //TODO не вижу смысла, в слове Real, юезр поля не должен знать, что тут творится (у тебя же нет другого метода получения размера поля), мне бы больше понравился простой getSize()
         return realSize;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public boolean isRowAvailable(Coordinates marker, int rowNumber) {

@@ -1,15 +1,14 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.gui;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class MainFrame extends JFrame {
 
     MainFrame(String s) {
         super(s);
-        setSize(600, 400);
-        JPanel panel = new MainPanel();
-        panel.setBackground(Color.blue);
+        setSize(640, 480);
+        MenuPanel panel = new MenuPanel(this);
+       // panel.create();
         this.add(panel);
         setResizable(false);
         setVisible(true);
@@ -21,6 +20,7 @@ public class MainFrame extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new MainFrame("There is no fox");
+
             }
         });
     }
