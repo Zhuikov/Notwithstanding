@@ -3,10 +3,7 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class QuoridorField {
     //TODO я бы засунул этот класс в пакет связаный с полем (да и вообще всё, что свзяано с полем засунул в один пакет)
@@ -85,14 +82,36 @@ public class QuoridorField {
         return size;
     }
 
-    public boolean isRowAvailable(Coordinates marker, int rowNumber) {
+    /**
+     * Возвращает кратчайший путь (в координатах) из заданной позиции до заданного ряда.
+     * Если нельзя пройти, вернется пустой стек.
+     * @param marker - координаты, из которых ищется путь
+     * @param rowNumber - номер ряда (строки)
+     */
+    public Stack<Coordinates> isRowAvailable(Coordinates marker, int rowNumber) {
 
-        //TODO конечно круто, что есть todo переименовать, но без имени и без документации достаточно трудно понять что?, где?, когда?
+        if (marker.getVertical() == rowNumber) {
+            Stack<Coordinates> coordinates = new Stack<>();
+            coordinates.add(getNeighbours(marker).get(0));
+            return coordinates;
+        }
+
+        class Vertex {
+            public Coordinates coordinates;
+            public Vertex from;
+
+            public Vertex(Coordinates coordinates, Vertex from) {
+                this.coordinates = coordinates;
+                this.from = from;
+            }
+        }
 
         boolean used[][] = new boolean[realSize][realSize];
-        Queue<Coordinates> queue = new LinkedList<Coordinates>();
+        Queue<Vertex> queue = new LinkedList<>();
+        List<Vertex> usedVertexes = new ArrayList<>();
+        Stack<Coordinates> path = new Stack<>();
 
-        queue.add(marker);
+        queue.add(new Vertex(marker, null));
 
         while (!queue.isEmpty()) {
 
@@ -101,26 +120,33 @@ public class QuoridorField {
 //          }
 //          System.out.println();
 
-            if (queue.element().getVertical() == rowNumber) {
-                return true;
+            if (queue.element().coordinates.getVertical() == rowNumber) {
+                Vertex vertex = queue.element();
+                while (vertex.from != null) {
+                    path.add(vertex.coordinates);
+                    vertex = vertex.from;
+                }
+                return path;
             }
 
-            for (Coordinates neighbour : getNeighbours(queue.element())) {
+            for (final Coordinates neighbour : getNeighbours(queue.element().coordinates)) {
                 try {
                     if (!used[neighbour.getVertical()][neighbour.getHorizontal()] &&   // todo: шлифануть бы тут
-                            getItem((queue.element().getVertical() + neighbour.getVertical()) / 2,
-                                    (queue.element().getHorizontal() + neighbour.getHorizontal()) / 2).getType() != ItemType.BARRIER &&
-                            !queue.contains(new Coordinates(neighbour.getVertical(), neighbour.getHorizontal()))) {
-                        queue.add(neighbour);
+                            getItem((queue.element().coordinates.getVertical() + neighbour.getVertical()) / 2,
+                                    (queue.element().coordinates.getHorizontal() + neighbour.getHorizontal()) / 2).getType() != ItemType.BARRIER &&
+                            !queue.contains(new Vertex(neighbour, queue.element()))) {
+                                    //Coordinates(neighbour.getVertical(), neighbour.getHorizontal()))) {
+                        queue.add(new Vertex(neighbour, queue.element())); //neighbour
                     }
                 } catch (ArrayIndexOutOfBoundsException e) { }
             }
 
-            used[queue.element().getVertical()][queue.element().getHorizontal()] = true;
+            used[queue.element().coordinates.getVertical()][queue.element().coordinates.getHorizontal()] = true;
+            usedVertexes.add(queue.element());
             queue.remove();
         }
 
-        return false;
+        return path;
     }
 
     private List<Coordinates> getNeighbours(Coordinates coordinates) {
@@ -134,6 +160,5 @@ public class QuoridorField {
 
         return neighbours;
     }
-
 
 }

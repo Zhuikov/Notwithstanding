@@ -10,14 +10,12 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Cell;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 class GamePanel extends JPanel {
 
@@ -28,13 +26,14 @@ class GamePanel extends JPanel {
     private Quoridor game;
     private FieldPanel fieldPanel;
     private BarrierPanel barrierPanel;
+    private boolean gotBarrier = false;
     private JLabel statusLabel;
     private Image bg = new ImageIcon("pictures/gamePics/background_game.jpg").getImage();
 
-    GamePanel(MainFrame frame) {
+    GamePanel(MainFrame frame, boolean bots) {
 
         this.frame = frame;
-        game = new Quoridor(2);
+        game = new Quoridor(2, bots);
 
         statusLabel = new JLabel("fff");
         statusLabel.setSize(470, 25);
@@ -59,6 +58,7 @@ class GamePanel extends JPanel {
         setBackground(new Color(200, 200, 200));
         setLayout(null);
         setVisible(true);
+
     }
 
     private void updateStatusLabel() {
@@ -74,6 +74,15 @@ class GamePanel extends JPanel {
 
         super.paintComponent(g);
         g.drawImage(bg, 0, 0, null);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (gotBarrier) {
+            g.setColor(Color.yellow);
+            g.fillRect((int)getMousePosition().getX(), (int)getMousePosition().getY(), 20, 20);
+        }
     }
 
     private class MenuListener implements ActionListener {
@@ -112,6 +121,8 @@ class GamePanel extends JPanel {
         }
 
         void pickBarrier(BarrierPosition position) {
+            pickedMarker = false;
+            this.repaint();
             pickedBarrier = true;
             barrierPosition = position;
             statusLabel.setText("Place " + position + " barrier...");
@@ -234,6 +245,11 @@ class GamePanel extends JPanel {
                 g2.setStroke(new BasicStroke(3));
                 g2.drawRect(pickedMarkerCoordinates.getHorizontal() * (cellSize + spaceSize) / 2,
                         pickedMarkerCoordinates.getVertical() * (cellSize + spaceSize) / 2, cellSize, cellSize);
+                for (Coordinates c : game.getPossibleMoves()) {
+                    g.setColor(Color.green);
+                    g.fillRect(c.getHorizontal() * (cellSize + spaceSize) / 2,
+                            c.getVertical() * (cellSize + spaceSize) / 2, cellSize, cellSize);
+                }
             }
 
             try {
@@ -251,7 +267,7 @@ class GamePanel extends JPanel {
         }
 
         /**
-         * "Переводит" из координат курсора на панели в координаты поля игры
+         * "Переводит" из координат курсора в координаты поля игры
          * @return координаты клетки поля, на которую кликнули
          */
         private Coordinates convertCoordinates(int x, int y) {
@@ -294,7 +310,7 @@ class GamePanel extends JPanel {
                 game.moveMarker(newCoordinates.getVertical(), newCoordinates.getHorizontal());
                 updateStatusLabel();
                 barrierPanel.updateText();
-            } catch (FieldItemException e) {
+            } catch (FieldItemException | NoBarriersException e ) {
                 statusLabel.setText(e.getMessage());
                 Timer timer = new Timer(1500, new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -328,11 +344,9 @@ class GamePanel extends JPanel {
             }
 
             public void mouseReleased(MouseEvent e) {
-
             }
 
             public void mouseEntered(MouseEvent e) {
-
             }
 
             public void mouseExited(MouseEvent e) {
@@ -343,7 +357,8 @@ class GamePanel extends JPanel {
 
     private class BarrierPanel extends JPanel {
 
-        private JLabel barriersNumber = new JLabel();
+        private JLabel bottomBarriersNumber = new JLabel();
+        private JLabel topBarriersNumber = new JLabel();
         private JButton barrierButton = new JButton("Place barrier");
         private JButton cancelButton = new JButton("Cancel");
         private BarrierListener barrierListener;
@@ -362,15 +377,20 @@ class GamePanel extends JPanel {
             setBackground(color);
             setVisible(true);
 
-            barriersNumber.setLocation(10, 20);
-            barriersNumber.setSize(185, 20);
-            barriersNumber.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 15));
+            bottomBarriersNumber.setLocation(15, 10);
+            bottomBarriersNumber.setSize(185, 20);
+            bottomBarriersNumber.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 14));
+            topBarriersNumber.setLocation(10, 30);
+            topBarriersNumber.setSize(185, 20);
+            topBarriersNumber.setFont(new Font("Arial", Font.BOLD + Font.ITALIC, 14));
+
             updateText();
 
             barrierButton.setLocation(25, 70);
             barrierButton.setSize(140, 20);
             barrierListener = new BarrierListener();
             barrierButton.addMouseListener(barrierListener);
+
             cancelButton.setLocation(25, 160);
             cancelButton.setSize(140, 20);
             cancelBarrierListener = new CancelBarrierListener();
@@ -387,11 +407,13 @@ class GamePanel extends JPanel {
             vertical.setBackground(color);
             group.add(vertical);
 
-            add(barriersNumber);
+            add(bottomBarriersNumber);
+            add(topBarriersNumber);
             add(barrierButton);
             add(cancelButton);
             add(vertical);
             add(horizontal);
+
         }
 
         void removeListeners() {
@@ -400,7 +422,8 @@ class GamePanel extends JPanel {
         }
 
         void updateText() {
-            barriersNumber.setText("You have " + game.getPlayerInformation(game.getCurrentPlayer()).getBarrierNumber() + " barriers");
+            bottomBarriersNumber.setText("Red has " + game.getPlayerInformation(Player.BOTTOM).getBarrierNumber() + " barriers");
+            topBarriersNumber.setText("Blue has " + game.getPlayerInformation(Player.TOP).getBarrierNumber() + " barriers");
         }
 
         private class BarrierListener implements MouseListener {

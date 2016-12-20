@@ -21,16 +21,16 @@ public class Quoridor {
     //TODO возможно есть смысл поменять на enum, с методом nextPlayer();
     private int currentPlayer;
 
-    public Quoridor(int playersNumber) {
+    public Quoridor(int playersNumber, boolean bots) {
 
         if (playersNumber == 2) {
             QuoridorPlayer player = QuoridorPlayer.TOP;
-            player.createPlayer(field);
+            player.createPlayer(field, false);
             currentPlayer = 0;                     //TODO несколько не очевидная строчка, может логичнее  = 1;
             players.add(player);
 
             player = QuoridorPlayer.BOTTOM;
-            player.createPlayer(field);
+            player.createPlayer(field, bots);
             players.add(player);
 
         } else {
@@ -45,11 +45,12 @@ public class Quoridor {
                 return Player.TOP;
             case BOTTOM:
                 return Player.BOTTOM;
-            case RIGHT:
-                return Player.RIGHT;
-            default:
-                return Player.LEFT;
+//            case RIGHT:
+//                return Player.RIGHT;
+//            default:
+//                return Player.LEFT;
         }
+        throw new AssertionError("unknown player" + players.get(currentPlayer));
     }
 
     public Field getField() {
@@ -66,13 +67,15 @@ public class Quoridor {
             case BOTTOM:
                 player.createPlayer(QuoridorPlayer.BOTTOM.getBarriersNumber());
                 return player;
-            case RIGHT:
-                player.createPlayer(QuoridorPlayer.RIGHT.getBarriersNumber());
-                return player;
-            default:
-                player.createPlayer(QuoridorPlayer.LEFT.getBarriersNumber());
-                return player;
+
+//            case RIGHT:
+//                player.createPlayer(QuoridorPlayer.RIGHT.getBarriersNumber());
+//                return player;
+//            default:
+//                player.createPlayer(QuoridorPlayer.LEFT.getBarriersNumber());
+//                return player;
         }
+        throw new AssertionError("unknown player" + player);
     }
 
     public boolean isEnd() {              //TODO возможно следует подумать об использование шаблона Наблюдатель
@@ -104,20 +107,36 @@ public class Quoridor {
         throw new NoWinnerException("There is no winner");
     }
 
-    public void moveMarker(int vertical, int horizontal) throws FieldItemException {  //TODO странное название у исключения, возможно есть смысл переименовать в Выход за границу поля, но это не точно
+    public void moveMarker(int vertical, int horizontal)
+            throws FieldItemException, NoBarriersException {  //TODO странное название у исключения, возможно есть смысл переименовать в Выход за границу поля, но это не точно
 
         players.get(currentPlayer).makeMove(vertical, horizontal);
-        if (++currentPlayer == players.size()) {
-            currentPlayer = 0;
-        }
+        changePlayerTurn();
     }
 
     public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
             throws FieldItemException, NoBarriersException {
 
         players.get(currentPlayer).makeMove(vertical, horizontal, position);
+        changePlayerTurn();
+    }
+
+    public List<Coordinates> getPossibleMoves() {
+
+        return players.get(currentPlayer).getPossibleMoves();
+    }
+
+    private void changePlayerTurn() throws FieldItemException, NoBarriersException {
+
         if (++currentPlayer == players.size()) {
             currentPlayer = 0;
+        }
+
+        if (isEnd()) return;
+
+        if (players.get(currentPlayer).isBot()) {
+            players.get(currentPlayer).makeRandomMove();
+            changePlayerTurn();
         }
     }
 

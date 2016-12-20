@@ -7,7 +7,6 @@ class MainFrame extends JFrame {
     MainFrame(String s) {
         super(s);
         setSize(640, 480);
-        MenuPanel panel = new MenuPanel(this);
         add(new MenuPanel(this));
         setResizable(false);
         setVisible(true);
@@ -18,7 +17,7 @@ class MainFrame extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame("There is no fox");
+                new MainFrame("Quoridor");
             }
         });
     }

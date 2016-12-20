@@ -21,8 +21,8 @@ public class MarkerTest {
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player1 = QuoridorPlayer.TOP;
         QuoridorPlayer player2 = QuoridorPlayer.BOTTOM;
-        player1.createPlayer(field);
-        player2.createPlayer(field);
+        player1.createPlayer(field, false);
+        player2.createPlayer(field, false);
 
         assertEquals(ItemType.MARKER, field.getItem(0, 8).getType());
         assertEquals(ItemType.MARKER, field.getItem(16, 8).getType());
@@ -33,7 +33,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
 
         player.makeMove(14, 8);
 
@@ -46,7 +46,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
 
         player.makeMove(18, 8);
 
@@ -57,7 +57,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
 
         player.makeMove(14, 6);
     }
@@ -67,7 +67,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
 
         player.makeMove(15, 8);
     }
@@ -77,7 +77,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
 
         player.makeMove(16, 8);
     }
@@ -87,7 +87,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
         Barrier barrier = new Barrier(15, 8, BarrierPosition.HORIZONTAL);
         field.setItem(barrier);
 
@@ -99,7 +99,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
         field.setItem(new Marker(14, 8));
 
         player.makeMove(12, 8);
@@ -111,7 +111,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
         field.setItem(new Marker(14, 8));
 
         player.makeMove(14, 10);
@@ -123,7 +123,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
         field.setItem(new Marker(14, 8));
         field.setItem(new Barrier(13, 8, BarrierPosition.HORIZONTAL));
 
@@ -135,7 +135,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field);
+        player.createPlayer(field, false);
         field.setItem(new Marker(14, 8));
         field.setItem(new Barrier(15, 9, BarrierPosition.VERTICAL));
 

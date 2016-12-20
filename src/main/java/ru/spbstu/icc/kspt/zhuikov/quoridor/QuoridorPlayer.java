@@ -4,36 +4,40 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 // todo разбить бы весь этот огромный класс. Мб сделать отдельный класс с логикой
+// todo вообще, надо было без енама
 public enum QuoridorPlayer {
 
-    TOP(0, 8, Owner.TOP),
-    BOTTOM(16, 8, Owner.BOTTOM),
-    RIGHT(8, 16, Owner.RIGHT),
-    LEFT(8, 0, Owner.LEFT);
+    TOP(0, 8, Owner.TOP, 16),
+    BOTTOM(16, 8, Owner.BOTTOM, 0);
+  //  RIGHT(8, 16, Owner.RIGHT),
+  //  LEFT(8, 0, Owner.LEFT);
 
     private final int initialVertical;
     private final int initialHorizontal;
     private final Owner owner;
+    private final int destinationRow;
 
     private Marker marker;
+    private boolean isBot = false;
     private int barriersNumber = 10;
     private List<Barrier> barriers = new ArrayList<Barrier>();
     private QuoridorField field;
     private boolean isActive = false;
 
-    QuoridorPlayer(int initialVertical, int initialHorizontal, Owner owner) {
+    QuoridorPlayer(int initialVertical, int initialHorizontal, Owner owner, int destinationRow) {
         this.initialVertical = initialVertical;
         this.initialHorizontal = initialHorizontal;
         this.owner = owner;
+        this.destinationRow = destinationRow;
     }
 
-    public void createPlayer(QuoridorField field) {          //TODO смущает, что чтобы создать игрока ему нужно передать поле
+    public void createPlayer(QuoridorField field, boolean isBot) {          //TODO смущает, что чтобы создать игрока ему нужно передать поле
         this.field = field;
+        this.isBot = isBot;
         this.isActive = true;
         barriersNumber = 10;
         marker = new Marker(initialVertical, initialHorizontal, owner);
@@ -47,6 +51,69 @@ public enum QuoridorPlayer {
     public List<Barrier> getBarriers() { return barriers; }
 
     public boolean isActive() { return isActive; }
+
+    public boolean isBot() { return  isBot; }
+
+    public List<Coordinates> getPossibleMoves() {
+
+        List<Coordinates> possibleMoves = new LinkedList<>();
+        for (int i = this.marker.getCoordinates().getVertical() - 4; i <= this.marker.getCoordinates().getVertical() + 4; i++) {
+            for (int j = this.marker.getCoordinates().getHorizontal() - 4; j <= this.marker.getCoordinates().getHorizontal() + 4; j++) {
+                try {
+                    checkPlace(i, j);
+                    possibleMoves.add(new Coordinates(i, j));
+                } catch (Exception e) {}
+            }
+        }
+
+        return possibleMoves;
+    }
+
+    public void makeRandomMove() throws FieldItemException, NoBarriersException {
+
+        double rand = Math.random();
+        if (rand > 0.35) {
+            setBotBarrier();
+        } else setBotMarker();
+    }
+
+    private void setBotMarker() throws FieldItemException {
+
+        Stack<Coordinates> path = field.isRowAvailable(marker.getCoordinates(), destinationRow);
+        if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() == ItemType.MARKER) {
+            path.pop();
+            makeMove(path.peek().getVertical(), path.peek().getHorizontal());
+            return;
+        }
+        makeMove(path.peek().getVertical(), path.peek().getHorizontal());
+    }
+
+    private void setBotBarrier() throws FieldItemException {
+
+        if (!TOP.isActive()) {
+            setBotMarker();
+            return;
+        }
+
+        Stack<Coordinates> topPath = field.isRowAvailable(TOP.marker.getCoordinates(), TOP.destinationRow);
+        Coordinates between = new Coordinates((topPath.peek().getVertical() + TOP.marker.getCoordinates().getVertical()) / 2,
+                (topPath.peek().getHorizontal() + TOP.marker.getCoordinates().getHorizontal()) / 2);
+        double rand = Math.random();
+        try {
+            if (rand < 0.5) {
+                makeMove(between.getVertical() % 2 == 0 ? between.getVertical() - 1 : between.getVertical(),
+                        between.getHorizontal() % 2 == 0 ? between.getHorizontal() - 1 : between.getHorizontal(),
+                        rand > 0.25 ? BarrierPosition.HORIZONTAL : BarrierPosition.VERTICAL);
+            } else {
+                makeMove(between.getVertical() % 2 == 0 ? between.getVertical() + 1 : between.getVertical(),
+                        between.getHorizontal() % 2 == 0 ? between.getHorizontal() + 1 : between.getHorizontal(),
+                        rand > 0.75 ? BarrierPosition.HORIZONTAL : BarrierPosition.VERTICAL);
+            }
+        } catch (Exception e) {
+            setBotMarker();
+        }
+
+    }
 
     public void makeMove(int vertical, int horizontal) throws FieldItemException {
 
@@ -83,7 +150,7 @@ public enum QuoridorPlayer {
         }
 
         if (field.getItem(vertical, horizontal).getType() != ItemType.EMPTY) {
-            throw new CellIsNotEmptyException("cell " + vertical + " " + horizontal + " is not empty");
+            throw new CellIsNotEmptyException("cell is not empty");
         }
 
         if (Coordinates.pathBetween(marker.getCoordinates(), new Coordinates(vertical, horizontal)) > 2.1) {
@@ -165,6 +232,10 @@ public enum QuoridorPlayer {
 
         //TODO я бы переименовал в checkPlaceForBarrier
 
+        if (vertical % 2 == 0 || horizontal % 2 == 0) {
+            throw new ImpossibleToSetItemException("impossible to set barrier here");
+        }
+
         if (position == BarrierPosition.VERTICAL) {                      //todo что-то сделать
             for (int i = vertical - Barrier.length + 1; i <= vertical + Barrier.length - 1; i++) {
                 try {
@@ -197,11 +268,11 @@ public enum QuoridorPlayer {
         Barrier probableBarrier = new Barrier(vertical, horizontal, position);
         field.setItem(probableBarrier);
 
-        if (TOP.isActive && !field.isRowAvailable(TOP.getMarker().getCoordinates(), 16)) {
+        if (TOP.isActive && field.isRowAvailable(TOP.getMarker().getCoordinates(), 16).empty()) {
             field.clearCells(probableBarrier.getCoordinates());
             throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
         }
-        if (BOTTOM.isActive && !field.isRowAvailable(BOTTOM.getMarker().getCoordinates(), 0)) {
+        if (BOTTOM.isActive && field.isRowAvailable(BOTTOM.getMarker().getCoordinates(), 0).empty()) {
             field.clearCells(probableBarrier.getCoordinates());
             throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
         }
@@ -222,7 +293,6 @@ public enum QuoridorPlayer {
     private void setItem(int vertical, int horizontal, BarrierPosition position) {
 
         //TODO два setItem с разными параметрами, по моему должны делать примерно одно и тоже, а у тебя при добавление BarrierPosition изменяется тип добавляемого элемента, предлагаю переименовать метод
-        // это фича же
         Barrier barrier = new Barrier(vertical, horizontal, position);
         field.setItem(barrier);
         barriers.add(barrier);

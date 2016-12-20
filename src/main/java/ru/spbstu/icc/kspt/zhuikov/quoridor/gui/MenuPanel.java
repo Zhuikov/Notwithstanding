@@ -7,7 +7,8 @@ import java.awt.event.*;
 
 public class MenuPanel extends JPanel {
 
-    private JButton startButton = new JButton("Start game");
+    private JButton startOnePlayer = new JButton("1 Player");
+    private JButton startTwoPlayer = new JButton("2 Player");
     private JButton exitButton = new JButton("Exit");
     private MainFrame frame;
     private Image bg = new ImageIcon("pictures/gamePics/background_menu1.jpg").getImage();
@@ -17,21 +18,21 @@ public class MenuPanel extends JPanel {
         this.frame = frame;
         setLayout(null);
 
-        startButton.setLocation(225, 220);
-        startButton.setSize(200, 30);
-        startButton.addMouseListener(new MyListener());
+        startOnePlayer.setLocation(225, 220);
+        startOnePlayer.setSize(200, 30);
+        startOnePlayer.addMouseListener(new StartListener(true));
 
-        exitButton.setLocation(225, 270);
+        startTwoPlayer.setLocation(225, 270);
+        startTwoPlayer.setSize(200, 30);
+        startTwoPlayer.addMouseListener(new StartListener(false));
+
+        exitButton.setLocation(225, 320);
         exitButton.setSize(200, 30);
         exitButton.addActionListener(new ExitListener());
 
-        add(startButton);
+        add(startOnePlayer);
+        add(startTwoPlayer);
         add(exitButton);
-
-    }
-
-    public void paint(Graphics g) {
-        super.paint(g);
     }
 
     @Override
@@ -41,10 +42,16 @@ public class MenuPanel extends JPanel {
         g.drawImage(bg, 0, 0, null);
     }
 
-    private class MyListener implements MouseListener {
+    private class StartListener implements MouseListener {
+
+        private boolean bots = false;
+        StartListener(boolean bots) {
+            this.bots = bots;
+        }
+
         @Override
         public void mouseClicked(MouseEvent e) {
-            frame.setContentPane(new GamePanel(frame));
+            frame.setContentPane(new GamePanel(frame, bots));
         }
 
         @Override
@@ -53,7 +60,7 @@ public class MenuPanel extends JPanel {
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            startButton.setText("d"); // ?????????????????????? (без этого не работает!)
+            startOnePlayer.setText("d"); // ?????????????????????? (без этого не работает!)
         }
 
         @Override

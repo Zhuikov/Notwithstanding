@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class ConsoleGame {
 
-    private static Quoridor game = new Quoridor(2);
+    private static Quoridor game = new Quoridor(2, false);
     private static ConsoleDrawer drawer = new ConsoleDrawer(game);
 
     public static void main(String[] args) {

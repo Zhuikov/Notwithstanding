@@ -28,8 +28,8 @@ public class FieldTest {
     public void testPathBetweenCells1() {  // пустое поле
 
         QuoridorField field = new QuoridorField(9);
-        assertEquals(true, field.isRowAvailable(new Coordinates(16, 8), 0));
-        assertEquals(true, field.isRowAvailable(new Coordinates(0, 8), 10));
+        assertEquals(false, field.isRowAvailable(new Coordinates(16, 8), 0).empty());
+        assertEquals(false, field.isRowAvailable(new Coordinates(0, 8), 10).empty());
     }
 
     @Test
@@ -43,9 +43,9 @@ public class FieldTest {
         field.setItem(new Barrier(15, 7, BarrierPosition.HORIZONTAL));
         field.setItem(new Barrier(15, 9, BarrierPosition.VERTICAL));
 
-        assertEquals(true, field.isRowAvailable(new Coordinates(16, 8), 0));
-        assertEquals(true, field.isRowAvailable(new Coordinates(0, 16), 0));
-        assertEquals(true, field.isRowAvailable(new Coordinates(0, 16), 16));
+        assertEquals(false, field.isRowAvailable(new Coordinates(16, 8), 0).empty());
+        assertEquals(false, field.isRowAvailable(new Coordinates(0, 16), 0).empty());
+        assertEquals(false, field.isRowAvailable(new Coordinates(0, 16), 16).empty());
     }
 
     @Test
@@ -58,9 +58,9 @@ public class FieldTest {
         field.setItem(new Barrier(7, 15, BarrierPosition.VERTICAL));
         field.setItem(new Barrier(5, 15, BarrierPosition.HORIZONTAL));
 
-        assertEquals(true,  field.isRowAvailable(new Coordinates(0, 4), 2));
-        assertEquals(false, field.isRowAvailable(new Coordinates(0, 4), 10));
-        assertEquals(false, field.isRowAvailable(new Coordinates(16, 6), 0));
+        assertEquals(false, field.isRowAvailable(new Coordinates(0, 4), 2).empty());
+        assertEquals(true, field.isRowAvailable(new Coordinates(0, 4), 10).empty());
+        assertEquals(true, field.isRowAvailable(new Coordinates(16, 6), 0).empty());
     }
 
     @Test
@@ -71,9 +71,9 @@ public class FieldTest {
         field.setItem(new Barrier(15, 9, BarrierPosition.VERTICAL));
         field.setItem(new Barrier(13, 8, BarrierPosition.HORIZONTAL));
 
-        assertEquals(false, field.isRowAvailable(new Coordinates(16, 8), 6));
-        assertEquals(true,  field.isRowAvailable(new Coordinates(16, 8), 16));
-        assertEquals(true,  field.isRowAvailable(new Coordinates(0, 8), 16));
+        assertEquals(true, field.isRowAvailable(new Coordinates(16, 8), 6).empty());
+        assertEquals(false, field.isRowAvailable(new Coordinates(16, 8), 16).empty());
+        assertEquals(false, field.isRowAvailable(new Coordinates(0, 8), 16).empty());
     }
 
 }

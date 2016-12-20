@@ -30,14 +30,12 @@ public class Coordinates {
 
     @Override
     public boolean equals(Object o) {   //TODO однобуквенное имя выглядит не очень
-                                        // =(
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         Coordinates that = (Coordinates) o;
 
         if (vertical != that.vertical) return false;  //TODO как-то криво, предлагаю объединить в одно return условие;
-                                                      // у меня почему-то есть основания думать, что тут все хорошо
         return horizontal == that.horizontal;
     }
 
