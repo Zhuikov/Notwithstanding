@@ -17,11 +17,15 @@ public class Quoridor {
 
     private QuoridorField field = new QuoridorField(9);
     private List<QuoridorPlayer> players = new ArrayList<QuoridorPlayer>(); //todo мб убрать этот ненужный список
+    private Fox fox;
 
     //TODO возможно есть смысл поменять на enum, с методом nextPlayer();
     private int currentPlayer;
+    private int step = 0;
+    private static int foxTime = 20;
+    private static int foxFrequency = 10;
 
-    public Quoridor(int playersNumber, boolean bots) {
+    public Quoridor(int playersNumber, boolean bot) {
 
         if (playersNumber == 2) {
             QuoridorPlayer player = QuoridorPlayer.TOP;
@@ -30,7 +34,7 @@ public class Quoridor {
             players.add(player);
 
             player = QuoridorPlayer.BOTTOM;
-            player.createPlayer(field, bots);
+            player.createPlayer(field, bot);
             players.add(player);
 
         } else {
@@ -51,6 +55,26 @@ public class Quoridor {
 //                return Player.LEFT;
         }
         throw new AssertionError("unknown player" + players.get(currentPlayer));
+    }
+
+    public static void setFoxTime(int foxTime) {
+        Quoridor.foxTime = foxTime;
+    }
+
+    public static int getFoxTime() {
+        return foxTime;
+    }
+
+    public static int getFoxFrequency() {
+        return foxFrequency;
+    }
+
+    public static void setFoxFrequency(int foxTurn) {
+        Quoridor.foxFrequency = foxTurn;
+    }
+
+    public int getStep() {
+        return step;
     }
 
     public Field getField() {
@@ -80,11 +104,15 @@ public class Quoridor {
 
     public boolean isEnd() {              //TODO возможно следует подумать об использование шаблона Наблюдатель
 
-        if (QuoridorPlayer.TOP.getMarker().getCoordinates().getVertical() == field.getRealSize() - 1) {
+        if (QuoridorPlayer.TOP.getMarker().getCoordinates().getVertical() == QuoridorPlayer.TOP.getDestinationRow()) {
             return true;
         }
 
-        if (QuoridorPlayer.BOTTOM.getMarker().getCoordinates().getVertical() == 0) {
+        if (QuoridorPlayer.BOTTOM.getMarker().getCoordinates().getVertical() == QuoridorPlayer.BOTTOM.getDestinationRow()) {
+            return true;
+        }
+
+        if (fox != null && fox.getMarker().getCoordinates().equals(fox.getTarget())) {
             return true;
         }
 
@@ -100,6 +128,9 @@ public class Quoridor {
             }
             if (QuoridorPlayer.BOTTOM.getMarker().getCoordinates().getVertical() == 0) {
                 return Player.BOTTOM;
+            }
+            if (fox != null && fox.getMarker().getCoordinates().equals(fox.getTarget())) {
+                return Player.FOX;
             }
         }
 
@@ -134,8 +165,18 @@ public class Quoridor {
 
         if (isEnd()) return;
 
+        if (fox != null && step % foxFrequency == 0) {
+            fox.makeMove();
+        }
+
+        if (step == foxTime) {
+            fox = new Fox(field);
+        }
+
+        step++;
+
         if (players.get(currentPlayer).isBot()) {
-            players.get(currentPlayer).makeRandomMove();
+            players.get(currentPlayer).makeBotMove();
             changePlayerTurn();
         }
     }

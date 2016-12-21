@@ -15,7 +15,6 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.dnd.DragSource;
 import java.awt.event.*;
 
 class GamePanel extends JPanel {
@@ -27,8 +26,8 @@ class GamePanel extends JPanel {
     private Quoridor game;
     private FieldPanel fieldPanel;
     private BarrierPanel barrierPanel;
-    private boolean gotBarrier = false;
     private JLabel statusLabel;
+    private FoxPanel foxPanel;
     private Image bg = new ImageIcon("pictures/gamePics/background_game.jpg").getImage();
 
     GamePanel(MainFrame frame, boolean bots) {
@@ -46,13 +45,16 @@ class GamePanel extends JPanel {
         add(statusLabel);
 
         JButton menuButton = new JButton("Menu");
-        menuButton.setLocation(435, 80);
+        menuButton.setLocation(435, 20);
         menuButton.setSize(140, 20);
         menuButton.addActionListener(new MenuListener());
         add(menuButton);
 
         fieldPanel = new FieldPanel();
         barrierPanel = new BarrierPanel();
+        foxPanel = new FoxPanel();
+
+        add(foxPanel);
         add(fieldPanel);
         add(barrierPanel);
 
@@ -75,15 +77,6 @@ class GamePanel extends JPanel {
 
         super.paintComponent(g);
         g.drawImage(bg, 0, 0, null);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        if (gotBarrier) {
-            g.setColor(Color.yellow);
-            g.fillRect((int)getMousePosition().getX(), (int)getMousePosition().getY(), 20, 20);
-        }
     }
 
     private class MenuListener implements ActionListener {
@@ -220,6 +213,10 @@ class GamePanel extends JPanel {
                                 g.fillOval(j * (cellSize + spaceSize) / 2 + cellSize / 8,
                                         i * (cellSize + spaceSize) / 2 + cellSize / 8,
                                         24, 24);
+                            } else if (cell.getOwner() == Owner.FOX) {
+                                g.setColor(new Color(255, 77, 0));
+                                g.fillPolygon(new int [] {j * (cellSize + spaceSize) / 2 + 3, j * (cellSize + spaceSize) / 2 + cellSize / 2, j * (cellSize + spaceSize) / 2 + cellSize - 3 },
+                                        new int [] {i * (cellSize + spaceSize) / 2 + 3, i * (cellSize + spaceSize) / 2 + cellSize - 3, i * (cellSize + spaceSize) / 2 + 3}, 3);
                             }
                             break;
                         }
@@ -239,6 +236,8 @@ class GamePanel extends JPanel {
                     }
                 }
             }
+
+            foxPanel.updateLabel();
 
             if (pickedMarker) {
                 g.setColor(Color.BLACK);
@@ -261,6 +260,8 @@ class GamePanel extends JPanel {
                         statusLabel.setText("Blue player won!");
                     } else if (game.getWinner().name().equals("BOTTOM")) {
                         statusLabel.setText("Red player won!");
+                    } else if (game.getWinner().name().equals("FOX")) {
+                        statusLabel.setText("Fox won!");
                     }
                 }
             } catch (NoWinnerException e) {}
@@ -313,11 +314,7 @@ class GamePanel extends JPanel {
                 barrierPanel.updateText();
             } catch (FieldItemException | NoBarriersException e ) {
                 statusLabel.setText(e.getMessage());
-                Timer timer = new Timer(1500, new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                       updateStatusLabel();
-                    }
-                });
+                Timer timer = new Timer(1500, e1 -> updateStatusLabel());
                 timer.setRepeats(false);
                 timer.start();
             }
@@ -373,7 +370,7 @@ class GamePanel extends JPanel {
             setLayout(null);
 
             setBorder(new LineBorder(Color.BLACK, 2));
-            setLocation(410, 140);
+            setLocation(410, 180);
             setSize(190, 200);
             setBackground(color);
             setVisible(true);
@@ -480,6 +477,51 @@ class GamePanel extends JPanel {
             @Override
             public void mouseExited(MouseEvent e) {
 
+            }
+        }
+    }
+
+
+    class FoxPanel extends JPanel {
+
+        private JLabel foxAppearingLabel;
+        private JLabel foxFrequencyLabel;
+
+        FoxPanel() {
+
+            setLayout(null);
+            setLocation(410, 60);
+            setSize(190, 100);
+            setBorder(new LineBorder(Color.BLACK, 2));
+            setBackground(new Color(190, 140, 140));
+
+            foxAppearingLabel = new JLabel();
+            foxAppearingLabel.setSize(180, 20);
+            foxAppearingLabel.setLocation(7, 5);
+            foxAppearingLabel.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 14));
+
+            JLabel foxFrequencyTextLabel = new JLabel("The Fox moves once ");
+            foxFrequencyTextLabel.setSize(180, 20);
+            foxFrequencyTextLabel.setLocation(7, 40);
+            foxFrequencyTextLabel.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 14));
+
+            foxFrequencyLabel = new JLabel("in " + Quoridor.getFoxFrequency() + " steps");
+            foxFrequencyLabel.setSize(100, 20);
+            foxFrequencyLabel.setLocation(100, 70);
+            foxFrequencyLabel.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 14));
+
+            add(foxAppearingLabel);
+            add(foxFrequencyTextLabel);
+            add(foxFrequencyLabel);
+
+        }
+
+        void updateLabel() {
+            if (Quoridor.getFoxTime() - game.getStep() > 0) {
+                foxAppearingLabel.setText("The Fox appears " + (Quoridor.getFoxTime() - game.getStep()));
+            } else {
+                foxAppearingLabel.setLocation(26, 5);
+                foxAppearingLabel.setText("The Fox is here!");
             }
         }
     }

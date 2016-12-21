@@ -88,7 +88,7 @@ public class QuoridorField {
      * @param marker - координаты, из которых ищется путь
      * @param rowNumber - номер ряда (строки)
      */
-    public Stack<Coordinates> isRowAvailable(Coordinates marker, int rowNumber) {
+    public Stack<Coordinates> getPathToRow(Coordinates marker, int rowNumber) {
 
         if (marker.getVertical() == rowNumber) {
             Stack<Coordinates> coordinates = new Stack<>();
@@ -136,6 +136,66 @@ public class QuoridorField {
                                     (queue.element().coordinates.getHorizontal() + neighbour.getHorizontal()) / 2).getType() != ItemType.BARRIER &&
                             !queue.contains(new Vertex(neighbour, queue.element()))) {
                                     //Coordinates(neighbour.getVertical(), neighbour.getHorizontal()))) {
+                        queue.add(new Vertex(neighbour, queue.element())); //neighbour
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) { }
+            }
+
+            used[queue.element().coordinates.getVertical()][queue.element().coordinates.getHorizontal()] = true;
+            usedVertexes.add(queue.element());
+            queue.remove();
+        }
+
+        return path;
+    }
+
+    /**
+     * Возвращает кратчайший путь.
+     * @param init начальные координаты
+     * @param dest конечные координаты
+     * @return стек координат, по которым нужно пройти.
+     * Если пройти нельзя, вернется пустой стек.
+     */
+
+    //это метод для лисы, надо будет сделать, чтобы все его использовали
+    //для этого выбросить тот енам наверно
+    public Stack<Coordinates> getPath(Coordinates init, Coordinates dest) {
+
+        class Vertex {
+            private Coordinates coordinates;
+            private Vertex from;
+
+            private Vertex(Coordinates coordinates, Vertex from) {
+                this.coordinates = coordinates;
+                this.from = from;
+            }
+        }
+
+        boolean used[][] = new boolean[realSize][realSize];
+        Queue<Vertex> queue = new LinkedList<>();
+        List<Vertex> usedVertexes = new ArrayList<>();
+        Stack<Coordinates> path = new Stack<>();
+
+        queue.add(new Vertex(init, null));
+
+        while (!queue.isEmpty()) {
+
+            if (queue.element().coordinates.equals(dest)) {
+                Vertex vertex = queue.element();
+                while (vertex.from != null) {
+                    path.add(vertex.coordinates);
+                    vertex = vertex.from;
+                }
+                return path;
+            }
+
+            for (final Coordinates neighbour : getNeighbours(queue.element().coordinates)) {
+                try {
+                    if (!used[neighbour.getVertical()][neighbour.getHorizontal()] &&
+                            getItem((queue.element().coordinates.getVertical() + neighbour.getVertical()) / 2,
+                                    (queue.element().coordinates.getHorizontal() + neighbour.getHorizontal()) / 2).getType() != ItemType.BARRIER &&
+                            !queue.contains(new Vertex(neighbour, queue.element()))) {
+                        //Coordinates(neighbour.getVertical(), neighbour.getHorizontal()))) {
                         queue.add(new Vertex(neighbour, queue.element())); //neighbour
                     }
                 } catch (ArrayIndexOutOfBoundsException e) { }

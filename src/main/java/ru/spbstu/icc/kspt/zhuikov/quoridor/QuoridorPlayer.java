@@ -48,6 +48,10 @@ public enum QuoridorPlayer {
 
     public int getBarriersNumber() { return barriersNumber; }
 
+    public int getDestinationRow() {
+        return destinationRow;
+    }
+
     public List<Barrier> getBarriers() { return barriers; }
 
     public boolean isActive() { return isActive; }
@@ -69,8 +73,11 @@ public enum QuoridorPlayer {
         return possibleMoves;
     }
 
-    public void makeRandomMove() throws FieldItemException, NoBarriersException {
+    public void makeBotMove() throws FieldItemException, NoBarriersException {
 
+        if (!isBot) {
+            throw new UnsupportedOperationException(this.name() + " not a bot");
+        }
         double rand = Math.random();
         if (rand > 0.45) {
             setBotBarrier();
@@ -79,10 +86,14 @@ public enum QuoridorPlayer {
 
     private void setBotMarker() throws FieldItemException {
 
-        Stack<Coordinates> path = field.isRowAvailable(marker.getCoordinates(), destinationRow);
+        Stack<Coordinates> path = field.getPathToRow(marker.getCoordinates(), destinationRow);
         if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() == ItemType.MARKER) {
             path.pop();
-            makeMove(path.peek().getVertical(), path.peek().getHorizontal());
+            try {
+                makeMove(path.peek().getVertical(), path.peek().getHorizontal());
+            } catch (Exception x) {
+                setBotBarrier();
+            }
             return;
         }
         makeMove(path.peek().getVertical(), path.peek().getHorizontal());
@@ -95,7 +106,7 @@ public enum QuoridorPlayer {
             return;
         }
 
-        Stack<Coordinates> topPath = field.isRowAvailable(TOP.marker.getCoordinates(), TOP.destinationRow);
+        Stack<Coordinates> topPath = field.getPathToRow(TOP.marker.getCoordinates(), TOP.destinationRow);
         Coordinates between = new Coordinates((topPath.peek().getVertical() + TOP.marker.getCoordinates().getVertical()) / 2,
                 (topPath.peek().getHorizontal() + TOP.marker.getCoordinates().getHorizontal()) / 2);
         double rand = Math.random();
@@ -268,15 +279,15 @@ public enum QuoridorPlayer {
         Barrier probableBarrier = new Barrier(vertical, horizontal, position);
         field.setItem(probableBarrier);
 
-        if (TOP.isActive && field.isRowAvailable(TOP.getMarker().getCoordinates(), 16).empty()) {
+        if (TOP.isActive && field.getPathToRow(TOP.getMarker().getCoordinates(), 16).empty()) {
             field.clearCells(probableBarrier.getCoordinates());
             throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
         }
-        if (BOTTOM.isActive && field.isRowAvailable(BOTTOM.getMarker().getCoordinates(), 0).empty()) {
+        if (BOTTOM.isActive && field.getPathToRow(BOTTOM.getMarker().getCoordinates(), 0).empty()) {
             field.clearCells(probableBarrier.getCoordinates());
             throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
         }
-//        if (RIGHT.isActive && !field.isRowAvailable(RIGHT.getMarker().getCoordinates(), ?????????)) //todo изменить логику
+//        if (RIGHT.isActive && !field.getPathToRow(RIGHT.getMarker().getCoordinates(), ?????????)) //todo изменить логику
 
         field.clearCells(probableBarrier.getCoordinates());
     }

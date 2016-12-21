@@ -5,6 +5,7 @@ public enum Player {
 
     TOP,
     BOTTOM,
+    FOX,
     RIGHT,
     LEFT;
 

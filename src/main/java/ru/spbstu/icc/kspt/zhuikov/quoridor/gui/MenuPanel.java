@@ -9,9 +9,10 @@ public class MenuPanel extends JPanel {
 
     private JButton startOnePlayer = new JButton("1 Player");
     private JButton startTwoPlayer = new JButton("2 Player");
+    private JButton settingsButton = new JButton("Settings");
     private JButton exitButton = new JButton("Exit");
     private MainFrame frame;
-    private Image bg = new ImageIcon("pictures/gamePics/background_menu1.jpg").getImage();
+    private final Image bg = new ImageIcon("pictures/gamePics/background_menu1.jpg").getImage();
 
     MenuPanel(MainFrame frame) {
 
@@ -26,12 +27,18 @@ public class MenuPanel extends JPanel {
         startTwoPlayer.setSize(200, 30);
         startTwoPlayer.addMouseListener(new StartListener(false));
 
-        exitButton.setLocation(225, 320);
+        settingsButton.setLocation(225, 320);
+        settingsButton.setSize(200, 30);
+        settingsButton.addMouseListener(new SettingsListener());
+
+
+        exitButton.setLocation(225, 370);
         exitButton.setSize(200, 30);
         exitButton.addActionListener(new ExitListener());
 
         add(startOnePlayer);
         add(startTwoPlayer);
+        add(settingsButton);
         add(exitButton);
     }
 
@@ -65,6 +72,34 @@ public class MenuPanel extends JPanel {
 
         @Override
         public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+    }
+
+    private class SettingsListener implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            frame.setContentPane(new SettingsPanel(frame));
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            settingsButton.setText("d");
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
         }
 
         @Override
