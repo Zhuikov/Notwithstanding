@@ -15,6 +15,7 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.dnd.DragSource;
 import java.awt.event.*;
 
 class GamePanel extends JPanel {

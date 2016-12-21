@@ -72,7 +72,7 @@ public enum QuoridorPlayer {
     public void makeRandomMove() throws FieldItemException, NoBarriersException {
 
         double rand = Math.random();
-        if (rand > 0.35) {
+        if (rand > 0.45) {
             setBotBarrier();
         } else setBotMarker();
     }
@@ -103,11 +103,11 @@ public enum QuoridorPlayer {
             if (rand < 0.5) {
                 makeMove(between.getVertical() % 2 == 0 ? between.getVertical() - 1 : between.getVertical(),
                         between.getHorizontal() % 2 == 0 ? between.getHorizontal() - 1 : between.getHorizontal(),
-                        rand > 0.25 ? BarrierPosition.HORIZONTAL : BarrierPosition.VERTICAL);
+                        rand > 0.15 ? BarrierPosition.HORIZONTAL : BarrierPosition.VERTICAL);
             } else {
                 makeMove(between.getVertical() % 2 == 0 ? between.getVertical() + 1 : between.getVertical(),
                         between.getHorizontal() % 2 == 0 ? between.getHorizontal() + 1 : between.getHorizontal(),
-                        rand > 0.75 ? BarrierPosition.HORIZONTAL : BarrierPosition.VERTICAL);
+                        rand > 0.65 ? BarrierPosition.HORIZONTAL : BarrierPosition.VERTICAL);
             }
         } catch (Exception e) {
             setBotMarker();
