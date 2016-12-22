@@ -1,0 +1,466 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{hyperref}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{here}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+
+\lstset{ %
+extendedchars=\true,
+keepspaces=true,
+language=Java,					% choose the language of the code
+basicstyle=\footnotesize,		% the size of the fonts that are used for the code
+numbers=left,					% where to put the line-numbers
+numberstyle=\footnotesize,		% the size of the fonts that are used for the line-numbers
+stepnumber=1,					% the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=5pt,					% how far the line-numbers are from the code
+backgroundcolor=\color{white},	% choose the background color. You must add \usepackage{color}
+showspaces=false				% show spaces adding particular underscores
+showstringspaces=false,			% underline spaces within strings
+showtabs=false,					% show tabs within strings adding particular underscores
+frame=single,           		% adds a frame around the code
+tabsize=4,						% sets default tabsize to 2 spaces
+captionpos=b,					% sets the caption-position to bottom
+breaklines=true,				% sets automatic line breaking
+breakatwhitespace=false,		% sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)},			% if you want to add a comment within your code
+postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}
+}
+\begin{document}	% начало документа
+
+
+\begin{titlepage}	% начало титульной страницы
+
+	\begin{center}		% выравнивание по центру
+
+		\large Санкт-Петербургский Политехнический Университет Петра Великого\\
+		\large Институт компьютерных наук и технологий \\
+		\large Кафедра компьютерных систем и программных технологий\\[6cm]
+		% название института, затем отступ 6см
+		
+		\huge Программирование\\[0.5cm] % название работы, затем отступ 0,5см
+		\large Отчет по курсовой работе\\[0.1cm]
+		\large Игра "Коридор"\\[5cm]
+
+	\end{center}
+
+
+	\begin{flushright} % выравнивание по правому краю
+		\begin{minipage}{0.25\textwidth} % врезка в половину ширины текста
+			\begin{flushleft} % выровнять её содержимое по левому краю
+
+				\large\textbf{Работу выполнил:}\\
+				\large Жуйков А.А.\\
+				\large {Группа:} 23501/4\\
+				
+				\large \textbf{Преподаватель:}\\
+				\large Вылегжанина К.Д.
+				
+
+			\end{flushleft}
+		\end{minipage}
+	\end{flushright}
+	
+	\vfill % заполнить всё доступное ниже пространство
+
+	\begin{center}
+	\large Санкт-Петербург\\
+	\large \the\year % вывести дату
+	\end{center} % закончить выравнивание по центру
+
+\thispagestyle{empty} % не нумеровать страницу
+\end{titlepage} % конец титульной страницы
+
+\vfill % заполнить всё доступное ниже пространство
+% Содержание
+\tableofcontents
+\newpage
+
+\section{Настольная игра ''Коридор''}
+\subsection{Краткое описание игры}
+Суть игры Коридор заключается в том, чтобы довести свою фишку из одного конца доски в другой и не дать сделать этого противнику. В свой ход мы можем либо двигаться, дабы поскорее достичь финиша, либо строить стены, из которых впоследствии и вырастает тот самый коридор, в котором должен заблудиться наш соперник. Не стоит забывать также и о том, что в Коридоре поле у вас общее, поэтому любое препятствие противнику может в итоге обернуться против вас самих.
+
+\subsection{Правила игры}
+\begin{itemize}
+\item Цель игры.\\
+Первому дойти до финишной линии противоположной стороны игрового поля.
+
+\item Правила игры для 2 игроков.\\
+Перед началом игры игроки помещают свои фишки на среднюю клетку первого ряда на своей стороне поля и получают 10 перегородок.  
+Игроки бросают жребий и определяют, кто начнет игру.
+
+\item Ход игры. \\
+В свой ход игрок может:   \\
+\begin{itemize}
+\item[1)] Переместить свою фишку. Игрок в свой ход может переместить фишку на одну клетку вперед, назад, влево или вправо.
+Фишка не может ''перепрыгнуть'' через перегородку.
+\item[2)] Поставить на поле одну перегородку. Перегородка ставится так, чтобы закрыть ровно две клетки. Ее можно поставить так, чтобы облегчить путь себе, либо препятствовать движению соперника. При этом всегда следует оставить сопернику выход к финишной линии.
+\end{itemize}  
+Если игрок использовал все перегородки, он продолжает играть только фишкой.
+
+\item Лицом к лицу. \\
+Если фишки обоих игроков находятся на соседних клетках и между ними нет перегородки, игрок, которому принадлежит ход, может своей фишкой ''перепрыгнуть'' через фишку соперника и таким образом переместиться на еще одну клетку вперед. 
+Если же сразу за фишкой соперника стоит перегородка, игрок может переместить свою фишку вправо или влево от фишки соперника. 
+
+\item Окончание игры. \\
+Побеждает тот, кто первым доходит до какой-либо из 9 клеток финишной линии на противоположной стороне игрового поля.
+
+\item Правила для четырех игроков. \\
+В начале игры каждый игрок помещает одну фишку на среднюю клетку ближайшего к нему ряда игрового поля. Каждый игрок получает по 5 перегородок. В этот вариант играют согласно правилам игры для 2 игроков. Однако, фишка игрока может "перепрыгнуть" не более чем на одну фишку. Ход передается по часовой стрелке.
+
+
+\end{itemize}
+\subsection{Задание}
+Разработать приложение, позволяющее играть в игру ''Коридор'' двум игрокам, а также одному игроку против искусственного интеллекта. Вместо четырех игроков, было выбрано другое дополнение игры. 
+
+\subsection{Дополнение игры.}
+В игру вводится еще один тип игрока - the Fox. The Fox появляется в случайной свободной клетке поля в указанный ход (от начала игры) и преследует случайного игрока на поле. The Fox ходит один раз в заданное количество ходов и не может ставить перегородки. Этого игрока, в отличие от простых игроков, можно закрыть за барьерами. The Fox побеждает, когда ловит игрока, поместив свою фишку на чужую. Таким образом, задача игрока усложняется: необходимо не только достичь финишной линии первым, но и ''сбежать'' от the Fox.
+\subsection{Диаграмма прецедентов использования}
+На рисунках \ref{pic:UseCaseDiagram1} и \ref{pic:UseCaseDiagram2} показаны диаграммы прецедентов использования.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5, height=7cm]{../pictures/UseCaseDiagram1.png}
+		\caption{Диаграмма прецедентов использования.} 
+		\label{pic:UseCaseDiagram1} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5, height=7cm]{../pictures/UseCaseDiagram2.png}
+		\caption{Диаграмма прецедентов использования.} 
+		\label{pic:UseCaseDiagram2} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+\subsection{Вывод}
+Определено задание разработки приложения. Составлены диаграммы прецедентов использования.
+\section{Проектирование приложения, реализующего игру ''Коридор''}
+Приложение должно позволять играть в игру двум игрокам, а также против искусственного интеллекта.
+
+\subsection{Проектирование библиотеки}
+Библиотека  - ядро приложения. Здесь содержатся основные классы, необходимые для представления игры. 
+
+\noindent В API выделены следующие методы: 
+\begin{itemize}
+\item Метод, передвигающий фишку текущего игрока в заданные координаты поля. (Текущий игрок - игрок, чья очередь делать ход.)
+\item Метод, размещающий перегородку текущего игрока на клетку с заданными координатами и в заданном направлении (горизонтально или вертикально).
+\item Метод, возвращающий список доступных ходов фишкой текущего игрока.
+\item Метод, позволяющий получить информацию о заданном игроке.
+\item Метод, возвращающий текущего игрока.
+\item Метод, возвращающий $true$, если какой-либо игрок достиг своей финишной линии и $false$ в обратном случае.
+\item Методы, возвращающие информацию о the Fox: ход, на котором появляется the Fox, и частота, с которой the Fox делает ход.
+\end{itemize}
+
+\subsection{Вывод}
+Былы выделены основные методы API.
+
+\section{Реализация игры ''Коридор''}
+\subsection{Среда разработки}
+
+\noindent Интегрированная среда разработки IntelliJ IDEA 2016.2.5. 
+
+\noindent Язык: Java 1.8.
+
+\subsection{Реализация консольного приложения}
+Консольное приложение предоставляет пользователю всю функциональность ядра и позволяет запускать игру в консоли. 
+
+\noindent Классы, необходимые для консольного приложения содержатся в пакете $ ru.spbstu.icc.kspt.zhuikov.quoridor.console$. 
+Основные классы, выделенные в консольном приложении:
+\begin{itemize}
+\item Класс ConsoleGame. Создает игру, организует консольное взаимодействие с пользователем. 
+\item Класс ConsoleDrawer. Выводит в консоль состояние поля игры, а также другую информацию: количество перегородок у игроков, очередь хода, победителя.
+\item Классы Command и CommandReader. Классы, необходимые для взаимодействия пользователя с приложением посредством команд, вводимых в консоль. Класс Command представляет собой такую команду, состоящую из нескольких частей (например, имя команды, координаты), при этом некоторые из них могут отсутствовать. CommandReader проверяет введенную команду на правильность с помощью регулярных выражений. Примеры команд:
+\begin{center}
+\textit{marker 2 2} 
+\end{center} передвигает фишку текущего игрока на позицию 2 2, если это возможно. 
+\begin{center}
+\textit{BARRIER 5 5 HORIZONTAL} 
+\end{center} 
+ставит перегородку текущего игрока горизонтально на позицию 5 5, если это возможно. 
+\end{itemize}
+
+Если команду невозможно выполнить (например, ''перепрыгнуть'' фишкой через перегородку), то в консоль выводится соответсвующее сообщение об ошибке.
+
+
+На рисунках \ref{pic:console1} и \ref{pic:console2} представлено состояние поля до выполнения команды и после него. 
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{console1}
+		\caption{Начальное состояние игры.} 
+		\label{pic:console1} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{console2}
+		\caption{Состояние игры после выполнения команды $barrier~7~7~Horizontal$.} 
+		\label{pic:console2} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+
+\subsection{Реализация библиотеки}
+\noindent Классы библиотеки объединены в пакет $ru.spbstu.icc.kspt.zhuikov.quoridor$. Основные классы, выделенные в библиотеке:
+\begin{itemize}
+
+\item Класс Quoridor. Реализует методы, заявленные  в API. Содержит игровое поле, список всех игроков в порядке очереди хода. Также меняет текущего игрока после очередного хода. 
+
+\item Класс QuoridorField. Класс представляет поле модели. Реализуется в виде двумерного массива клеток поля - private class Cell, в которых содержится информация о находящемся на ней объекте и цвете. Класс также содержит размер поля. Присутствуют методы, ставящие на поле объект, занимающий одну клетку и объект, занимающий несколько клеток (см. рисунок \ref{pic:classDiagram}); методы, возвращающие эти объекты, размер поля, цвет клетки поля.
+
+\item Перечисление QuoridorPlayer. Класс представления игрока в игре. Перечисление было выбрано потому, что игроков может быть всегда только ограниченное количество (2 или 4), их позиции всегда закреплены (TOP, BOTTOM...). У каждого игрока содержится следующая информация: начальные координаты фишки; номер финишной линии; список перегородок, их текущее количество; ссылка на поле; а также флаг, является ли игрок ботом. 
+
+Игрок содержит следующие методы: методы, возвращающие фишку игрока, список барьеров; методы, позволяющие сделать ход. Использовалась перегрузка методов: в зависимости от количества переданных аргументов ставится перегородка или передвигается фишка. В классе игрок перед ходом проверяется возможность хода. Если ход сделать невозможно, генерируется соответствующее исключение с информацией об ошибке.
+
+\item Класс Fox. Класс для представления игрока the Fox в игре. Содержит фишку, фишку цели и ссылку на поле. Имеется метод, позволяющий сделать ход. Цель выбирается случайно. Для передвижения фишки, вычисляется кратчайший путь до цели и делается ход на необходимые координаты.
+
+\item Классы, представляющие объекты на поле. Эти классы содержатся в подпакете $.items$ Иерархия классов показана на рисунке \ref{pic:classDiagram} 
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{classDiagram}
+		\caption{Диаграмма классов, реализующих объекты на поле.} 
+		\label{pic:classDiagram} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+Класс OneCellItem содержит текущие координаты объекта, а также владельца (TOP, BOTTOM, NOBODY...). Класс ManyCellItem, в отличие от OneCellItem, содержит список координат объекта. 
+
+\item Классы-исключения. Исключения, использующиеся в библиотеке приложения, содержатся в подпакете $.exceptions$. 
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{exceptions}
+		\caption{Диаграмма классов, реализующих исключения.} 
+		\label{pic:classDiagram} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+\end{itemize}
+
+\subsection{Реализация графического приложения}
+Для создания графического приложения была выбрана библиотека Swing. \\
+
+На рисунке \ref{pic:mainGUI} представлено главное окно приложения. Пользователю, предоставляется возможность начать одиночную игру против бота, начать игру для двух человек или выйти из игры. 
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{mainGUI}
+		\caption{Главное меню графического приложения} 
+		\label{pic:mainGUI} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+На рисунке \ref{pic:gameGUI1} - окно игры. Отображается информация о поле, количестве барьеров, очередь хода. В строке под полем выводится различная информация, например, текущий игрок, информация о причине невозможности хода, победитель. Присутвует кнопка выхода в меню. Для того, чтобы поставить перегородку, необходимо выбрать его направление, нажать на кнопку ''Place barrier'' и кликнуть на нужное место на поле.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{gameGUI1}
+		\caption{Скриншот окна игры. Зеленым цветом подсвечиваются ходы, на которые можно сходить фишкой текущему игроку.} 
+		\label{pic:gameGUI1} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+
+На рисунке \ref{pic:gameGUI2} показана победа игрока the Fox.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{gameGUI2}
+		\caption{Победа игрока the Fox: удалось догнать красного игрока.} 
+		\label{pic:gameGUI2} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+На рисунке \ref{pic:gameGUI3} показан скриншот игровой ситуации, в которой победу одержал красный игрок.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{gameGUI3}
+		\caption{Красный игрок одержал победу, достигнув финишной линии.} 
+		\label{pic:gameGUI3} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+\subsection{Вывод}
+Для реализации игры определены основные классы библиотеки, консольного и графического приложений. Разделение на подпакеты упрощает процесс работы над проектом, а также его структуру. Разработано графическое приложение, предоставляющее возможность играть одному игроку или двум игрокам.
+
+\section{Процесс обеспечения качества и тестирование}
+\subsection{Просмотр кода}
+В ходе проектирования была проведена проверка исходного кода программы с целью обнаружения и исправления ошибок (code review). В результате было получено около 40-ти замечаний.
+
+Большая часть замечаний исправлена. 
+
+\subsection{Проведенные демонстрации}
+Была проведена одна презентация приложения. Получены следующие замечания:
+Последняя демонтрация перед релизом консольного приложения
+
+Замечания:
+
+\begin{itemize}
+\item Выводить информацию о количестве барьеров обоих игроков, а не только текущего.
+\item Перегородки переносить курсором мыши на необходимое место.
+\item Подсвечивать возможные ходы выбранной фишки игрока.
+\item Добавить какой-нибудь искусственный интеллект и возможность играть одному игроку. 
+\item Добавить еще одного игрока - the Fox.
+\end{itemize}
+
+Все недочеты и замечания, кроме переноски перегородки мышью, исправлены.
+
+\subsection{Тестирование кода приложения}
+Приложение содержит модульные тесты. Для тестирования был использован пакет org.junit.Test. Протестированы некоторые основные классы. Имеется большое количество тестов классов QuoridorField и QouridorPlayer: проверяется установка перегородки на поле, возможность перемещения фишки на позиции. С помощью возможнстей среды разработки было подсчитано  покрытие кода тестами. Результаты представлены на рисунке \ref{pic:tests}. 
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.5]{tests}
+		\caption{Процент покрытия кода тестами.} 
+		\label{pic:gameGUI3} % название для ссылок внутри кода
+	\end{center}
+\end{figure}
+
+\subsection{Вывод}
+Тестирование приложения - важная часть разработки. Просмотр кода помогает найти какие-то недочеты в проектировании кода или в других вопросах. С помощью тестов можно быстро определить ошибку при изменении какой-либо части кода.
+
+\section{Вывод}
+Курсовая работа этого семестра – это отличная возможность ближе познакомиться с новым для автора языком Java. Как оказалось, язык намного понятнее и проще, чем уже известный C++.
+
+%Работа над приложением будет продолжаться. Планируется добавить еду для жертв;  новые тесты, привести в порядок имеющиеся. Хищники должны ускоряться во время преследования жертвы, при этом тратить энергию. Возможно, в процессе улучшения появятся новые идеи для оптимизации алгоритмов ярда. 
+
+Во время работы над проектом, автор приобрел практический опыт в области проектирования приложений, а также создания графических приложений на языке Java. 
+
+\section{Приложение 1. Листинги кода}
+\subsection{Библиотека}
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/Quoridor.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/QuoridorField.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/QuoridorPlayer.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/Fox.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/Coordinates.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/CellColor.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/items/Item.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/items/ItemType.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/items/OneCellItem.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/items/ManyCellsItem.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/items/Empty.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/items/Barrier.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/items/Marker.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/items/BarrierPosition.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/items/Owner.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/exceptions/FieldBoundsException.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/exceptions/FieldItemException.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/exceptions/CellIsNotEmptyException.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/exceptions/ImpossibleToSetItemException.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/exceptions/NoBarriersException.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/exceptions/NoWinnerException.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/exceptions/TooLongDistanceException.java}
+
+\subsection{Консольное приложение}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/console/ConsoleGame.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/console/ConsoleDrawer.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/console/Command.java}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/console/CommandType.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/console/CommandReader.java}
+\newpage
+
+\subsection{Графическое приложение}
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/gui/MainFrame.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/gui/MenuPanel.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/gui/SettingsPanel.java}
+\newpage
+
+\lstinputlisting[]
+{../src/main/java/ru/spbstu/icc/kspt/zhuikov/quoridor/gui/GamePanel.java}
+\newpage
+
+\subsection{Модульные тесты}
+
+\lstinputlisting[]
+{../src/test/java/ru/sbpstu/icc/kspt/Zhuikov/courseWork/BarrierTest.java}
+\newpage
+
+\lstinputlisting[]
+{../src/test/java/ru/sbpstu/icc/kspt/Zhuikov/courseWork/FieldTest.java}
+\newpage
+
+\lstinputlisting[]
+{../src/test/java/ru/sbpstu/icc/kspt/Zhuikov/courseWork/MarkerTest.java}
+\newpage
+
+
+\end{document}

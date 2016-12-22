@@ -2,6 +2,7 @@
 *.a
 *.pro.user* 
 *.aux 
+*.out
 *.log 
 *.synctex.gz 
 *.tdo 
