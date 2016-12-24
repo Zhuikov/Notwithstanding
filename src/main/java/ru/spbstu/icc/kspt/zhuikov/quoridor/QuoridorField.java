@@ -97,10 +97,10 @@ public class QuoridorField {
         }
 
         class Vertex {
-            public Coordinates coordinates;
-            public Vertex from;
+            private Coordinates coordinates;
+            private Vertex from;
 
-            public Vertex(Coordinates coordinates, Vertex from) {
+            private Vertex(Coordinates coordinates, Vertex from) {
                 this.coordinates = coordinates;
                 this.from = from;
             }
@@ -157,7 +157,7 @@ public class QuoridorField {
      * Если пройти нельзя, вернется пустой стек.
      */
 
-    //это метод для лисы, надо будет сделать, чтобы все его использовали
+    //это метод для the Fox, надо будет сделать, чтобы все его использовали
     //для этого выбросить тот енам наверно
     public Stack<Coordinates> getPath(Coordinates init, Coordinates dest) {
 

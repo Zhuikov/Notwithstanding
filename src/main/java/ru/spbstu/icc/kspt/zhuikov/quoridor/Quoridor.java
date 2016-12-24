@@ -58,6 +58,10 @@ public class Quoridor {
     }
 
     public static void setFoxTime(int foxTime) {
+
+        if (foxTime < 0) {
+            throw new IllegalArgumentException("Fox time must be >= 0");
+        }
         Quoridor.foxTime = foxTime;
     }
 
@@ -70,6 +74,10 @@ public class Quoridor {
     }
 
     public static void setFoxFrequency(int foxTurn) {
+
+        if (foxTurn < 1 ) {
+            throw new IllegalArgumentException("Fox Frequency must be > 0");
+        }
         Quoridor.foxFrequency = foxTurn;
     }
 
@@ -167,6 +175,7 @@ public class Quoridor {
 
         if (fox != null && step % foxFrequency == 0) {
             fox.makeMove();
+            if (isEnd()) return;
         }
 
         if (step == foxTime) {
@@ -177,6 +186,7 @@ public class Quoridor {
 
         if (players.get(currentPlayer).isBot()) {
             players.get(currentPlayer).makeBotMove();
+            if (isEnd()) return;
             changePlayerTurn();
         }
     }

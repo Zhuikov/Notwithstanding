@@ -7,8 +7,8 @@ import java.awt.event.*;
 
 public class MenuPanel extends JPanel {
 
-    private JButton startOnePlayer = new JButton("1 Player");
-    private JButton startTwoPlayer = new JButton("2 Player");
+    private JButton startOnePlayer = new JButton("One Player");
+    private JButton startTwoPlayer = new JButton("Two Players");
     private JButton settingsButton = new JButton("Settings");
     private JButton exitButton = new JButton("Exit");
     private MainFrame frame;

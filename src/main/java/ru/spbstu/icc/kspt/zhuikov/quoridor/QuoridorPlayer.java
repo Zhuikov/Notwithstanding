@@ -87,7 +87,7 @@ public enum QuoridorPlayer {
     private void setBotMarker() throws FieldItemException {
 
         Stack<Coordinates> path = field.getPathToRow(marker.getCoordinates(), destinationRow);
-        if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() == ItemType.MARKER) {
+        if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY) {
             path.pop();
             try {
                 makeMove(path.peek().getVertical(), path.peek().getHorizontal());

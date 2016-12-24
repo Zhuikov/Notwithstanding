@@ -6,6 +6,7 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Marker;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 
+import java.util.EmptyStackException;
 import java.util.Stack;
 
 public class Fox {
@@ -56,12 +57,17 @@ public class Fox {
     private Coordinates getNextCoordinates() {
 
         Stack<Coordinates> path = field.getPath(marker.getCoordinates(), target.getCoordinates());
+        Coordinates c = marker.getCoordinates();
 
-        if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY
-                && !path.peek().equals(target.getCoordinates())) {
-            path.pop();
-            path.peek();
-        }
-        return path.peek();
+        try {
+            if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY
+                    && !path.peek().equals(target.getCoordinates())) {
+                path.pop();
+                path.peek();
+            }
+            c = path.peek();
+        } catch (EmptyStackException e) {}
+
+        return c;
     }
 }
