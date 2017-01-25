@@ -156,9 +156,6 @@ public class QuoridorField {
      * @return стек координат, по которым нужно пройти.
      * Если пройти нельзя, вернется пустой стек.
      */
-
-    //это метод для the Fox, надо будет сделать, чтобы все его использовали
-    //для этого выбросить тот енам наверно
     public Stack<Coordinates> getPath(Coordinates init, Coordinates dest) {
 
         class Vertex {
