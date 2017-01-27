@@ -1,6 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.gui;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.Coordinates;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
@@ -10,7 +11,7 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Cell;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.RetPlayer;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -33,7 +34,7 @@ class GamePanel extends JPanel {
     GamePanel(MainFrame frame, boolean bots) {
 
         this.frame = frame;
-        game = new Quoridor(2, bots);
+        game = new Quoridor(bots);
 
         statusLabel = new JLabel("fff");
         statusLabel.setSize(470, 25);
@@ -65,9 +66,9 @@ class GamePanel extends JPanel {
     }
 
     private void updateStatusLabel() {
-        if (game.getCurrentPlayer().name().equals("TOP")) {
+        if (game.getCurrentPlayer().getPosition() == PlayerPosition.TOP) {
             statusLabel.setText("Blue player's turn");
-        } else if (game.getCurrentPlayer().name().equals("BOTTOM")) {
+        } else if (game.getCurrentPlayer().getPosition() == PlayerPosition.BOT) {
             statusLabel.setText("Red player's turn");
         }
     }
@@ -256,11 +257,11 @@ class GamePanel extends JPanel {
                 if (game.isEnd()) {
                     this.removeMouseListener(fieldMouseListener);
                     barrierPanel.removeListeners();
-                    if (game.getWinner().name().equals("TOP")) {
+                    if (game.getWinner() == Owner.TOP) {
                         statusLabel.setText("Blue player won!");
-                    } else if (game.getWinner().name().equals("BOTTOM")) {
+                    } else if (game.getWinner() == Owner.BOTTOM) {
                         statusLabel.setText("Red player won!");
-                    } else if (game.getWinner().name().equals("FOX")) {
+                    } else if (game.getWinner() == Owner.FOX) {
                         statusLabel.setText("Fox won!");
                     }
                 }
@@ -301,7 +302,7 @@ class GamePanel extends JPanel {
 
         private void pickMarker(Cell marker) {
 
-            pickedMarker = marker.getOwner().name().equals(game.getCurrentPlayer().name());
+            pickedMarker = marker.getOwner() ==  game.getCurrentPlayer().getPosition().getOwner();
             pickedMarkerCoordinates = new Coordinates(marker.getVertical(), marker.getHorizontal());
         }
 
@@ -420,8 +421,15 @@ class GamePanel extends JPanel {
         }
 
         void updateText() {
-            bottomBarriersNumber.setText("Red has " + game.getPlayerInformation(Player.BOTTOM).getBarrierNumber() + " barriers");
-            topBarriersNumber.setText("Blue has " + game.getPlayerInformation(Player.TOP).getBarrierNumber() + " barriers");
+            for (RetPlayer player : game.getPlayers()) {
+                switch (player.getPosition()) {
+                    case TOP:
+                        topBarriersNumber.setText("Blue has " + player.getBarriersNumber() + " barriers");
+                        break;
+                    case BOT:
+                        bottomBarriersNumber.setText("Red has " + player.getBarriersNumber() + " barriers");
+                }
+            }
         }
 
         private class BarrierListener implements MouseListener {

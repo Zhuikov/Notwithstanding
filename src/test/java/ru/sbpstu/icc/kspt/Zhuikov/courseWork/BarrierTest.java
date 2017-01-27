@@ -2,12 +2,16 @@ package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
 // todo пусть тесты покрывают всю логику
 
 import org.junit.Test;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.HumanPlayer;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.Player;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Barrier;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,16 +21,15 @@ public class BarrierTest {
     public void testBarrierSet() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
-        QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field, false);
+        HumanPlayer player = new HumanPlayer(field, PlayerPosition.TOP);
 
-        player.makeMove(5, 3, BarrierPosition.VERTICAL);
+        player.placeBarrier(5, 3, BarrierPosition.VERTICAL);
 
         assertEquals(ItemType.BARRIER, field.getItem(5, 3).getType());
         assertEquals(ItemType.BARRIER, field.getItem(4, 3).getType());
         assertEquals(ItemType.BARRIER, field.getItem(6, 3).getType());
 
-        player.makeMove(13, 11, BarrierPosition.HORIZONTAL);
+        player.placeBarrier(13, 11, BarrierPosition.HORIZONTAL);
 
         assertEquals(ItemType.BARRIER, field.getItem(13, 10).getType());
         assertEquals(ItemType.BARRIER, field.getItem(13, 11).getType());
@@ -38,9 +41,8 @@ public class BarrierTest {
     public void testBlackCellSet() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
-        QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field, false);
-        player.makeMove(2, 8, BarrierPosition.HORIZONTAL);
+        HumanPlayer player = new HumanPlayer(field, PlayerPosition.TOP, Owner.TOP);
+        player.placeBarrier(2, 8, BarrierPosition.HORIZONTAL);
     }
 
     @Test(expected = ImpossibleToSetItemException.class)

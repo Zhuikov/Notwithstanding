@@ -6,7 +6,6 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoWinnerException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 public class ConsoleDrawer {
 

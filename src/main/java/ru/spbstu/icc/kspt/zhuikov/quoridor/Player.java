@@ -15,5 +15,7 @@ abstract public class Player {
         field.setItem(marker);
     }
 
-    public Coordinates getCoordinates() { return marker.getCoordinates(); }
+    public Marker getMarker() {
+        return marker;
+    }
 }

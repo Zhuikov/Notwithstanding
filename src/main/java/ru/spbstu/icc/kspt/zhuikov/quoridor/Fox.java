@@ -7,47 +7,37 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Marker;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 
 import java.util.EmptyStackException;
+import java.util.List;
 import java.util.Stack;
 
-public class Fox {
+public class Fox extends Player {
 
-    private Marker marker;
-    private QuoridorField field;
     private Marker target;
 
-    public Fox(QuoridorField field) {
+    public Fox(QuoridorField field, List<UsualPlayer> playerList) {
 
         this.field = field;
         int x, y;
         do {
-            x = (int) (Math.random() * 10) % 9 * 2;
-            y = (int) (Math.random() * 10) % 9 * 2;
+            x = (int) (Math.random() * 10) % field.getSize() * 2;
+            y = (int) (Math.random() * 10) % field.getSize() * 2;
         } while (field.getItem(x, y).getType() != ItemType.EMPTY);
         marker = new Marker(x, y, Owner.FOX);
         field.setItem(marker);
 
-        double rand = Math.random();
+        int rand = (int) (Math.random() * 10) % playerList.size();
         System.out.println("fox rand: " + rand);
-        if (rand > 0.5) {
-            target = QuoridorPlayer.TOP.getMarker();
-        } else {
-            target = QuoridorPlayer.BOTTOM.getMarker();
-        }
+        target = playerList.get(rand).getMarker();
     }
 
     public boolean makeMove() {
 
         Coordinates c = getNextCoordinates();
-        // не проверяем потому, что проверяется в getNextCoordinates();
         field.setItem(new Empty(marker.getCoordinates().getVertical(), marker.getCoordinates().getHorizontal()));
         marker.moveTo(c.getVertical(), c.getHorizontal());
         field.setItem(marker);
 
         return c.equals(target.getCoordinates());
-    }
-
-    public Marker getMarker() {
-        return marker;
     }
 
     public Coordinates getTarget() {

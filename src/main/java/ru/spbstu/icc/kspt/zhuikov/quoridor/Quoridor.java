@@ -4,8 +4,10 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoWinnerException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.RetPlayer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,7 @@ import java.util.List;
 public class Quoridor {
 
     private QuoridorField field = new QuoridorField(9);
-    private List<QuoridorPlayer> players = new ArrayList<QuoridorPlayer>(); //todo мб убрать этот ненужный список
+    private List<UsualPlayer> players = new ArrayList<>();
     private Fox fox;
 
     //TODO возможно есть смысл поменять на enum, с методом nextPlayer();
@@ -25,36 +27,26 @@ public class Quoridor {
     private static int foxTime = 20;
     private static int foxFrequency = 10;
 
-    public Quoridor(int playersNumber, boolean bot) {
+    public Quoridor(boolean bot) {
 
-        if (playersNumber == 2) {
-            QuoridorPlayer player = QuoridorPlayer.TOP;
-            player.createPlayer(field, false);
-            currentPlayer = 0;                     //TODO несколько не очевидная строчка, может логичнее  = 1;
-            players.add(player);
-
-            player = QuoridorPlayer.BOTTOM;
-            player.createPlayer(field, bot);
-            players.add(player);
-
+        HumanPlayer humanPlayer = new HumanPlayer(field, PlayerPosition.BOT);
+        players.add(humanPlayer);
+        if (bot) {
+            BotPlayer botPlayer = new BotPlayer(field, PlayerPosition.TOP, humanPlayer);
+            players.add(botPlayer);
         } else {
-            throw new UnsupportedOperationException("пока рано еще думать о чем-то большем...");
+            HumanPlayer humanPlayer1 = new HumanPlayer(field, PlayerPosition.TOP);
+            players.add(humanPlayer1);
         }
+
+        currentPlayer = 0;                     //TODO несколько не очевидная строчка, может логичнее  = 1;
+
     }
 
-    public Player getCurrentPlayer() {
+    public RetPlayer getCurrentPlayer() {
 
-        switch (players.get(currentPlayer)) {
-            case TOP:
-                return Player.TOP;
-            case BOTTOM:
-                return Player.BOTTOM;
-//            case RIGHT:
-//                return Player.RIGHT;
-//            default:
-//                return Player.LEFT;
-        }
-        throw new AssertionError("unknown player" + players.get(currentPlayer));
+        UsualPlayer normalPlayer = players.get(currentPlayer);
+        return new RetPlayer(normalPlayer.getBarriersNumber(), normalPlayer.getPosition());
     }
 
     public static void setFoxTime(int foxTime) {
@@ -89,74 +81,58 @@ public class Quoridor {
         return new Field(field);
     }
 
-    //todo по рукам бы надавать наверно надо за такое...
-    public Player getPlayerInformation(Player player) {
+    public List<RetPlayer> getPlayers() {
 
-        switch (player) {
-            case TOP:
-                player.createPlayer(QuoridorPlayer.TOP.getBarriersNumber());
-                return player;
-            case BOTTOM:
-                player.createPlayer(QuoridorPlayer.BOTTOM.getBarriersNumber());
-                return player;
+        List<RetPlayer> retPlayers = new ArrayList<>();
 
-//            case RIGHT:
-//                player.createPlayer(QuoridorPlayer.RIGHT.getBarriersNumber());
-//                return player;
-//            default:
-//                player.createPlayer(QuoridorPlayer.LEFT.getBarriersNumber());
-//                return player;
+        for (UsualPlayer player : players) {
+            retPlayers.add(new RetPlayer(player.getBarriersNumber(), player.getPosition()));
         }
-        throw new AssertionError("unknown player" + player);
+
+        return retPlayers;
     }
+
 
     public boolean isEnd() {              //TODO возможно следует подумать об использование шаблона Наблюдатель
 
-        if (QuoridorPlayer.TOP.getMarker().getCoordinates().getVertical() == QuoridorPlayer.TOP.getDestinationRow()) {
-            return true;
+        for (UsualPlayer player : players) {
+            if (player.getPosition().destinationRow == player.getMarker().getCoordinates().getVertical()) {
+                return true;
+            }
         }
+        return fox != null && fox.getMarker().getCoordinates().equals(fox.getTarget());
 
-        if (QuoridorPlayer.BOTTOM.getMarker().getCoordinates().getVertical() == QuoridorPlayer.BOTTOM.getDestinationRow()) {
-            return true;
-        }
-
-        if (fox != null && fox.getMarker().getCoordinates().equals(fox.getTarget())) {
-            return true;
-        }
-
-        // todo тут еще потом других сделать
-        return false;
     }
 
-    public Player getWinner() throws NoWinnerException {   //TODO по-моему, при использование Наблюдателя метод атрофируется
+    public Owner getWinner() throws NoWinnerException {   //TODO по-моему, при использование Наблюдателя метод атрофируется
 
         if (isEnd()) {
-            if (QuoridorPlayer.TOP.getMarker().getCoordinates().getVertical() == field.getRealSize() - 1) {
-                return Player.TOP;
+
+            for (UsualPlayer player : players) {
+                if (player.getPosition().destinationRow == player.getMarker().getCoordinates().getVertical()) {
+                    return player.getPosition().getOwner();
+                }
             }
-            if (QuoridorPlayer.BOTTOM.getMarker().getCoordinates().getVertical() == 0) {
-                return Player.BOTTOM;
-            }
-            if (fox != null && fox.getMarker().getCoordinates().equals(fox.getTarget())) {
-                return Player.FOX;
+
+            if (fox.getMarker().getCoordinates().equals(fox.getTarget())) {
+                return Owner.FOX;
             }
         }
 
-        // todo вообще ужас! за это точно надо надавать...
         throw new NoWinnerException("There is no winner");
     }
 
     public void moveMarker(int vertical, int horizontal)
             throws FieldItemException, NoBarriersException {  //TODO странное название у исключения, возможно есть смысл переименовать в Выход за границу поля, но это не точно
 
-        players.get(currentPlayer).makeMove(vertical, horizontal);
+        players.get(currentPlayer).moveMarker(vertical, horizontal);
         changePlayerTurn();
     }
 
     public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
             throws FieldItemException, NoBarriersException {
 
-        players.get(currentPlayer).makeMove(vertical, horizontal, position);
+        players.get(currentPlayer).placeBarrier(vertical, horizontal, position);
         changePlayerTurn();
     }
 
@@ -173,20 +149,20 @@ public class Quoridor {
 
         if (isEnd()) return;
 
-        if (fox != null && step % foxFrequency == 0) {
+        if (step % foxFrequency == 0 && fox != null) {
             fox.makeMove();
             if (isEnd()) return;
         }
 
         if (step == foxTime) {
-            fox = new Fox(field);
+            fox = new Fox(field, players);
         }
 
         step++;
 
         if (players.get(currentPlayer).isBot()) {
-            players.get(currentPlayer).makeBotMove();
-            if (isEnd()) return;
+            players.get(currentPlayer).makeMove();
+//            if (isEnd()) return;
             changePlayerTurn();
         }
     }

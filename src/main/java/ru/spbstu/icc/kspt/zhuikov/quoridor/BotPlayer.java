@@ -1,23 +1,35 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
 import java.util.Stack;
 
-public class BotPlayer extends Player {
+public class BotPlayer extends UsualPlayer {
 
-    private PlayerPosition position;
-    private int barriersNumber = 10; // todo ...
     private int destinationRow;
-    private HumanPlayer opponent;
+    private UsualPlayer opponent;
 
-    public BotPlayer(QuoridorField field, PlayerPosition position, Owner owner, HumanPlayer opponent) {
+    public BotPlayer(QuoridorField field, PlayerPosition position, UsualPlayer opponent) {
+        bot = true;
         this.field = field;
         this.position = position;
         this.destinationRow = position.destinationRow;
         this.opponent = opponent;
-        marker = new Marker(position.initialVertical, position.initialHorizontal, owner);
+        marker = new Marker(position.initialVertical, position.initialHorizontal, position.owner);
+        field.setItem(marker);
+    }
+
+    @Override
+    public void moveMarker(int vertical, int horizontal) throws FieldItemException {
+//        makeMove();
+    }
+
+    @Override
+    public void placeBarrier(int vertical, int horizontal, BarrierPosition position) throws FieldItemException, NoBarriersException {
+//        makeMove();
     }
 
     public void makeMove() {
@@ -31,9 +43,9 @@ public class BotPlayer extends Player {
 
     private void placeBarrier() {
 
-        Stack<Coordinates> topPath = field.getPathToRow(opponent.getCoordinates(), opponent.getPosition().destinationRow);
-        Coordinates between = new Coordinates((topPath.peek().getVertical() + opponent.getCoordinates().getVertical()) / 2,
-                (topPath.peek().getHorizontal() + opponent.getCoordinates().getHorizontal()) / 2);
+        Stack<Coordinates> topPath = field.getPathToRow(opponent.getMarker().getCoordinates(), opponent.getPosition().destinationRow);
+        Coordinates between = new Coordinates((topPath.peek().getVertical() + opponent.getMarker().getCoordinates().getVertical()) / 2,
+                (topPath.peek().getHorizontal() + opponent.getMarker().getCoordinates().getHorizontal()) / 2);
         double rand = Math.random();
         try {
             if (rand < 0.5) {
@@ -49,12 +61,6 @@ public class BotPlayer extends Player {
             moveMarker();
         }
 
-    }
-
-    private void setBarrier(int vertical, int horizontal, BarrierPosition position) {
-
-        field.setItem(new Barrier(vertical, horizontal, position));
-        barriersNumber--;
     }
 
     private void moveMarker() {
@@ -76,5 +82,4 @@ public class BotPlayer extends Player {
         }
         setMarker(path.peek().getVertical(), path.peek().getHorizontal());
     }
-
 }
