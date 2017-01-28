@@ -2,13 +2,12 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor.console;
 
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 import java.util.Scanner;
 
 public class ConsoleGame {
 
-    private static Quoridor game = new Quoridor(2, false);
+    private static Quoridor game = new Quoridor(false);
     private static ConsoleDrawer drawer = new ConsoleDrawer(game);
 
     public static void main(String[] args) {
@@ -21,9 +20,8 @@ public class ConsoleGame {
     public void launch() {
 
         Scanner in = new Scanner(System.in);
-        drawer.drawPlayerInformation(Player.TOP);
+        drawer.drawPlayerInformation();
         drawer.drawField();
-        drawer.drawPlayerInformation(Player.BOTTOM);
         drawer.drawTurn();
         while (!game.isEnd()) {
 
@@ -51,9 +49,8 @@ public class ConsoleGame {
             }
 
             System.out.println();
-            drawer.drawPlayerInformation(Player.TOP);
+            drawer.drawPlayerInformation();
             drawer.drawField();
-            drawer.drawPlayerInformation(Player.BOTTOM);
             drawer.drawTurn();
         }
 

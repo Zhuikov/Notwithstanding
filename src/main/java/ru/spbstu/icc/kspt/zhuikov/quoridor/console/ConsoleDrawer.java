@@ -6,10 +6,19 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoWinnerException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.RetPlayer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConsoleDrawer {
 
     private Quoridor game = null;
+    private static final Map<Owner, String> positions = new HashMap<Owner, String>() {{
+        put(Owner.BOTTOM, "BOTTOM");
+        put(Owner.TOP, "TOP");
+        put(Owner.FOX, "FOX");
+    }};
 
     public ConsoleDrawer(Quoridor game) {
         this.game = game;
@@ -44,21 +53,22 @@ public class ConsoleDrawer {
 
     }
 
-    public void drawPlayerInformation(Player player) {
+    public void drawPlayerInformation() {
 
-        System.out.println(player.name() + " " + game.getPlayerInformation(player).getBarrierNumber());
+        for (RetPlayer player : game.getPlayers()) {
+            System.out.println(positions.get(player.getPosition().getOwner()) + " player has " + player.getBarriersNumber() + " barriers");
+        }
     }
 
     public void drawTurn() {
 
-        System.out.print(game.getCurrentPlayer().name() + " player's turn: ");
+        System.out.print(positions.get(game.getCurrentPlayer().getPosition().getOwner()) + " player turn");
     }
 
     public void drawWinner() {
 
         try {
-            Player winner = game.getWinner();
-            System.out.println(winner + " player won!");
+            System.out.println(positions.get(game.getWinner()) + " won!");
         } catch (NoWinnerException e ) {
             System.out.println("why did you call me?");
         }

@@ -67,7 +67,7 @@ public class QuoridorField {
 
         //TODO к примеру, здесь был бы get(), он, по идее, безопаснее
 
-        return field[vertical][horizontal].item;  // todo мб return new ...
+        return field[vertical][horizontal].item;
     }
 
     public CellColor getColor(int vertical, int horizontal) {
@@ -80,73 +80,6 @@ public class QuoridorField {
 
     public int getSize() {
         return size;
-    }
-
-    /**
-     * Возвращает кратчайший путь (в координатах) из заданной позиции до заданного ряда.
-     * Если нельзя пройти, вернется пустой стек.
-     * @param marker - координаты, из которых ищется путь
-     * @param rowNumber - номер ряда (строки)
-     */
-    public Stack<Coordinates> getPathToRow(Coordinates marker, int rowNumber) {
-
-        if (marker.getVertical() == rowNumber) {
-            Stack<Coordinates> coordinates = new Stack<>();
-            coordinates.add(getNeighbours(marker).get(0));
-            return coordinates;
-        }
-
-        class Vertex {
-            private Coordinates coordinates;
-            private Vertex from;
-
-            private Vertex(Coordinates coordinates, Vertex from) {
-                this.coordinates = coordinates;
-                this.from = from;
-            }
-        }
-
-        boolean used[][] = new boolean[realSize][realSize];
-        Queue<Vertex> queue = new LinkedList<>();
-        List<Vertex> usedVertexes = new ArrayList<>();
-        Stack<Coordinates> path = new Stack<>();
-
-        queue.add(new Vertex(marker, null));
-
-        while (!queue.isEmpty()) {
-
-//          for (Coordinates coordinates : queue) {
-//              System.out.print(coordinates + " ");
-//          }
-//          System.out.println();
-
-            if (queue.element().coordinates.getVertical() == rowNumber) {
-                Vertex vertex = queue.element();
-                while (vertex.from != null) {
-                    path.add(vertex.coordinates);
-                    vertex = vertex.from;
-                }
-                return path;
-            }
-
-            for (final Coordinates neighbour : getNeighbours(queue.element().coordinates)) {
-                try {
-                    if (!used[neighbour.getVertical()][neighbour.getHorizontal()] &&   // todo: шлифануть бы тут
-                            getItem((queue.element().coordinates.getVertical() + neighbour.getVertical()) / 2,
-                                    (queue.element().coordinates.getHorizontal() + neighbour.getHorizontal()) / 2).getType() != ItemType.BARRIER &&
-                            !queue.contains(new Vertex(neighbour, queue.element()))) {
-                                    //Coordinates(neighbour.getVertical(), neighbour.getHorizontal()))) {
-                        queue.add(new Vertex(neighbour, queue.element())); //neighbour
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) { }
-            }
-
-            used[queue.element().coordinates.getVertical()][queue.element().coordinates.getHorizontal()] = true;
-            usedVertexes.add(queue.element());
-            queue.remove();
-        }
-
-        return path;
     }
 
     /**

@@ -1,17 +1,14 @@
 package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
-// todo пусть тесты покрывают всю логику
 
+import org.junit.Ignore;
 import org.junit.Test;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.HumanPlayer;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Player;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Barrier;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,7 +38,7 @@ public class BarrierTest {
     public void testBlackCellSet() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
-        HumanPlayer player = new HumanPlayer(field, PlayerPosition.TOP, Owner.TOP);
+        HumanPlayer player = new HumanPlayer(field, PlayerPosition.TOP);
         player.placeBarrier(2, 8, BarrierPosition.HORIZONTAL);
     }
 
@@ -49,59 +46,54 @@ public class BarrierTest {
     public void testSetBetweenBlackCells() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
-        QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field, false);
-        player.makeMove(7, 12, BarrierPosition.VERTICAL);
+        HumanPlayer player = new HumanPlayer(field, PlayerPosition.BOT);
+        player.placeBarrier(7, 12, BarrierPosition.VERTICAL);
     }
 
-//    @Test(expected = FieldBoundsException.class)
-//    public void testWrongCoordinates() throws FieldItemException, NoBarriersException {
-//
-//        QuoridorField field = new QuoridorField(9);
-//        QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-//        player.createPlayer(field, false);
-//        player.makeMove(0, 1, BarrierPosition.VERTICAL);
-//    }
+    @Test(expected = ImpossibleToSetItemException.class)
+    public void testWrongCoordinates() throws FieldItemException, NoBarriersException {
+
+        QuoridorField field = new QuoridorField(9);
+        HumanPlayer player = new HumanPlayer(field, PlayerPosition.BOT);
+        player.placeBarrier(0, 1, BarrierPosition.VERTICAL);
+    }
 
     @Test(expected = CellIsNotEmptyException.class)
     public void testImpossibleSet() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
-        QuoridorPlayer player = QuoridorPlayer.BOTTOM;
-        player.createPlayer(field, false);
+        HumanPlayer player = new HumanPlayer(field, PlayerPosition.BOT);
 
-        player.makeMove(5, 3, BarrierPosition.VERTICAL);
-        player.makeMove(3, 3, BarrierPosition.VERTICAL);
+        player.placeBarrier(5, 3, BarrierPosition.VERTICAL);
+        player.placeBarrier(3, 3, BarrierPosition.VERTICAL);
     }
 
     @Test (expected = NoBarriersException.class)
     public void testNoBarriers() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
-        QuoridorPlayer player = QuoridorPlayer.TOP;
-        player.createPlayer(field, false);
+        HumanPlayer player =new HumanPlayer(field, PlayerPosition.TOP);
 
         for (int i = 1; i < 16; i+=2) {
-            player.makeMove(1, i, BarrierPosition.VERTICAL); // 8 barriers
+            player.placeBarrier(1, i, BarrierPosition.VERTICAL); // 8 barriers
         }
-        player.makeMove(5, 1, BarrierPosition.VERTICAL);
-        player.makeMove(5, 3, BarrierPosition.VERTICAL);
+        player.placeBarrier(5, 1, BarrierPosition.VERTICAL);
+        player.placeBarrier(5, 3, BarrierPosition.VERTICAL);
 
-        player.makeMove(5, 5, BarrierPosition.VERTICAL);
+        player.placeBarrier(5, 5, BarrierPosition.VERTICAL);
     }
 
     @Test (expected = ImpossibleToSetItemException.class)
+    @Ignore
     public void testPlayerBlock() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);
-        QuoridorPlayer bottom = QuoridorPlayer.BOTTOM;
-        QuoridorPlayer top = QuoridorPlayer.TOP;
-        bottom.createPlayer(field, false);
-        top.createPlayer(field, false);
+        HumanPlayer bottom = new HumanPlayer(field, PlayerPosition.BOT);
+        new HumanPlayer(field, PlayerPosition.TOP);
 
         field.setItem(new Barrier(1, 7, BarrierPosition.VERTICAL));
         field.setItem(new Barrier(1, 9, BarrierPosition.VERTICAL));
 
-        bottom.makeMove(3, 8, BarrierPosition.HORIZONTAL);
+        bottom.placeBarrier(3, 8, BarrierPosition.HORIZONTAL);
     }
 }

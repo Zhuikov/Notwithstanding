@@ -43,9 +43,9 @@ public class BotPlayer extends UsualPlayer {
 
     private void placeBarrier() {
 
-        Stack<Coordinates> topPath = field.getPathToRow(opponent.getMarker().getCoordinates(), opponent.getPosition().destinationRow);
-        Coordinates between = new Coordinates((topPath.peek().getVertical() + opponent.getMarker().getCoordinates().getVertical()) / 2,
-                (topPath.peek().getHorizontal() + opponent.getMarker().getCoordinates().getHorizontal()) / 2);
+        Stack<Coordinates> opponentsPath = getPathToRow(opponent.getMarker().getCoordinates(), opponent.getPosition().destinationRow);
+        Coordinates between = new Coordinates((opponentsPath.peek().getVertical() + opponent.getMarker().getCoordinates().getVertical()) / 2,
+                (opponentsPath.peek().getHorizontal() + opponent.getMarker().getCoordinates().getHorizontal()) / 2);
         double rand = Math.random();
         try {
             if (rand < 0.5) {
@@ -65,7 +65,24 @@ public class BotPlayer extends UsualPlayer {
 
     private void moveMarker() {
 
-        Stack<Coordinates> path = field.getPath(marker.getCoordinates(), new Coordinates(destinationRow, 0));
+        Stack<Coordinates> path = getPathToRow(marker.getCoordinates(), position.destinationRow);
+
+        if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY) {
+            path.pop();
+        }
+        setMarker(path.peek().getVertical(), path.peek().getHorizontal());
+    }
+
+    /**
+     * Возвращает кратчайший путь из точки на поле до заданного ряда.
+     * Длина пути всегда больше либо равна двум.
+     * @param start - координаты точки
+     * @param destinationRow - ряд, до которого ищется путь
+     * @return последовательность координат - кратчайший путь
+     */
+    private Stack<Coordinates> getPathToRow(Coordinates start, int destinationRow) {
+
+        Stack<Coordinates> path = field.getPath(start, new Coordinates(destinationRow, 0));
         int min = 1000000;
         for (int i = 0; i <= field.getSize(); i+=2) {
             if (field.getItem(destinationRow, i).getType() == ItemType.EMPTY) {
@@ -77,9 +94,6 @@ public class BotPlayer extends UsualPlayer {
             }
         }
 
-        if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY) {
-            path.pop();
-        }
-        setMarker(path.peek().getVertical(), path.peek().getHorizontal());
+        return path;
     }
 }
