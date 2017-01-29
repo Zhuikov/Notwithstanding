@@ -29,6 +29,18 @@ public class Coordinates {
     }
 
     @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("[")
+                .append(vertical)
+                .append(" ")
+                .append(horizontal)
+                .append("]");
+        return sb.toString();
+    }
+
+    @Override
     public boolean equals(Object o) {   //TODO однобуквенное имя выглядит не очень
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

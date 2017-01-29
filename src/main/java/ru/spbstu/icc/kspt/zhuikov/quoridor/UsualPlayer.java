@@ -5,9 +5,11 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Barrier;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 // обычный игрок, который хочет дойти до конца (не лиса)
 // м.б. ботом или человеком
@@ -21,6 +23,30 @@ abstract class UsualPlayer extends Player {
 
         field.setItem(new Barrier(vertical, horizontal, position));
         barriersNumber--;
+    }
+
+    /**
+     * Возвращает кратчайший путь из точки на поле до заданного ряда.
+     * Длина пути всегда больше либо равна двум.
+     * @param start - координаты точки
+     * @param destinationRow - ряд, до которого ищется путь
+     * @return стек координат - кратчайший путь
+     */
+    protected Stack<Coordinates> getPathToRow(Coordinates start, int destinationRow) {
+
+        Stack<Coordinates> path = field.getPath(start, new Coordinates(destinationRow, 0));
+        int min = 1000000;
+        for (int i = 0; i <= field.getRealSize(); i+=2) {
+            if (field.getItem(destinationRow, i).getType() == ItemType.EMPTY) {
+                Stack<Coordinates> temp = field.getPath(start, new Coordinates(destinationRow, i));
+                if (temp.size() < min && temp.size() != 0) {
+                    path = temp;
+                    min = path.size();
+                }
+            }
+        }
+
+        return path;
     }
 
     public boolean isBot() { return bot; }
@@ -46,12 +72,59 @@ abstract class UsualPlayer extends Player {
         return possibleMoves;
     }
 
-    abstract public void makeMove();
+    abstract protected void makeMove();
 
-    abstract public void moveMarker(int vertical, int horizontal) throws FieldItemException;
+    abstract protected void moveMarker(int vertical, int horizontal) throws FieldItemException;
 
-    abstract public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
+    abstract protected void placeBarrier(int vertical, int horizontal, BarrierPosition position)
             throws FieldItemException, NoBarriersException;
+
+    void checkBarrierPlace(int vertical, int horizontal, BarrierPosition position) throws FieldItemException {
+
+        if (vertical % 2 == 0 || horizontal % 2 == 0) {
+            throw new ImpossibleToSetItemException("impossible to set barrier here");
+        }
+
+        if (position == BarrierPosition.VERTICAL) {                      //todo что-то сделать
+            for (int i = vertical - Barrier.length + 1; i <= vertical + Barrier.length - 1; i++) {
+                try {
+                    if (field.getItem(i, horizontal).getType() != ItemType.EMPTY) {
+                        throw new CellIsNotEmptyException("impossible to place barrier here");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw new FieldBoundsException("impossible to place barrier here");
+                }
+            }
+
+        } else if (position == BarrierPosition.HORIZONTAL) {
+            for (int i = horizontal - Barrier.length + 1; i <= horizontal + Barrier.length - 1; i++) {
+                try {
+                    if (field.getItem(vertical, i).getType() != ItemType.EMPTY) {
+                        throw new CellIsNotEmptyException("impossible to place barrier here");
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw new FieldBoundsException("impossible to place barrier here");
+                }
+            }
+        }
+
+
+        Barrier probableBarrier = new Barrier(vertical, horizontal, position);
+        field.setItem(probableBarrier);
+
+        for (int i = 0; i < field.getRealSize(); i+=2) {
+            for (int j = 0; j < field.getRealSize(); j+=2) {
+                if (field.getItem(i, j).getType() == ItemType.MARKER && field.getItem(i, j).getOwner() != Owner.FOX) {
+                    if (getPathToRow(new Coordinates(i, j), getPlayerPosition(field.getItem(i, j).getOwner()).destinationRow).empty()) {
+                        field.clearCells(probableBarrier.getCoordinates());
+                        throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
+                    }
+                }
+            }
+        }
+
+        field.clearCells(probableBarrier.getCoordinates());
+    }
 
     void checkMarkerPlace(int vertical, int horizontal) throws FieldItemException {
 
@@ -84,6 +157,17 @@ abstract class UsualPlayer extends Player {
                 (marker.getCoordinates().getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER) {
             throw new ImpossibleToSetItemException("impossible to jump over the barrier");
         }
+    }
+
+    private PlayerPosition getPlayerPosition(Owner owner) {
+
+        for (PlayerPosition position : PlayerPosition.values()) {
+            if (position.getOwner() == owner) {
+                return position;
+            }
+        }
+
+        throw new IllegalArgumentException("there is no PlayerPosition for " + owner);
     }
 
     private boolean jumpOverMarker(int vertical, int horizontal) throws FieldItemException {

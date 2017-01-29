@@ -1,6 +1,5 @@
 package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.HumanPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.PlayerPosition;
@@ -84,7 +83,6 @@ public class BarrierTest {
     }
 
     @Test (expected = ImpossibleToSetItemException.class)
-    @Ignore
     public void testPlayerBlock() throws FieldItemException, NoBarriersException {
 
         QuoridorField field = new QuoridorField(9);

@@ -99,6 +99,22 @@ public class QuoridorField {
                 this.coordinates = coordinates;
                 this.from = from;
             }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (!(o instanceof Vertex)) return false;
+
+                Vertex vertex = (Vertex) o;
+
+                return coordinates != null ? coordinates.equals(vertex.coordinates) : vertex.coordinates == null;
+
+            }
+
+            @Override
+            public int hashCode() {
+                return coordinates != null ? coordinates.hashCode() : 0;
+            }
         }
 
         boolean used[][] = new boolean[realSize][realSize];
@@ -110,12 +126,25 @@ public class QuoridorField {
 
         while (!queue.isEmpty()) {
 
+//            for (Vertex vertex : queue) {
+//                  System.out.print(vertex.coordinates + " ");
+//            }
+//            System.out.println();
+
             if (queue.element().coordinates.equals(dest)) {
                 Vertex vertex = queue.element();
                 while (vertex.from != null) {
                     path.add(vertex.coordinates);
                     vertex = vertex.from;
                 }
+
+//                int i = 0;
+//                for (Coordinates coord : path) {
+//                    System.out.print(i + ") " + coord + " ");
+//                    i++;
+//                }
+//                System.out.println();
+//                System.out.println(path.peek());
                 return path;
             }
 
