@@ -1,11 +1,9 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.CellColor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Barrier;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.Stack;
 
 // обычный игрок, который хочет дойти до конца (не лиса)
 // м.б. ботом или человеком
-abstract class UsualPlayer extends Player {
+abstract public class UsualPlayer extends QuoridorPlayer {
 
     protected PlayerPosition position;
     protected boolean bot;
@@ -72,11 +70,11 @@ abstract class UsualPlayer extends Player {
         return possibleMoves;
     }
 
-    abstract protected void makeMove();
+    abstract public void makeMove() throws NoBarriersException;
 
-    abstract protected void moveMarker(int vertical, int horizontal) throws FieldItemException;
+    abstract public void moveMarker(int vertical, int horizontal) throws FieldItemException;
 
-    abstract protected void placeBarrier(int vertical, int horizontal, BarrierPosition position)
+    abstract public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
             throws FieldItemException, NoBarriersException;
 
     void checkBarrierPlace(int vertical, int horizontal, BarrierPosition position) throws FieldItemException {
@@ -115,7 +113,7 @@ abstract class UsualPlayer extends Player {
         for (int i = 0; i < field.getRealSize(); i+=2) {
             for (int j = 0; j < field.getRealSize(); j+=2) {
                 if (field.getItem(i, j).getType() == ItemType.MARKER && field.getItem(i, j).getOwner() != Owner.FOX) {
-                    if (getPathToRow(new Coordinates(i, j), getPlayerPosition(field.getItem(i, j).getOwner()).destinationRow).empty()) {
+                    if (getPathToRow(new Coordinates(i, j), getPlayerPosition(field.getItem(i, j).getOwner()).getDestinationRow()).empty()) {
                         field.clearCells(probableBarrier.getCoordinates());
                         throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
                     }

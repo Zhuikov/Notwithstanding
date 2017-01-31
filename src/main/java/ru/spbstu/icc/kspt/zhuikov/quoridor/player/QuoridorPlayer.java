@@ -1,9 +1,10 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Empty;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Marker;
 
-abstract public class Player {
+abstract public class QuoridorPlayer {
 
     protected Marker marker;
     protected QuoridorField field;

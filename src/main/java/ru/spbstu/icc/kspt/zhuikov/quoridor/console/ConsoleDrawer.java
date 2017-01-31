@@ -3,10 +3,9 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor.console;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.CellColor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoWinnerException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.RetPlayer;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +54,7 @@ public class ConsoleDrawer {
 
     public void drawPlayerInformation() {
 
-        for (RetPlayer player : game.getPlayers()) {
+        for (Player player : game.getPlayers()) {
             System.out.println(positions.get(player.getPosition().getOwner()) + " player has " + player.getBarriersNumber() + " barriers");
         }
     }
@@ -67,11 +66,7 @@ public class ConsoleDrawer {
 
     public void drawWinner() {
 
-        try {
-            System.out.println(positions.get(game.getWinner()) + " won!");
-        } catch (NoWinnerException e ) {
-            System.out.println("why did you call me?");
-        }
+        System.out.println(positions.get(game.getWinner()) + " won!");
     }
 
     public void drawHelp() {

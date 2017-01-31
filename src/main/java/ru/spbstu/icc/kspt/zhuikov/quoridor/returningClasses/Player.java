@@ -1,14 +1,14 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.PlayerPosition;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 
-public class RetPlayer {
+public class Player {
 
-    private int barriersNumber;
-    private PlayerPosition position;
+    private final int barriersNumber;
+    private final PlayerPosition position;
 
-    public RetPlayer(int barriersNumber, PlayerPosition position) {
+    public Player(int barriersNumber, PlayerPosition position) {
         this.barriersNumber = barriersNumber;
         this.position = position;
     }

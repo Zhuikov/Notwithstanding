@@ -1,17 +1,16 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.gui;
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Coordinates;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.PlayerPosition;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoWinnerException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Cell;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.RetPlayer;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -132,14 +131,10 @@ class GamePanel extends JPanel {
                 updateStatusLabel();
                 barrierPanel.updateText();
             } catch (FieldItemException | NoBarriersException e)  {
+                String temp = statusLabel.getText();
                 statusLabel.setText(e.getMessage());
-                pickedBarrier = false;
-                Timer timer = new Timer(1500, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        updateStatusLabel();
-                    }
-                });
+                pickedBarrier = true;
+                Timer timer = new Timer(1500, e1 -> statusLabel.setText(temp));
                 timer.setRepeats(false);
                 timer.start();
               //  barrierPanel.updateText();
@@ -253,20 +248,17 @@ class GamePanel extends JPanel {
                 }
             }
 
-            try {
-                if (game.isEnd()) {
-                    this.removeMouseListener(fieldMouseListener);
-                    barrierPanel.removeListeners();
-                    if (game.getWinner() == Owner.TOP) {
-                        statusLabel.setText("Blue player won!");
-                    } else if (game.getWinner() == Owner.BOTTOM) {
-                        statusLabel.setText("Red player won!");
-                    } else if (game.getWinner() == Owner.FOX) {
-                        statusLabel.setText("Fox won!");
-                    }
+            if (game.isEnd()) {
+                this.removeMouseListener(fieldMouseListener);
+                barrierPanel.removeListeners();
+                if (game.getWinner() == Owner.TOP) {
+                    statusLabel.setText("Blue player won!");
+                } else if (game.getWinner() == Owner.BOTTOM) {
+                    statusLabel.setText("Red player won!");
+                } else if (game.getWinner() == Owner.FOX) {
+                    statusLabel.setText("Fox won!");
                 }
-            } catch (NoWinnerException e) {}
-
+            }
         }
 
         /**
@@ -421,7 +413,7 @@ class GamePanel extends JPanel {
         }
 
         void updateText() {
-            for (RetPlayer player : game.getPlayers()) {
+            for (Player player : game.getPlayers()) {
                 switch (player.getPosition()) {
                     case TOP:
                         topBarriersNumber.setText("Blue has " + player.getBarriersNumber() + " barriers");

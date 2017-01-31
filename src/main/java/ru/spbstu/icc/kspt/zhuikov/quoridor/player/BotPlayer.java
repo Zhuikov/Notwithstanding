@@ -1,6 +1,7 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
@@ -9,29 +10,29 @@ import java.util.Stack;
 
 public class BotPlayer extends UsualPlayer {
 
-    private UsualPlayer opponent;
+    private final UsualPlayer opponent;
 
     public BotPlayer(QuoridorField field, PlayerPosition position, UsualPlayer opponent) {
         bot = true;
         this.opponent = opponent;
         this.field = field;
         this.position = position;
-        marker = new Marker(position.initialVertical, position.initialHorizontal, position.owner);
+        marker = new Marker(position.getInitialVertical(), position.getInitialHorizontal(), position.getOwner());
         field.setItem(marker);
     }
 
     @Override
-    protected void moveMarker(int vertical, int horizontal) throws FieldItemException {
+    public void moveMarker(int vertical, int horizontal) throws FieldItemException {
 //        makeMove();
     }
 
     @Override
-    protected void placeBarrier(int vertical, int horizontal, BarrierPosition position) throws FieldItemException, NoBarriersException {
+    public void placeBarrier(int vertical, int horizontal, BarrierPosition position) throws FieldItemException, NoBarriersException {
 //        makeMove();
     }
 
     @Override
-    public void makeMove() {
+    public void makeMove() throws NoBarriersException {
 
         double rand = Math.random();
         if (rand > 0.47) {
@@ -40,9 +41,13 @@ public class BotPlayer extends UsualPlayer {
 
     }
 
-    private void placeBarrier() {
+    private void placeBarrier() throws NoBarriersException {
 
-        Stack<Coordinates> opponentsPath = getPathToRow(opponent.getMarker().getCoordinates(), opponent.getPosition().destinationRow);
+        if (barriersNumber == 0) {
+            throw new NoBarriersException("you have no barriers", this.position);
+        }
+
+        Stack<Coordinates> opponentsPath = getPathToRow(opponent.getMarker().getCoordinates(), opponent.getPosition().getDestinationRow());
         Coordinates between = new Coordinates((opponentsPath.peek().getVertical() + opponent.getMarker().getCoordinates().getVertical()) / 2,
                 (opponentsPath.peek().getHorizontal() + opponent.getMarker().getCoordinates().getHorizontal()) / 2);
 
@@ -72,7 +77,7 @@ public class BotPlayer extends UsualPlayer {
 
     private void moveMarker() {
 
-        Stack<Coordinates> path = getPathToRow(marker.getCoordinates(), position.destinationRow);
+        Stack<Coordinates> path = getPathToRow(marker.getCoordinates(), position.getDestinationRow());
 
         if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY) {
             path.pop();

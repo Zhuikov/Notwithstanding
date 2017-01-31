@@ -101,7 +101,7 @@ public class SettingsPanel extends JPanel {
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            backButton.setText("d");
+            backButton.setText("a");
         }
 
         @Override

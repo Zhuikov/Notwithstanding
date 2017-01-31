@@ -2,11 +2,12 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoWinnerException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.RetPlayer;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,12 @@ import java.util.List;
 
 public class Quoridor {
 
-    private QuoridorField field = new QuoridorField(9);
+    private final QuoridorField field = new QuoridorField(9);
     private List<UsualPlayer> players = new ArrayList<>();
     private Fox fox;
 
     //TODO возможно есть смысл поменять на enum, с методом nextPlayer();
-    private int currentPlayer;
+    private int currentPlayer = 0;
     private int step = 0;
     private static int foxTime = 20;
     private static int foxFrequency = 10;
@@ -39,14 +40,12 @@ public class Quoridor {
             players.add(humanPlayer1);
         }
 
-        currentPlayer = 0;                     //TODO несколько не очевидная строчка, может логичнее  = 1;
-
     }
 
-    public RetPlayer getCurrentPlayer() {
+    public Player getCurrentPlayer() {
 
         UsualPlayer normalPlayer = players.get(currentPlayer);
-        return new RetPlayer(normalPlayer.getBarriersNumber(), normalPlayer.getPosition());
+        return new Player(normalPlayer.getBarriersNumber(), normalPlayer.getPosition());
     }
 
     public static void setFoxTime(int foxTime) {
@@ -81,22 +80,22 @@ public class Quoridor {
         return new Field(field);
     }
 
-    public List<RetPlayer> getPlayers() {
+    public List<Player> getPlayers() {
 
-        List<RetPlayer> retPlayers = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
 
-        for (UsualPlayer player : players) {
-            retPlayers.add(new RetPlayer(player.getBarriersNumber(), player.getPosition()));
+        for (UsualPlayer player : this.players) {
+            players.add(new Player(player.getBarriersNumber(), player.getPosition()));
         }
 
-        return retPlayers;
+        return players;
     }
 
 
     public boolean isEnd() {              //TODO возможно следует подумать об использование шаблона Наблюдатель
 
         for (UsualPlayer player : players) {
-            if (player.getPosition().destinationRow == player.getMarker().getCoordinates().getVertical()) {
+            if (player.getPosition().getDestinationRow() == player.getMarker().getCoordinates().getVertical()) {
                 return true;
             }
         }
@@ -104,12 +103,12 @@ public class Quoridor {
 
     }
 
-    public Owner getWinner() throws NoWinnerException {   //TODO по-моему, при использование Наблюдателя метод атрофируется
+    public Owner getWinner(){   //TODO по-моему, при использование Наблюдателя метод атрофируется
 
         if (isEnd()) {
 
             for (UsualPlayer player : players) {
-                if (player.getPosition().destinationRow == player.getMarker().getCoordinates().getVertical()) {
+                if (player.getPosition().getDestinationRow() == player.getMarker().getCoordinates().getVertical()) {
                     return player.getPosition().getOwner();
                 }
             }
@@ -119,11 +118,11 @@ public class Quoridor {
             }
         }
 
-        throw new NoWinnerException("There is no winner");
+        return Owner.NOBODY;
     }
 
     public void moveMarker(int vertical, int horizontal)
-            throws FieldItemException, NoBarriersException {  //TODO странное название у исключения, возможно есть смысл переименовать в Выход за границу поля, но это не точно
+            throws FieldItemException, NoBarriersException {
 
         players.get(currentPlayer).moveMarker(vertical, horizontal);
         changePlayerTurn();

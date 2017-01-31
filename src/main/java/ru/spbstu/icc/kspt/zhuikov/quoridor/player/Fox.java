@@ -1,18 +1,16 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Empty;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Marker;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
 import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
 
-public class Fox extends Player {
+public class Fox extends QuoridorPlayer {
 
-    private Marker target;
+    private final Marker target;
 
     public Fox(QuoridorField field, List<UsualPlayer> playerList) {
 

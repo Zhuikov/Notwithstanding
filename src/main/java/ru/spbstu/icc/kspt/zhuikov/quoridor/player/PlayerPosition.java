@@ -1,4 +1,4 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
@@ -8,10 +8,10 @@ public enum PlayerPosition {
     TOP(0, 8, 16, Owner.TOP),
     BOT(16, 8, 0, Owner.BOTTOM);
 
-    int initialVertical;
-    int initialHorizontal;
-    int destinationRow;
-    Owner owner;
+    private final int initialVertical;
+    private final int initialHorizontal;
+    private final int destinationRow;
+    private final Owner owner;
 
     PlayerPosition(int initialVertical, int initialHorizontal, int destinationRow, Owner owner) {
         this.initialVertical = initialVertical;
@@ -21,4 +21,16 @@ public enum PlayerPosition {
     }
 
     public Owner getOwner() { return owner; }
+
+    public int getInitialVertical() {
+        return initialVertical;
+    }
+
+    public int getInitialHorizontal() {
+        return initialHorizontal;
+    }
+
+    public int getDestinationRow() {
+        return destinationRow;
+    }
 }

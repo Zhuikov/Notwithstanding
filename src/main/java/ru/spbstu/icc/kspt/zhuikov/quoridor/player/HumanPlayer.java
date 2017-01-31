@@ -1,6 +1,7 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
@@ -8,14 +9,14 @@ public class HumanPlayer extends UsualPlayer {
 
     public HumanPlayer(QuoridorField field, PlayerPosition position) {
         bot = false;
-        this.marker = new Marker(position.initialVertical, position.initialHorizontal, position.owner);
+        this.marker = new Marker(position.getInitialVertical(), position.getInitialHorizontal(), position.getOwner());
         field.setItem(marker);
         this.field = field;
         this.position = position;
     }
 
     @Override
-    protected void makeMove() {}
+    public void makeMove() {}
 
     @Override
     public void moveMarker(int vertical, int horizontal) throws FieldItemException {
@@ -28,7 +29,7 @@ public class HumanPlayer extends UsualPlayer {
     public void placeBarrier(int vertical, int horizontal, BarrierPosition position) throws FieldItemException, NoBarriersException {
 
         if (barriersNumber == 0) {
-            throw new NoBarriersException("you have no barriers");       //TODO можно ещё передать у кого из игроков
+            throw new NoBarriersException("you have no barriers", this.position);
         }
 
         checkBarrierPlace(vertical, horizontal, position);

@@ -1,8 +1,6 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.items;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Coordinates;
-
 public class Marker extends OneCellItem {
 
     public Marker(int vertical, int horizontal) {

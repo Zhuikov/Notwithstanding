@@ -10,7 +10,7 @@ public class QuoridorField {
 
     private final int realSize;
     private final int size;
-    private Cell[][] field;    //TODO почему бы не использовать, какую-нибудь коллекцию? (конечно банально, но например, List<List<~>>)
+    private Cell[][] field;
 
     public QuoridorField(int size) {
 
@@ -65,8 +65,6 @@ public class QuoridorField {
 
     public Item getItem(int vertical, int horizontal) {
 
-        //TODO к примеру, здесь был бы get(), он, по идее, безопаснее
-
         return field[vertical][horizontal].item;
     }
 
@@ -119,7 +117,6 @@ public class QuoridorField {
 
         boolean used[][] = new boolean[realSize][realSize];
         Queue<Vertex> queue = new LinkedList<>();
-        List<Vertex> usedVertexes = new ArrayList<>();
         Stack<Coordinates> path = new Stack<>();
 
         queue.add(new Vertex(init, null));
@@ -154,14 +151,12 @@ public class QuoridorField {
                             getItem((queue.element().coordinates.getVertical() + neighbour.getVertical()) / 2,
                                     (queue.element().coordinates.getHorizontal() + neighbour.getHorizontal()) / 2).getType() != ItemType.BARRIER &&
                             !queue.contains(new Vertex(neighbour, queue.element()))) {
-                        //Coordinates(neighbour.getVertical(), neighbour.getHorizontal()))) {
-                        queue.add(new Vertex(neighbour, queue.element())); //neighbour
+                        queue.add(new Vertex(neighbour, queue.element()));
                     }
                 } catch (ArrayIndexOutOfBoundsException e) { }
             }
 
             used[queue.element().coordinates.getVertical()][queue.element().coordinates.getHorizontal()] = true;
-            usedVertexes.add(queue.element());
             queue.remove();
         }
 

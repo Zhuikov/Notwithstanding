@@ -1,10 +1,10 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.items;
 
 
 public class Coordinates {
 
-    private int vertical;
-    private int horizontal;
+    private final int vertical;
+    private final int horizontal;
 
     public static double pathBetween(Coordinates coordinates1, Coordinates coordinates2) {
 
@@ -41,13 +41,13 @@ public class Coordinates {
     }
 
     @Override
-    public boolean equals(Object o) {   //TODO однобуквенное имя выглядит не очень
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         Coordinates that = (Coordinates) o;
 
-        if (vertical != that.vertical) return false;  //TODO как-то криво, предлагаю объединить в одно return условие;
+        if (vertical != that.vertical) return false;
         return horizontal == that.horizontal;
     }
 

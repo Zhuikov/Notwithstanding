@@ -3,14 +3,11 @@ package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
 
 import org.junit.Test;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.CellColor;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Coordinates;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Barrier;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
-
-import java.util.LinkedList;
-import java.util.Queue;
 
 import static org.junit.Assert.assertEquals;
 
