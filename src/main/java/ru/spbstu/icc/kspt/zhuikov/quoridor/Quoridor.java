@@ -95,11 +95,11 @@ public class Quoridor {
     public boolean isEnd() {              //TODO возможно следует подумать об использование шаблона Наблюдатель
 
         for (UsualPlayer player : players) {
-            if (player.getPosition().getDestinationRow() == player.getMarker().getCoordinates().getVertical()) {
+            if (player.getPosition().getDestinationRow() == player.getCoordinates().getVertical()) {
                 return true;
             }
         }
-        return fox != null && fox.getMarker().getCoordinates().equals(fox.getTarget());
+        return fox != null && fox.getCoordinates().equals(fox.getTarget());
 
     }
 
@@ -108,12 +108,12 @@ public class Quoridor {
         if (isEnd()) {
 
             for (UsualPlayer player : players) {
-                if (player.getPosition().getDestinationRow() == player.getMarker().getCoordinates().getVertical()) {
+                if (player.getPosition().getDestinationRow() == player.getCoordinates().getVertical()) {
                     return player.getPosition().getOwner();
                 }
             }
 
-            if (fox.getMarker().getCoordinates().equals(fox.getTarget())) {
+            if (fox.getCoordinates().equals(fox.getTarget())) {
                 return Owner.FOX;
             }
         }

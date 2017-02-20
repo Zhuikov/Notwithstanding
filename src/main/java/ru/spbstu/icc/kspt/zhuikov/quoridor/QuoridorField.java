@@ -10,7 +10,7 @@ public class QuoridorField {
 
     private final int realSize;
     private final int size;
-    private Cell[][] field;
+    private Cell[][] field; // todo пусть будет Item[][]
 
     public QuoridorField(int size) {
 
@@ -20,9 +20,9 @@ public class QuoridorField {
         for (int i = 0; i <= realSize - 1; i++) {
             for (int j = 0; j <= realSize - 1; j++) {
                 if ((i % 2 == 0) && (j % 2 == 0)) {
-                    field[i][j] = new Cell(new Empty(i, j));
+                    field[i][j] = new Cell(new Empty());
                 } else {
-                    field[i][j] = new Cell(new Empty(i, j));
+                    field[i][j] = new Cell(new Empty());
                 }
             }
         }
@@ -36,24 +36,23 @@ public class QuoridorField {
         }
     }
 
-    public void setItem(OneCellItem item) {
-        field[item.getCoordinates().getVertical()][item.getCoordinates().getHorizontal()].item = item;
+    public void setItem(Item item, Coordinates destination) {
+        field[destination.getVertical()][destination.getHorizontal()].item = item;
     }
 
-    public void setItem(ManyCellsItem item) {
-        for (Coordinates coordinates : item.getCoordinates()) {
-            field[coordinates.getVertical()][coordinates.getHorizontal()].item = item;
+    public void setBarrier(Barrier barrier) {
+        for (Coordinates coordinates : barrier.getCoordinates()) {
+            field[coordinates.getVertical()][coordinates.getHorizontal()].item = barrier;
         }
     }
 
     public void clearCell(int vertical, int horizontal) {
-        field[vertical][horizontal].item = new Empty(vertical, horizontal);
+        field[vertical][horizontal].item = new Empty();
     }
 
     public void clearCells(List<Coordinates> coordinatesList) {
         for (Coordinates coordinates : coordinatesList) {
-            field[coordinates.getVertical()][coordinates.getHorizontal()].item
-                    = new Empty(coordinates.getVertical(), coordinates.getHorizontal());
+            field[coordinates.getVertical()][coordinates.getHorizontal()].item = new Empty();
         }
     }
 

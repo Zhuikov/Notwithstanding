@@ -3,14 +3,11 @@ package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
 
 import org.junit.Test;
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.HumanPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Barrier;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Marker;
 
 import static org.junit.Assert.assertEquals;
 
@@ -81,8 +78,8 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         HumanPlayer player = new HumanPlayer(field, PlayerPosition.BOT);
-        Barrier barrier = new Barrier(15, 8, BarrierPosition.HORIZONTAL);
-        field.setItem(barrier);
+        Barrier barrier = new Barrier(new Coordinates(15, 8), BarrierPosition.HORIZONTAL);
+        field.setBarrier(barrier);
 
         player.moveMarker(14, 8);
     }
@@ -92,7 +89,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         HumanPlayer player = new HumanPlayer(field, PlayerPosition.BOT);
-        field.setItem(new Marker(14, 8));
+        field.setItem(new Marker(Owner.NOBODY), new Coordinates(14, 8));
 
         player.moveMarker(12, 8);
         assertEquals(ItemType.MARKER, field.getItem(12, 8).getType());
@@ -103,7 +100,7 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         HumanPlayer player = new HumanPlayer(field, PlayerPosition.BOT);
-        field.setItem(new Marker(14, 8));
+        field.setItem(new Marker(Owner.NOBODY), new Coordinates(14, 8));
 
         player.moveMarker(14, 10);
         assertEquals(ItemType.MARKER, field.getItem(14, 10).getType());
@@ -114,8 +111,8 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         HumanPlayer player = new HumanPlayer(field, PlayerPosition.BOT);
-        field.setItem(new Marker(14, 8));
-        field.setItem(new Barrier(13, 8, BarrierPosition.HORIZONTAL));
+        field.setItem(new Marker(Owner.NOBODY), new Coordinates(14, 8));
+        field.setBarrier(new Barrier(new Coordinates(13, 8), BarrierPosition.HORIZONTAL));
 
         player.moveMarker(12, 8);
     }
@@ -125,8 +122,8 @@ public class MarkerTest {
 
         QuoridorField field = new QuoridorField(9);
         HumanPlayer player = new HumanPlayer(field, PlayerPosition.BOT);
-        field.setItem(new Marker(14, 8));
-        field.setItem(new Barrier(15, 9, BarrierPosition.VERTICAL));
+        field.setItem(new Marker(Owner.NOBODY), new Coordinates(14, 8));
+        field.setBarrier(new Barrier(new Coordinates(15, 9), BarrierPosition.VERTICAL));
 
         player.moveMarker(14, 10);
     }

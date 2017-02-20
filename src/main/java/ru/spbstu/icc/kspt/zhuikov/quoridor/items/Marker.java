@@ -1,19 +1,10 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.items;
 
 
-public class Marker extends OneCellItem {
+public class Marker extends Item {
 
-    public Marker(int vertical, int horizontal) {
-        super(vertical, horizontal);
+    public Marker(Owner owner) {
         this.type = ItemType.MARKER;
-    }
-
-    public Marker(int vertical, int horizontal, Owner owner) {
-        this(vertical, horizontal);
         this.owner = owner;
-    }
-
-    public void moveTo(int vertical, int horizontal) {
-        coordinates = new Coordinates(vertical, horizontal);
     }
 }

@@ -1,6 +1,7 @@
 package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
 
 import org.junit.Test;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.HumanPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
@@ -89,8 +90,8 @@ public class BarrierTest {
         HumanPlayer bottom = new HumanPlayer(field, PlayerPosition.BOT);
         new HumanPlayer(field, PlayerPosition.TOP);
 
-        field.setItem(new Barrier(1, 7, BarrierPosition.VERTICAL));
-        field.setItem(new Barrier(1, 9, BarrierPosition.VERTICAL));
+        field.setBarrier(new Barrier(new Coordinates(1, 7), BarrierPosition.VERTICAL));
+        field.setBarrier(new Barrier(new Coordinates(1, 9), BarrierPosition.VERTICAL));
 
         bottom.placeBarrier(3, 8, BarrierPosition.HORIZONTAL);
     }

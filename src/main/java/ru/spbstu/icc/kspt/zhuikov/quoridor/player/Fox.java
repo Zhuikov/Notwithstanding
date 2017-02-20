@@ -10,30 +10,31 @@ import java.util.Stack;
 
 public class Fox extends QuoridorPlayer {
 
-    private final Marker target;
+    private final UsualPlayer target;
 
     public Fox(QuoridorField field, List<UsualPlayer> playerList) {
 
+        owner = Owner.FOX;
         this.field = field;
         int x, y;
         do {
             x = (int) (Math.random() * 10) % field.getSize() * 2;
             y = (int) (Math.random() * 10) % field.getSize() * 2;
         } while (field.getItem(x, y).getType() != ItemType.EMPTY);
-        marker = new Marker(x, y, Owner.FOX);
-        field.setItem(marker);
+        markerCoordinates = new Coordinates(x, y);
+        field.setItem(new Marker(owner), markerCoordinates);
 
         int rand = (int) (Math.random() * 10) % playerList.size();
         System.out.println("fox rand: " + rand);
-        target = playerList.get(rand).getMarker();
+        target = playerList.get(rand);
     }
 
     public boolean makeMove() {
 
         Coordinates c = getNextCoordinates();
-        field.setItem(new Empty(marker.getCoordinates().getVertical(), marker.getCoordinates().getHorizontal()));
-        marker.moveTo(c.getVertical(), c.getHorizontal());
-        field.setItem(marker);
+        field.setItem(new Empty(), markerCoordinates);
+        markerCoordinates = c;
+        field.setItem(new Marker(owner), markerCoordinates);
 
         return c.equals(target.getCoordinates());
     }
@@ -44,8 +45,8 @@ public class Fox extends QuoridorPlayer {
 
     private Coordinates getNextCoordinates() {
 
-        Stack<Coordinates> path = field.getPath(marker.getCoordinates(), target.getCoordinates());
-        Coordinates c = marker.getCoordinates();
+        Stack<Coordinates> path = field.getPath(markerCoordinates, target.getCoordinates());
+        Coordinates c = markerCoordinates;
 
         try {
             if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY

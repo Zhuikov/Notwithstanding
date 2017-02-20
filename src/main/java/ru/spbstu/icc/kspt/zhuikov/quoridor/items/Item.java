@@ -7,7 +7,7 @@ abstract public class Item {
 
     protected Owner owner = Owner.NOBODY;
 
-    public Item() {}
+    Item() {}
 
     public ItemType getType() { return type; }
 

@@ -72,10 +72,10 @@ public class FieldTest {
         QuoridorField field = new QuoridorField(9);
 
         for (int i = 1; i <= 13; i+=4) {
-            field.setItem(new Barrier(i, 7, BarrierPosition.VERTICAL));
+            field.setBarrier(new Barrier(new Coordinates(i, 7), BarrierPosition.VERTICAL));
         }
-        field.setItem(new Barrier(15, 7, BarrierPosition.HORIZONTAL));
-        field.setItem(new Barrier(15, 9, BarrierPosition.VERTICAL));
+        field.setBarrier(new Barrier(new Coordinates(15, 7), BarrierPosition.HORIZONTAL));
+        field.setBarrier(new Barrier(new Coordinates(15, 9), BarrierPosition.VERTICAL));
 
         assertEquals(false, field.getPath(new Coordinates(16, 8), new Coordinates(0, 0)).empty());
         assertEquals(true, field.getPath(new Coordinates(0, 16), new Coordinates(0, 0)).empty());
@@ -87,10 +87,10 @@ public class FieldTest {
 
         QuoridorField field = new QuoridorField(9);
         for (int i = 1; i <= 13; i+=4) {
-            field.setItem(new Barrier(7, i, BarrierPosition.HORIZONTAL));
+            field.setBarrier(new Barrier(new Coordinates(7, i), BarrierPosition.HORIZONTAL));
         }
-        field.setItem(new Barrier(7, 15, BarrierPosition.VERTICAL));
-        field.setItem(new Barrier(5, 15, BarrierPosition.HORIZONTAL));
+        field.setBarrier(new Barrier(new Coordinates(7, 15), BarrierPosition.VERTICAL));
+        field.setBarrier(new Barrier(new Coordinates(5, 15), BarrierPosition.HORIZONTAL));
 
         assertEquals(false, field.getPath(new Coordinates(0, 4), new Coordinates(2, 16)).empty());
         assertEquals(true, field.getPath(new Coordinates(0, 4), new Coordinates(10, 10)).empty());
@@ -101,9 +101,9 @@ public class FieldTest {
     public void testPathBetweenCells4() throws FieldItemException { // закрытая фишка
 
         QuoridorField field = new QuoridorField(9);
-        field.setItem(new Barrier(15, 7, BarrierPosition.VERTICAL));
-        field.setItem(new Barrier(15, 9, BarrierPosition.VERTICAL));
-        field.setItem(new Barrier(13, 8, BarrierPosition.HORIZONTAL));
+        field.setBarrier(new Barrier(new Coordinates(15, 7), BarrierPosition.VERTICAL));
+        field.setBarrier(new Barrier(new Coordinates(15, 9), BarrierPosition.VERTICAL));
+        field.setBarrier(new Barrier(new Coordinates(13, 8), BarrierPosition.HORIZONTAL));
 
         assertEquals(true, field.getPath(new Coordinates(16, 8), new Coordinates(6, 8)).empty());
         assertEquals(true, field.getPath(new Coordinates(16, 8), new Coordinates(16, 8)).empty());

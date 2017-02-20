@@ -9,8 +9,9 @@ public class HumanPlayer extends UsualPlayer {
 
     public HumanPlayer(QuoridorField field, PlayerPosition position) {
         bot = false;
-        this.marker = new Marker(position.getInitialVertical(), position.getInitialHorizontal(), position.getOwner());
-        field.setItem(marker);
+        owner = position.getOwner();
+        markerCoordinates = new Coordinates(position.getInitialVertical(), position.getInitialHorizontal());
+        field.setItem(new Marker(owner), markerCoordinates);
         this.field = field;
         this.position = position;
     }
@@ -22,7 +23,7 @@ public class HumanPlayer extends UsualPlayer {
     public void moveMarker(int vertical, int horizontal) throws FieldItemException {
 
         checkMarkerPlace(vertical, horizontal);
-        setMarker(vertical, horizontal);
+        setMarker(new Coordinates(vertical, horizontal), owner);
     }
 
     @Override

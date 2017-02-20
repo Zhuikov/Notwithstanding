@@ -1,10 +1,9 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.items;
 
 
-public class Empty extends OneCellItem {
+public class Empty extends Item {
 
-    public Empty(int vertical, int horizontal) {
-        super(vertical, horizontal);
+    public Empty() {
         this.type = ItemType.EMPTY;
     }
 

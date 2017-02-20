@@ -14,11 +14,12 @@ public class BotPlayer extends UsualPlayer {
 
     public BotPlayer(QuoridorField field, PlayerPosition position, UsualPlayer opponent) {
         bot = true;
+        owner = position.getOwner();
         this.opponent = opponent;
         this.field = field;
         this.position = position;
-        marker = new Marker(position.getInitialVertical(), position.getInitialHorizontal(), position.getOwner());
-        field.setItem(marker);
+        markerCoordinates = new Coordinates(position.getInitialVertical(), position.getInitialHorizontal());
+        field.setItem(new Marker(owner), markerCoordinates);
     }
 
     @Override
@@ -53,9 +54,9 @@ public class BotPlayer extends UsualPlayer {
             throw new NoBarriersException("you have no barriers", this.position);
         }
 
-        Stack<Coordinates> opponentsPath = getPathToRow(opponent.getMarker().getCoordinates(), opponent.getPosition().getDestinationRow());
-        Coordinates between = new Coordinates((opponentsPath.peek().getVertical() + opponent.getMarker().getCoordinates().getVertical()) / 2,
-                (opponentsPath.peek().getHorizontal() + opponent.getMarker().getCoordinates().getHorizontal()) / 2);
+        Stack<Coordinates> opponentsPath = getPathToRow(opponent.getCoordinates(), opponent.getPosition().getDestinationRow());
+        Coordinates between = new Coordinates((opponentsPath.peek().getVertical() + opponent.getCoordinates().getVertical()) / 2,
+                (opponentsPath.peek().getHorizontal() + opponent.getCoordinates().getHorizontal()) / 2);
 
         double rand = Math.random();
 
@@ -83,12 +84,13 @@ public class BotPlayer extends UsualPlayer {
 
     private void moveMarker() {
 
-        Stack<Coordinates> path = getPathToRow(marker.getCoordinates(), position.getDestinationRow());
+        Stack<Coordinates> path = getPathToRow(markerCoordinates, position.getDestinationRow());
 
         if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY) {
             path.pop();
         }
-        setMarker(path.peek().getVertical(), path.peek().getHorizontal());
+        setMarker(path.peek(), owner);
+
     }
 
 }
