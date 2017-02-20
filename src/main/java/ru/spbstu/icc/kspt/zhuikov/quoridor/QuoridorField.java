@@ -20,24 +20,18 @@ public class QuoridorField {
         for (int i = 0; i <= realSize - 1; i++) {
             for (int j = 0; j <= realSize - 1; j++) {
                 if ((i % 2 == 0) && (j % 2 == 0)) {
-                    field[i][j] = new Cell(CellColor.BLACK, new Empty(i, j));
+                    field[i][j] = new Cell(new Empty(i, j));
                 } else {
-                    field[i][j] = new Cell(CellColor.WHITE, new Empty(i, j));
+                    field[i][j] = new Cell(new Empty(i, j));
                 }
             }
         }
     }
 
-    public QuoridorField() {
-        this(9);
-    }
-
     private class Cell {
-        private CellColor color;
         private Item item;
 
-        Cell(CellColor color, Item item) {
-            this.color = color;
+        Cell(Item item) {
             this.item = item;
         }
     }
@@ -66,10 +60,6 @@ public class QuoridorField {
     public Item getItem(int vertical, int horizontal) {
 
         return field[vertical][horizontal].item;
-    }
-
-    public CellColor getColor(int vertical, int horizontal) {
-        return field[vertical][horizontal].color;
     }
 
     public int getRealSize() {  //TODO не вижу смысла, в слове Real, юезр поля не должен знать, что тут творится (у тебя же нет другого метода получения размера поля), мне бы больше понравился простой getSize()

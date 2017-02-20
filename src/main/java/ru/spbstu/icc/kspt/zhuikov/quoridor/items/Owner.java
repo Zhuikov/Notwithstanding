@@ -6,7 +6,5 @@ public enum Owner {
     TOP,
     BOTTOM,
     FOX,
-    RIGHT,
-    LEFT,
     NOBODY
 }

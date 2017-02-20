@@ -1,7 +1,6 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.CellColor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
@@ -136,8 +135,8 @@ abstract public class UsualPlayer extends QuoridorPlayer {
             throw new ImpossibleToSetItemException("impossible to move to the same cell");
         }
 
-        if (field.getColor(vertical, horizontal) == CellColor.WHITE) {
-            throw new ImpossibleToSetItemException("impossible to set marker on white cell");
+        if (vertical % 2 != 0 && horizontal % 2 != 0) {
+            throw new ImpossibleToSetItemException("impossible to set marker on this cell");
         }
 
         if (field.getItem(vertical, horizontal).getType() != ItemType.EMPTY) {

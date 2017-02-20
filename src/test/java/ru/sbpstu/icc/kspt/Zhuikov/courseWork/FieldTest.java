@@ -2,7 +2,6 @@ package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
 
 
 import org.junit.Test;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.CellColor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
@@ -12,17 +11,6 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import static org.junit.Assert.assertEquals;
 
 public class FieldTest {
-
-    @Test
-    public void testInitialization() {
-
-        QuoridorField field = new QuoridorField(9);
-
-        assertEquals(CellColor.BLACK, field.getColor(0, 0));
-        assertEquals(CellColor.WHITE, field.getColor(0, 1));
-        assertEquals(CellColor.WHITE, field.getColor(1, 1));
-        assertEquals(CellColor.BLACK, field.getColor(2, 2));
-    }
 
     @Test
     public void testPathBetweenCells1() {  // пустое поле

@@ -16,7 +16,7 @@ public class Field {
 
         for (int i = 0; i < field.getRealSize(); i++) {
             for (int j = 0; j < field.getRealSize(); j++) {
-                cells[i][j] = new Cell(i, j, field.getItem(i, j).getType(), field.getColor(i, j), field.getItem(i, j).getOwner());
+                cells[i][j] = new Cell(i, j, field.getItem(i, j).getType(), field.getItem(i, j).getOwner());
             }
         }
     }

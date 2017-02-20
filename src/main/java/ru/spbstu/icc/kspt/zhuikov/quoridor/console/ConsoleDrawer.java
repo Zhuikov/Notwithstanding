@@ -1,7 +1,6 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.console;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.CellColor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
@@ -30,7 +29,7 @@ public class ConsoleDrawer {
             for (int j = 0; j < field.getRealSize(); j++) {
                 switch (field.getCell(i, j).getType()) {
                     case EMPTY:
-                        if (field.getCell(i, j).getColor() == CellColor.BLACK) {
+                        if (i % 2 == 0 && j % 2 == 0) {
                             System.out.print("O");
                         } else {
                             System.out.print(" ");

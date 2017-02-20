@@ -32,11 +32,17 @@ public class BotPlayer extends UsualPlayer {
     }
 
     @Override
-    public void makeMove() throws NoBarriersException {
+    public void makeMove()  {
 
         double rand = Math.random();
         if (rand > 0.47) {
-            placeBarrier();
+
+            try {
+                placeBarrier();
+            } catch (NoBarriersException e) {
+                moveMarker();
+            }
+
         } else moveMarker();
 
     }
