@@ -19,14 +19,18 @@ import java.util.List;
 public class Quoridor {
 
     private final QuoridorField field = new QuoridorField(9);
-    private List<UsualPlayer> players = new ArrayList<>();
-    private Fox fox;
+    private final RulesController RC = new RulesController(field);
+    private List<QuoridorPlayer> players = new ArrayList<>();
 
-    //TODO возможно есть смысл поменять на enum, с методом nextPlayer();
     private int currentPlayer = 0;
     private int step = 0;
     private static int foxTime = 20;
     private static int foxFrequency = 10;
+    private static final int startBarrierNumber = 10;
+
+    public static int getStartBarrierNumber() {
+        return startBarrierNumber;
+    }
 
     public Quoridor(boolean bot) {
 
@@ -140,30 +144,30 @@ public class Quoridor {
         return players.get(currentPlayer).getPossibleMoves();
     }
 
-    private void changePlayerTurn() throws FieldItemException, NoBarriersException {
-
-        if (++currentPlayer == players.size()) {
-            currentPlayer = 0;
-        }
-
-        if (isEnd()) return;
-
-        if (step % foxFrequency == 0 && fox != null) {
-            fox.makeMove();
-            if (isEnd()) return;
-        }
-
-        if (step == foxTime) {
-            fox = new Fox(field, players);
-        }
-
-        step++;
-
-        if (players.get(currentPlayer).isBot()) {
-            players.get(currentPlayer).makeMove();
+//    private void changePlayerTurn() throws FieldItemException, NoBarriersException {
+//
+//        if (++currentPlayer == players.size()) {
+//            currentPlayer = 0;
+//        }
+//
+//        if (isEnd()) return;
+//
+//        if (step % foxFrequency == 0 && fox != null) {
+//            fox.makeMove();
 //            if (isEnd()) return;
-            changePlayerTurn();
-        }
-    }
+//        }
+//
+//        if (step == foxTime) {
+//            fox = new Fox(field, players);
+//        }
+//
+//        step++;
+//
+//        if (players.get(currentPlayer).isBot()) {
+//            players.get(currentPlayer).makeMove();
+////            if (isEnd()) return;
+//            changePlayerTurn();
+//        }
+//    }
 
 }
