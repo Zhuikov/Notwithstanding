@@ -11,6 +11,7 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 //TODO мне не хватает документации к коду
@@ -19,10 +20,12 @@ import java.util.List;
 public class Quoridor {
 
     private final QuoridorField field = new QuoridorField(9);
-    private final RulesController RC = new RulesController(field);
+    private final GameLogic GL = new GameLogic(field);
     private List<QuoridorPlayer> players = new ArrayList<>();
+    private Map<PlayerPosition, Integer> barrierNumbers;
 
-    private int currentPlayer = 0;
+//    private int currentPlayer = 0;
+    private QuoridorPlayer currentPlayer;
     private int step = 0;
     private static int foxTime = 20;
     private static int foxFrequency = 10;
@@ -35,6 +38,9 @@ public class Quoridor {
     public Quoridor(boolean bot) {
 
         HumanPlayer humanPlayer = new HumanPlayer(field, PlayerPosition.BOT);
+
+        currentPlayer = humanPlayer;
+
         players.add(humanPlayer);
         if (bot) {
             BotPlayer botPlayer = new BotPlayer(field, PlayerPosition.TOP, humanPlayer);
@@ -125,23 +131,38 @@ public class Quoridor {
         return Owner.NOBODY;
     }
 
-    public void moveMarker(int vertical, int horizontal)
+    public void moveMarker(Coordinates destination)
             throws FieldItemException, NoBarriersException {
 
         players.get(currentPlayer).moveMarker(vertical, horizontal);
         changePlayerTurn();
     }
 
-    public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
+    public void placeBarrier(Coordinates destination, BarrierPosition position)
             throws FieldItemException, NoBarriersException {
+
+        if (barrierNumbers.get(GL.getPlayerPosition(currentPlayer.getOwner())) == 0) {
+            throw new NoBarriersException("you have no barriers", GL.getPlayerPosition(currentPlayer.getOwner()));
+        }
 
         players.get(currentPlayer).placeBarrier(vertical, horizontal, position);
         changePlayerTurn();
     }
 
-    public List<Coordinates> getPossibleMoves() {
+    public List<Coordinates> getPossibleMoves(Coordinates initCoordinates) {
 
-        return players.get(currentPlayer).getPossibleMoves();
+
+        List<Coordinates> possibleMoves = new ArrayList<>();
+        for (int i = initCoordinates.getVertical() - 4; i <= initCoordinates.getVertical() + 4; i+=2) {
+            for (int j = initCoordinates.getHorizontal() - 4; j <= initCoordinates.getHorizontal() + 4; j+=2) {
+                try {
+                    GL.checkMarker(initCoordinates, new Coordinates(i, j));
+                } catch (Exception e) {}
+                possibleMoves.add(new Coordinates(i, j));
+            }
+        }
+
+        return possibleMoves;
     }
 
 //    private void changePlayerTurn() throws FieldItemException, NoBarriersException {

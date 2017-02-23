@@ -25,56 +25,10 @@ abstract public class UsualPlayer extends QuoridorPlayer {
 //        field.setBarrier(new Barrier(new Coordinates(vertical, horizontal), position));
 //        barriersNumber--;
 //    }
-//
-//    /**
-//     * Возвращает кратчайший путь из точки на поле до заданного ряда.
-//     * Длина пути всегда больше либо равна двум.
-//     * @param start - координаты точки
-//     * @param destinationRow - ряд, до которого ищется путь
-//     * @return стек координат - кратчайший путь
-//     */
-//    protected Stack<Coordinates> getPathToRow(Coordinates start, int destinationRow) {
-//
-//        Stack<Coordinates> path = field.getPath(start, new Coordinates(destinationRow, 0));
-//        int min = 10000000;
-//        for (int i = 0; i <= field.getRealSize(); i+=2) {
-//            if (field.getItem(destinationRow, i).getType() == ItemType.EMPTY) {
-//                Stack<Coordinates> temp = field.getPath(start, new Coordinates(destinationRow, i));
-//                if (temp.size() < min && temp.size() != 0) {
-//                    path = temp;
-//                    min = path.size();
-//                }
-//            }
-//        }
-//
-//        return path;
-//    }
-//
+
 //
 //    public int getBarriersNumber() { return barriersNumber; }
-//
-//    public List<Coordinates> getPossibleMoves() {
-//
-//        List<Coordinates> possibleMoves = new ArrayList<>();
-//        for (int i = markerCoordinates.getVertical() - 4; i <= markerCoordinates.getVertical() + 4; i+=2) {
-//            for (int j = markerCoordinates.getHorizontal() - 4; j <= markerCoordinates.getHorizontal() + 4; j+=2) {
-//                try {
-//                    checkMarkerPlace(i, j);
-//                    possibleMoves.add(new Coordinates(i, j));
-//                } catch (Exception e) {}
-//            }
-//        }
-//
-//        return possibleMoves;
-//    }
-//
-//    abstract public void makeMove() throws NoBarriersException;
-//
-//    abstract public void moveMarker(int vertical, int horizontal) throws FieldItemException;
-//
-//    abstract public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
-//            throws FieldItemException, NoBarriersException;
-//
+
 //    void checkBarrierPlace(int vertical, int horizontal, BarrierPosition position) throws FieldItemException {
 //
 //        if (vertical % 2 == 0 || horizontal % 2 == 0) {
@@ -154,17 +108,7 @@ abstract public class UsualPlayer extends QuoridorPlayer {
 //            throw new ImpossibleToSetItemException("impossible to jump over the barrier");
 //        }
 //    }
-//
-//    private PlayerPosition getPlayerPosition(Owner owner) {
-//
-//        for (PlayerPosition position : PlayerPosition.values()) {
-//            if (position.getOwner() == owner) {
-//                return position;
-//            }
-//        }
-//
-//        throw new IllegalArgumentException("there is no PlayerPosition for " + owner);
-//    }
+
 //
 //    private boolean jumpOverMarker(int vertical, int horizontal) throws FieldItemException {
 //

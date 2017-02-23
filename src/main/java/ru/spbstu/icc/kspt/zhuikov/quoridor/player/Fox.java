@@ -1,6 +1,8 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.Command;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.CommandType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.FoxBrain;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
@@ -38,15 +40,21 @@ public class Fox extends QuoridorPlayer {
         target = playerList.get(rand);
     }
 
-//    public boolean makeMove() {
-//
+    @Override
+    public void makeMove(Command command) {
+
+        if (command.getCommandType() == CommandType.MARKER) {
+            game.moveMarker(command.getDestination());
+        }
+
+        throw new IllegalArgumentException("the fox can only move marker");
 //        Coordinates c = getNextCoordinates();
 //        field.setItem(new Empty(), markerCoordinates);
 //        markerCoordinates = c;
 //        field.setItem(new Marker(owner), markerCoordinates);
 //
 //        return c.equals(target.getCoordinates());
-//    }
+    }
 //
 //
 //    private Coordinates getNextCoordinates() {

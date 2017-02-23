@@ -10,10 +10,12 @@ import java.util.Stack;
 public class FoxBrain extends Brain {
 
     private Fox fox;
+    private GameLogic GL;
 
     public FoxBrain(QuoridorField field, Fox fox) {
         this.field = field;
         this.fox = fox;
+        GL = new GameLogic(field);
     }
 
     public Command whatToDo() {
@@ -21,42 +23,28 @@ public class FoxBrain extends Brain {
         return getNextStep();
     }
 
-    //    public boolean makeMove() {
-//
-//        Coordinates c = getNextCoordinates();
-//        field.setItem(new Empty(), markerCoordinates);
-//        markerCoordinates = c;
-//        field.setItem(new Marker(owner), markerCoordinates);
-//
-//        return c.equals(target.getCoordinates());
-//    }
-//
-//    public Coordinates getTarget() {
-//        return target.getCoordinates();
-//    }
-//
     private Command getNextStep() {
 
-        Stack<Coordinates> path = getPath(fox.getCoordinates(), fox.getTargetCoordinates());
+        Stack<Coordinates> path = GL.getPath(fox.getCoordinates(), fox.getTargetCoordinates());
 
-        if (!path.empty() && field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() == ItemType.EMPTY) {
+        if (path.empty()) {
+            int rand = (int)(Math.random() * 10) % fox.getPossibleMoves().size();
+            return new Command(CommandType.MARKER, fox.getPossibleMoves().get(rand));
+        }
+
+        if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() == ItemType.EMPTY) {
             return new Command(CommandType.MARKER, path.peek());
         }
 
-        if (path.empty()) {
-
+        if (path.peek().equals(fox.getTargetCoordinates())) {
+            return new Command(CommandType.MARKER, path.peek());
         }
-        Coordinates c = markerCoordinates;
 
-        try {
-            if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY
-                    && !path.peek().equals(target.getCoordinates())) {
-                path.pop();
-                path.peek();
-            }
-            c = path.peek();
-        } catch (EmptyStackException e) {}
+        if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY) {
+            path.pop();
+            return new Command(CommandType.MARKER, path.peek());
+        }
 
-        return c;
+        throw new IllegalArgumentException("Fox, getNextStep необработанный сценарий"); //todo: убрать это
     }
 }
