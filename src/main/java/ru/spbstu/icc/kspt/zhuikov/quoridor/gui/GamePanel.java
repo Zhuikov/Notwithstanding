@@ -1,8 +1,8 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.gui;
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
@@ -23,7 +23,7 @@ class GamePanel extends JPanel {
     private final Color topColor = Color.blue;
 
     private MainFrame frame;
-    private Quoridor game;
+    private QuoridorCore game;
     private FieldPanel fieldPanel;
     private BarrierPanel barrierPanel;
     private JLabel statusLabel;
@@ -33,7 +33,7 @@ class GamePanel extends JPanel {
     GamePanel(MainFrame frame, boolean bots) {
 
         this.frame = frame;
-        game = new Quoridor(bots);
+        game = new QuoridorCore(bots);
 
         statusLabel = new JLabel("fff");
         statusLabel.setSize(470, 25);
@@ -413,7 +413,7 @@ class GamePanel extends JPanel {
         }
 
         void updateText() {
-            for (Player player : game.getPlayers()) {
+            for (Player player : game.getQueue()) {
                 switch (player.getPosition()) {
                     case TOP:
                         topBarriersNumber.setText("Blue has " + player.getBarriersNumber() + " barriers");
@@ -505,7 +505,7 @@ class GamePanel extends JPanel {
             foxFrequencyTextLabel.setLocation(7, 40);
             foxFrequencyTextLabel.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 14));
 
-            foxFrequencyLabel = new JLabel("in " + Quoridor.getFoxFrequency() + " steps");
+            foxFrequencyLabel = new JLabel("in " + QuoridorCore.getFoxFrequency() + " steps");
             foxFrequencyLabel.setSize(100, 20);
             foxFrequencyLabel.setLocation(100, 70);
             foxFrequencyLabel.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 14));
@@ -517,8 +517,8 @@ class GamePanel extends JPanel {
         }
 
         void updateLabel() {
-            if (Quoridor.getFoxTime() - game.getStep() > 0) {
-                foxAppearingLabel.setText("The Fox appears " + (Quoridor.getFoxTime() - game.getStep()));
+            if (QuoridorCore.getFoxTime() - game.getStep() > 0) {
+                foxAppearingLabel.setText("The Fox appears " + (QuoridorCore.getFoxTime() - game.getStep()));
             } else {
                 foxAppearingLabel.setLocation(26, 5);
                 foxAppearingLabel.setText("The Fox is here!");

@@ -1,174 +1,18 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
 // обычный игрок, который хочет дойти до конца (не лиса)
 // м.б. ботом или человеком
 abstract public class UsualPlayer extends QuoridorPlayer {
 
     protected PlayerPosition position;
-    protected int barriersNumber = 10;
 
     public PlayerPosition getPosition() {
         return position;
     }
 
+    public int getBarriersNumber() {
+        return game.getBarriersNumber(position);
+    }
 
-//    protected void setBarrier(int vertical, int horizontal, BarrierPosition position) {
-//
-//        field.setBarrier(new Barrier(new Coordinates(vertical, horizontal), position));
-//        barriersNumber--;
-//    }
-
-//
-//    public int getBarriersNumber() { return barriersNumber; }
-
-//    void checkBarrierPlace(int vertical, int horizontal, BarrierPosition position) throws FieldItemException {
-//
-//        if (vertical % 2 == 0 || horizontal % 2 == 0) {
-//            throw new ImpossibleToSetItemException("impossible to set barrier here");
-//        }
-//
-//        if (position == BarrierPosition.VERTICAL) {                      //todo что-то сделать
-//            for (int i = vertical - Barrier.length + 1; i <= vertical + Barrier.length - 1; i++) {
-//                try {
-//                    if (field.getItem(i, horizontal).getType() != ItemType.EMPTY) {
-//                        throw new CellIsNotEmptyException("impossible to place barrier here");
-//                    }
-//                } catch (ArrayIndexOutOfBoundsException e) {
-//                    throw new FieldBoundsException("impossible to place barrier here");
-//                }
-//            }
-//
-//        } else if (position == BarrierPosition.HORIZONTAL) {
-//            for (int i = horizontal - Barrier.length + 1; i <= horizontal + Barrier.length - 1; i++) {
-//                try {
-//                    if (field.getItem(vertical, i).getType() != ItemType.EMPTY) {
-//                        throw new CellIsNotEmptyException("impossible to place barrier here");
-//                    }
-//                } catch (ArrayIndexOutOfBoundsException e) {
-//                    throw new FieldBoundsException("impossible to place barrier here");
-//                }
-//            }
-//        }
-//
-//
-//        Barrier probableBarrier = new Barrier(new Coordinates(vertical, horizontal), position);
-//        field.setBarrier(probableBarrier);
-//
-//        for (int i = 0; i < field.getRealSize(); i+=2) {
-//            for (int j = 0; j < field.getRealSize(); j+=2) {
-//                if (field.getItem(i, j).getType() == ItemType.MARKER && field.getItem(i, j).getOwner() != Owner.FOX) {
-//                    if (getPathToRow(new Coordinates(i, j), getPlayerPosition(field.getItem(i, j).getOwner()).getDestinationRow()).empty()) {
-//                        field.clearCells(probableBarrier.getCoordinates());
-//                        throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
-//                    }
-//                }
-//            }
-//        }
-//
-//        field.clearCells(probableBarrier.getCoordinates());
-//    }
-//
-//    void checkMarkerPlace(int vertical, int horizontal) throws FieldItemException {
-//
-//        try {
-//            field.getItem(vertical, horizontal);
-//        } catch (ArrayIndexOutOfBoundsException e) {
-//            throw new FieldBoundsException("impossible to place marker on " + vertical + " " + horizontal);
-//        }
-//
-//        if (markerCoordinates.equals(new Coordinates(vertical, horizontal))) {
-//            throw new ImpossibleToSetItemException("impossible to move to the same cell");
-//        }
-//
-//        if (vertical % 2 != 0 || horizontal % 2 != 0) {
-//            throw new ImpossibleToSetItemException("impossible to set marker on this cell");
-//        }
-//
-//        if (field.getItem(vertical, horizontal).getType() != ItemType.EMPTY) {
-//            throw new CellIsNotEmptyException("cell is not empty");
-//        }
-//
-//        if (Coordinates.pathBetween(markerCoordinates, new Coordinates(vertical, horizontal)) > 2.1) {
-//
-//            if (!jumpOverMarker(vertical, horizontal)) {
-//                throw new TooLongDistanceException("you can move just nearby cells");
-//            }
-//        }
-//
-//        if (field.getItem((markerCoordinates.getVertical() + vertical) / 2,
-//                (markerCoordinates.getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER) {
-//            throw new ImpossibleToSetItemException("impossible to jump over the barrier");
-//        }
-//    }
-
-//
-//    private boolean jumpOverMarker(int vertical, int horizontal) throws FieldItemException {
-//
-//        // если "прыгают" прямо:
-//        if (Coordinates.pathBetween(markerCoordinates, new Coordinates(vertical, horizontal)) < 4.01 &&
-//                Coordinates.pathBetween(markerCoordinates, new Coordinates(vertical,horizontal)) > 3.99) {
-//
-//            return jumpForward(vertical, horizontal);
-//        }
-//
-//        // если "прыгают" по диагонали:
-//        if (Coordinates.pathBetween(markerCoordinates, new Coordinates(vertical, horizontal)) < 2.83 &&
-//                Coordinates.pathBetween(markerCoordinates, new Coordinates(vertical,horizontal)) > 2.81) {
-//
-//            return jumpDiagonal(vertical, horizontal);
-//        }
-//
-//        return false;
-//    }
-//
-//    private boolean jumpForward(int vertical, int horizontal) throws FieldItemException {
-//
-//        Coordinates midCoordinates = new Coordinates( (markerCoordinates.getVertical() + vertical) / 2,
-//                (markerCoordinates.getHorizontal() + horizontal) / 2);
-//
-//        if (field.getItem(midCoordinates.getVertical(), midCoordinates.getHorizontal()).getType() == ItemType.MARKER) {
-//
-//            if ( (field.getItem( (midCoordinates.getVertical() + markerCoordinates.getVertical()) / 2,
-//                    (midCoordinates.getHorizontal() + markerCoordinates.getHorizontal()) / 2).getType() == ItemType.BARRIER) ||
-//                    (field.getItem( (midCoordinates.getVertical() + vertical) / 2,
-//                            (midCoordinates.getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER) ) {
-//
-//                throw new ImpossibleToSetItemException("impossible to set marker because of barrier");
-//            }
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
-//
-//    private boolean jumpDiagonal(int vertical, int horizontal) throws FieldItemException {
-//
-//        Coordinates opponentsMarker;
-//
-//        if (field.getItem(markerCoordinates.getVertical(), horizontal).getType() == ItemType.MARKER) {
-//            opponentsMarker = new Coordinates(markerCoordinates.getVertical(), horizontal);
-//        } else if (field.getItem(vertical, markerCoordinates.getHorizontal()).getType() == ItemType.MARKER) {
-//            opponentsMarker = new Coordinates(vertical, markerCoordinates.getHorizontal());
-//        } else { return false; }
-//
-//        if ( (field.getItem( (opponentsMarker.getVertical() + markerCoordinates.getVertical()) / 2,
-//                (opponentsMarker.getHorizontal() + markerCoordinates.getHorizontal()) / 2).getType() == ItemType.BARRIER)
-//                ||
-//                (field.getItem( (opponentsMarker.getVertical() + vertical) / 2,
-//                        (opponentsMarker.getHorizontal() + horizontal) / 2).getType() == ItemType.BARRIER)) {
-//
-//            throw new ImpossibleToSetItemException("impossible to set marker because of barrier");
-//        }
-//
-//        return true;
-//    }
 }

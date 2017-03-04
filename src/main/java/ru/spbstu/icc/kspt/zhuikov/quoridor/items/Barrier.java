@@ -7,12 +7,10 @@ import java.util.List;
 public class Barrier extends Item {
 
     public final static int length = 2;
-    private BarrierPosition position;
     private List<Coordinates> coordinates = new ArrayList<>();
 
     public Barrier(Coordinates coordinates, BarrierPosition position) {
         this.type = ItemType.BARRIER;
-        this.position = position;
 
         if (position == BarrierPosition.VERTICAL) {
             for (int i = coordinates.getVertical() - length + 1; i <= coordinates.getVertical() + length - 1; i++) {
@@ -32,7 +30,5 @@ public class Barrier extends Item {
     public List<Coordinates> getCoordinates() {
         return coordinates;
     }
-
-    public BarrierPosition getPosition() { return position; }
 
 }

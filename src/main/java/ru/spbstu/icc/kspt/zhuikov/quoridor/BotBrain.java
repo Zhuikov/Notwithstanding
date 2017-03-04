@@ -5,29 +5,30 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.BotPlayer;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
 import java.util.Stack;
 
 public class BotBrain extends Brain {
 
-    private final GameLogic GL;
     private BotPlayer player;
-    private int barrierNumber;
 
-    public BotBrain(QuoridorField field, BotPlayer player) {
+    public BotBrain(Field field, BotPlayer player) {
         this.field = field;
         GL = new GameLogic(field);
         this.player = player;
-        barrierNumber = Quoridor.getStartBarrierNumber();
     }
 
-    public Command whatToDo() {
+    public Command whatToDo(Field field) {
+
+        this.field = field;
+        GL.setField(field);
 
         double rand = Math.random();
 
-        if (rand > 0.47 && barrierNumber > 0) {
-            barrierNumber--; // todo: тут считается параллельно ядру
+        if (rand > 0.47 && player.getBarriersNumber() > 0) {
             try {
                 return placeBarrier();
             } catch (FieldItemException e) {
@@ -40,11 +41,22 @@ public class BotBrain extends Brain {
 
     private Command placeBarrier() throws FieldItemException {
 
-        Stack<Coordinates> opponentsPath = GL.getPathToRow(player.getOpponent().getCoordinates(),
-                player.getOpponent().getPosition().getDestinationRow());
+        Coordinates opponentCoordinates = new Coordinates(-1, -1);
+        Owner opponentsOwner = Owner.BOTTOM;
 
-        Coordinates between = new Coordinates((opponentsPath.peek().getVertical() + player.getOpponent().getCoordinates().getVertical()) / 2,
-                (opponentsPath.peek().getHorizontal() + player.getOpponent().getCoordinates().getHorizontal()) / 2);
+        for (Coordinates c : field.getMarkers()) {
+            if (field.getItemOwner(c.getVertical(), c.getHorizontal()) != player.getOwner() &&
+                    field.getItemOwner(c.getVertical(), c.getHorizontal()) != Owner.FOX) {
+                opponentCoordinates = c;
+                opponentsOwner = field.getItemOwner(c.getVertical(), c.getHorizontal());
+            }
+        }
+
+        Stack<Coordinates> opponentsPath = GL.getPathToRow(opponentCoordinates,
+                GL.getPlayerPosition(opponentsOwner).getDestinationRow());
+
+        Coordinates between = new Coordinates((opponentsPath.peek().getVertical() + opponentCoordinates.getVertical()) / 2,
+                (opponentsPath.peek().getHorizontal() + opponentCoordinates.getHorizontal()) / 2);
 
         double rand = Math.random();
         if (rand < 0.5) {
@@ -69,7 +81,7 @@ public class BotBrain extends Brain {
 
         Stack<Coordinates> path = GL.getPathToRow(player.getCoordinates(), player.getPosition().getDestinationRow());
 
-        if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY) {
+        if (field.getItemType(path.peek().getVertical(), path.peek().getHorizontal()) != ItemType.EMPTY) {
             path.pop();
         }
         return new Command(CommandType.MARKER, path.peek());

@@ -1,17 +1,21 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
 
 public class HumanPlayer extends UsualPlayer {
 
-
-    public HumanPlayer(Quoridor game, PlayerPosition position) {
+    public HumanPlayer(QuoridorCore game, PlayerPosition position) {
         this.game = game;
         this.position = position;
         owner = position.getOwner();
     }
-//
+
+    @Override
+    public void makeMove() {
+
+    }
+
 //    @Override
 //    public void moveMarker(int vertical, int horizontal) throws FieldItemException {
 //

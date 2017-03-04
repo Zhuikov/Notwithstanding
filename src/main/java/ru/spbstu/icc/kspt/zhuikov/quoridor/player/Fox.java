@@ -4,50 +4,56 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.Command;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.CommandType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.FoxBrain;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
-
-import java.util.List;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
 public class Fox extends QuoridorPlayer {
 
-    private UsualPlayer target;
     private FoxBrain brain;
 
-    public Coordinates getTargetCoordinates() {
-        return target.getCoordinates();
-    }
-
-    public void setBrain(FoxBrain brain) {
-        this.brain = brain;
-    }
-
-    public Fox(Quoridor game, Coordinates initial, List<UsualPlayer> playerList) {
+    public Fox(QuoridorCore game) {
 
         this.game = game;
         owner = Owner.FOX;
-        markerCoordinates = initial;
-//        int x, y;
-//        do {
-//            x = (int) (Math.random() * 10) % field.getSize() * 2;
-//            y = (int) (Math.random() * 10) % field.getSize() * 2;
-//        } while (field.getItem(x, y).getType() != ItemType.EMPTY);
-//        markerCoordinates = new Coordinates(x, y);
-//        field.setItem(new Marker(owner), markerCoordinates);
 
-        int rand = (int) (Math.random() * 10) % playerList.size();
-        System.out.println("fox rand: " + rand);
-        target = playerList.get(rand);
+        Field gameField = game.getField();
+        brain = new FoxBrain(gameField, this);
+
+        int x, y;
+        do {
+            x = (int) (Math.random() * 10) % gameField.getSize() * 2;
+            y = (int) (Math.random() * 10) % gameField.getSize() * 2;
+        } while (gameField.getItemType(x, y) != ItemType.EMPTY);
+        markerCoordinates = new Coordinates(x, y);
+        game.spawnFox(markerCoordinates);
+
     }
 
     @Override
-    public void makeMove(Command command) {
+    public void makeMove() {
+
+        Field field = game.getField();
+        Command command = brain.whatToDo(field);
 
         if (command.getCommandType() == CommandType.MARKER) {
-            game.moveMarker(command.getDestination());
+            try {
+                game.moveMarker(command.getDestination());
+                markerCoordinates = command.getDestination();
+            } catch (FieldItemException e) {
+                throw new AssertionError("fox.makeMove()");
+            }
+        } else {
+            throw new IllegalArgumentException("the fox can only move marker");
         }
 
-        throw new IllegalArgumentException("the fox can only move marker");
+        if (field.getItemOwner(markerCoordinates.getVertical(), markerCoordinates.getHorizontal()) == brain.getTarget()) {
+            for (VictoryListener listener : victoryListeners) {
+                listener.setWinner(owner);
+            }
+        }
 //        Coordinates c = getNextCoordinates();
 //        field.setItem(new Empty(), markerCoordinates);
 //        markerCoordinates = c;

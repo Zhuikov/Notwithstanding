@@ -1,7 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.console;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
@@ -11,14 +11,14 @@ import java.util.Map;
 
 public class ConsoleDrawer {
 
-    private Quoridor game = null;
+    private QuoridorCore game = null;
     private static final Map<Owner, String> positions = new HashMap<Owner, String>() {{
         put(Owner.BOTTOM, "BOTTOM");
         put(Owner.TOP, "TOP");
         put(Owner.FOX, "FOX");
     }};
 
-    public ConsoleDrawer(Quoridor game) {
+    public ConsoleDrawer(QuoridorCore game) {
         this.game = game;
     }
 
@@ -53,7 +53,7 @@ public class ConsoleDrawer {
 
     public void drawPlayerInformation() {
 
-        for (Player player : game.getPlayers()) {
+        for (Player player : game.getQueue()) {
             System.out.println(positions.get(player.getPosition().getOwner()) + " player has " + player.getBarriersNumber() + " barriers");
         }
     }
@@ -70,7 +70,7 @@ public class ConsoleDrawer {
 
     public void drawHelp() {
 
-        String help = "Quoridor game. Commands help.\n" +
+        String help = "QuoridorCore game. Commands help.\n" +
                 "   Command examples (without \"[ ]\":\n" +
                 "     [marker 2 2] - moves current player's marker to [2 2] position if it possible\n" +
                 "     [barrier 5 5 vertical] - places current player's barrier to [5 5] position " +

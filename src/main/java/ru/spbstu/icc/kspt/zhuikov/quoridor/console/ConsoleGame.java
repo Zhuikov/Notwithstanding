@@ -1,13 +1,13 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.console;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
 
 import java.util.Scanner;
 
 public class ConsoleGame {
 
-    private static Quoridor game = new Quoridor(false);
+    private static QuoridorCore game = new QuoridorCore(false);
     private static ConsoleDrawer drawer = new ConsoleDrawer(game);
 
     public static void main(String[] args) {
