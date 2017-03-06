@@ -6,7 +6,6 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.CommandType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.FoxBrain;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
@@ -14,12 +13,12 @@ public class Fox extends QuoridorPlayer {
 
     private FoxBrain brain;
 
-    public Fox(QuoridorCore game) {
+    public Fox(QuoridorCore core) {
 
-        this.game = game;
+        this.core = core;
         owner = Owner.FOX;
 
-        Field gameField = game.getField();
+        Field gameField = core.getField();
         brain = new FoxBrain(gameField, this);
 
         int x, y;
@@ -28,19 +27,19 @@ public class Fox extends QuoridorPlayer {
             y = (int) (Math.random() * 10) % gameField.getSize() * 2;
         } while (gameField.getItemType(x, y) != ItemType.EMPTY);
         markerCoordinates = new Coordinates(x, y);
-        game.spawnFox(markerCoordinates);
+        core.spawnFox(markerCoordinates);
 
     }
 
     @Override
     public void makeMove() {
 
-        Field field = game.getField();
+        Field field = core.getField();
         Command command = brain.whatToDo(field);
 
         if (command.getCommandType() == CommandType.MARKER) {
             try {
-                game.moveMarker(command.getDestination());
+                core.moveMarker(command.getDestination());
                 markerCoordinates = command.getDestination();
             } catch (FieldItemException e) {
                 throw new AssertionError("fox.makeMove()");
@@ -50,7 +49,7 @@ public class Fox extends QuoridorPlayer {
         }
 
         if (field.getItemOwner(markerCoordinates.getVertical(), markerCoordinates.getHorizontal()) == brain.getTarget()) {
-            for (VictoryListener listener : victoryListeners) {
+            for (WinnerListener listener : winnerListeners) {
                 listener.setWinner(owner);
             }
         }

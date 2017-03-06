@@ -1,16 +1,15 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.gui;
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.WinnerListener;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Cell;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -23,19 +22,20 @@ class GamePanel extends JPanel {
     private final Color topColor = Color.blue;
 
     private MainFrame frame;
-    private QuoridorCore game;
+    private Quoridor game;
     private FieldPanel fieldPanel;
     private BarrierPanel barrierPanel;
     private JLabel statusLabel;
     private FoxPanel foxPanel;
+    private Owner winner;
     private Image bg = new ImageIcon("pictures/gamePics/background_game.jpg").getImage();
 
     GamePanel(MainFrame frame, boolean bots) {
 
         this.frame = frame;
-        game = new QuoridorCore(bots);
+        game = new Quoridor(bots);
 
-        statusLabel = new JLabel("fff");
+        statusLabel = new JLabel();
         statusLabel.setSize(470, 25);
         statusLabel.setLocation(45, 395);
         statusLabel.setBorder(new LineBorder(Color.BLACK, 2));
@@ -65,9 +65,9 @@ class GamePanel extends JPanel {
     }
 
     private void updateStatusLabel() {
-        if (game.getCurrentPlayer().getPosition() == PlayerPosition.TOP) {
+        if (game.getCurrentPlayer().getOwner() == Owner.TOP) {
             statusLabel.setText("Blue player's turn");
-        } else if (game.getCurrentPlayer().getPosition() == PlayerPosition.BOT) {
+        } else if (game.getCurrentPlayer().getOwner() == Owner.BOTTOM) {
             statusLabel.setText("Red player's turn");
         }
     }
@@ -89,7 +89,7 @@ class GamePanel extends JPanel {
         }
     }
 
-    private class FieldPanel extends JPanel {
+    private class FieldPanel extends JPanel implements WinnerListener {
 
         private Field field;
         private final int cellSize = 30;
@@ -248,17 +248,6 @@ class GamePanel extends JPanel {
                 }
             }
 
-            if (game.isEnd()) {
-                this.removeMouseListener(fieldMouseListener);
-                barrierPanel.removeListeners();
-                if (game.getWinner() == Owner.TOP) {
-                    statusLabel.setText("Blue player won!");
-                } else if (game.getWinner() == Owner.BOTTOM) {
-                    statusLabel.setText("Red player won!");
-                } else if (game.getWinner() == Owner.FOX) {
-                    statusLabel.setText("Fox won!");
-                }
-            }
         }
 
         /**
@@ -292,10 +281,10 @@ class GamePanel extends JPanel {
             return fieldCoordinates.getVertical() % 2 == 0 && fieldCoordinates.getHorizontal() % 2 == 0;
         }
 
-        private void pickMarker(Cell marker) {
+        private void pickMarker(Cell marker, Coordinates markerCoordinates) {
 
-            pickedMarker = marker.getOwner() ==  game.getCurrentPlayer().getPosition().getOwner();
-            pickedMarkerCoordinates = new Coordinates(marker.getVertical(), marker.getHorizontal());
+            pickedMarker = marker.getOwner() ==  game.getCurrentPlayer().getOwner();
+            pickedMarkerCoordinates = markerCoordinates;
         }
 
         private void unpickMarker(Coordinates newCoordinates) {
@@ -305,11 +294,28 @@ class GamePanel extends JPanel {
                 game.moveMarker(newCoordinates.getVertical(), newCoordinates.getHorizontal());
                 updateStatusLabel();
                 barrierPanel.updateText();
-            } catch (FieldItemException | NoBarriersException e ) {
+            } catch (FieldItemException e) {
                 statusLabel.setText(e.getMessage());
                 Timer timer = new Timer(1500, e1 -> updateStatusLabel());
                 timer.setRepeats(false);
                 timer.start();
+            }
+        }
+
+        @Override
+        public void setWinner(Owner owner) {
+
+            winner = owner;
+
+            this.removeMouseListener(fieldMouseListener);
+            barrierPanel.removeListeners();
+
+            if (winner == Owner.TOP) {
+                statusLabel.setText("Blue player won!");
+            } else if (winner == Owner.BOTTOM) {
+                statusLabel.setText("Red player won!");
+            } else if (winner == Owner.FOX) {
+                statusLabel.setText("Fox won!");
             }
         }
 
@@ -320,7 +326,7 @@ class GamePanel extends JPanel {
                     Coordinates fieldCoordinates = convertCoordinates(e.getX(), e.getY());
                     Cell cell = field.getCell(fieldCoordinates.getVertical(), fieldCoordinates.getHorizontal());
                     if (cell.getType() == ItemType.MARKER) {
-                        pickMarker(cell);
+                        pickMarker(cell, fieldCoordinates);
                     } else if (pickedMarker) {
                         unpickMarker(fieldCoordinates);
                     }
@@ -413,15 +419,9 @@ class GamePanel extends JPanel {
         }
 
         void updateText() {
-            for (Player player : game.getQueue()) {
-                switch (player.getPosition()) {
-                    case TOP:
-                        topBarriersNumber.setText("Blue has " + player.getBarriersNumber() + " barriers");
-                        break;
-                    case BOT:
-                        bottomBarriersNumber.setText("Red has " + player.getBarriersNumber() + " barriers");
-                }
-            }
+
+            topBarriersNumber.setText("Blue has " + game.getBarriersNumber(Owner.TOP) + " barriers");
+            bottomBarriersNumber.setText("Red has " + game.getBarriersNumber(Owner.BOTTOM) + " barriers");
         }
 
         private class BarrierListener implements MouseListener {
@@ -505,7 +505,7 @@ class GamePanel extends JPanel {
             foxFrequencyTextLabel.setLocation(7, 40);
             foxFrequencyTextLabel.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 14));
 
-            foxFrequencyLabel = new JLabel("in " + QuoridorCore.getFoxFrequency() + " steps");
+            foxFrequencyLabel = new JLabel("in " + Quoridor.getFoxFrequency() + " steps");
             foxFrequencyLabel.setSize(100, 20);
             foxFrequencyLabel.setLocation(100, 70);
             foxFrequencyLabel.setFont(new Font("Arial", Font.ITALIC + Font.BOLD, 14));
@@ -517,8 +517,8 @@ class GamePanel extends JPanel {
         }
 
         void updateLabel() {
-            if (QuoridorCore.getFoxTime() - game.getStep() > 0) {
-                foxAppearingLabel.setText("The Fox appears " + (QuoridorCore.getFoxTime() - game.getStep()));
+            if (Quoridor.getFoxTime() - game.getStep() > 0) {
+                foxAppearingLabel.setText("The Fox appears " + (Quoridor.getFoxTime() - game.getStep()));
             } else {
                 foxAppearingLabel.setLocation(26, 5);
                 foxAppearingLabel.setText("The Fox is here!");

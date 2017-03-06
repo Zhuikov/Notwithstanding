@@ -210,7 +210,7 @@ public class GameLogic {
      * @param owner - владелец
      * @return PlayerPosition, соответствующая данному владельцу.
      */
-    public PlayerPosition getPlayerPosition(Owner owner) {
+    public PlayerPosition getPlayerPosition(Owner owner){
 
         for (PlayerPosition position : PlayerPosition.values()) {
             if (position.getOwner() == owner) {

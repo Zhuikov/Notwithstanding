@@ -12,11 +12,11 @@ public class BotPlayer extends UsualPlayer {
 
     private BotBrain brain;
 
-    public BotPlayer(QuoridorCore game, PlayerPosition position) {
+    public BotPlayer(QuoridorCore core, PlayerPosition position) {
 
-        this.game = game;
+        this.core = core;
         this.position = position;
-        brain = new BotBrain(game.getField(), this);
+        brain = new BotBrain(core.getField(), this);
         owner = position.getOwner();
         markerCoordinates = new Coordinates(position.getInitialVertical(), position.getInitialHorizontal());
 
@@ -25,12 +25,12 @@ public class BotPlayer extends UsualPlayer {
     @Override
     public void makeMove() {
 
-        Command command = brain.whatToDo(game.getField());
+        Command command = brain.whatToDo(core.getField());
 
         switch (command.getCommandType()) {
             case MARKER:
                 try {
-                    game.moveMarker(command.getDestination());
+                    core.moveMarker(command.getDestination());
                     markerCoordinates = command.getDestination();
                 } catch (FieldItemException e) {
                     throw new AssertionError("bot.makeMove()");
@@ -38,7 +38,7 @@ public class BotPlayer extends UsualPlayer {
                 break;
             case BARRIER:
                 try {
-                    game.placeBarrier(command.getDestination(), command.getBarrierPosition());
+                    core.placeBarrier(command.getDestination(), command.getBarrierPosition());
                 } catch (FieldItemException | NoBarriersException e) {
                     throw new AssertionError("bot.makeMove()");
                 }
@@ -47,7 +47,7 @@ public class BotPlayer extends UsualPlayer {
         }
 
         if (markerCoordinates.getVertical() == position.getDestinationRow()) {
-            for (VictoryListener listener : victoryListeners) {
+            for (WinnerListener listener : winnerListeners) {
                 listener.setWinner(owner);
             }
         }

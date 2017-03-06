@@ -12,7 +12,7 @@ abstract public class UsualPlayer extends QuoridorPlayer {
     }
 
     public int getBarriersNumber() {
-        return game.getBarriersNumber(position);
+        return core.getBarriersNumber(owner);
     }
 
 }

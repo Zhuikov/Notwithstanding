@@ -1,7 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.gui;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,8 +13,8 @@ public class SettingsPanel extends JPanel {
     private final Image bg = new ImageIcon("pictures/gamePics/background_menu1.jpg").getImage();
     private MainFrame frame;
     private JButton backButton = new JButton("Back");
-    private JSlider stepSlider = new JSlider(0, 40, QuoridorCore.getFoxTime());
-    private JSlider frequencySlider = new JSlider(1, 20, QuoridorCore.getFoxFrequency());
+    private JSlider stepSlider = new JSlider(0, 40, Quoridor.getFoxTime());
+    private JSlider frequencySlider = new JSlider(1, 20, Quoridor.getFoxFrequency());
     private JLabel stepLabel = new JLabel("");
     private JLabel frequencyLabel = new JLabel("");
 
@@ -37,7 +37,7 @@ public class SettingsPanel extends JPanel {
         stepSlider.setPaintTicks(true);
         stepSlider.addChangeListener(e -> {
             stepLabel.setText("" + stepSlider.getValue());
-            QuoridorCore.setFoxTime(stepSlider.getValue());
+            Quoridor.setFoxTime(stepSlider.getValue());
         });
 
         stepLabel = new JLabel("" + stepSlider.getValue());
@@ -59,7 +59,7 @@ public class SettingsPanel extends JPanel {
         frequencySlider.setPaintTicks(true);
         frequencySlider.addChangeListener(e -> {
             frequencyLabel.setText("" + frequencySlider.getValue());
-            QuoridorCore.setFoxFrequency(frequencySlider.getValue());
+            Quoridor.setFoxFrequency(frequencySlider.getValue());
         });
 
         frequencyLabel = new JLabel("" + frequencySlider.getValue());

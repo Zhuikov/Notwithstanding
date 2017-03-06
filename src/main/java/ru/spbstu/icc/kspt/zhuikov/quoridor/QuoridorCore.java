@@ -3,9 +3,8 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.*;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +15,7 @@ import java.util.Map;
 //TODO мне не хватает документации к коду
 //TODO также хотелось бы, чтобы ядро с логикой было выделенно, если не в отдельный модуль, то хотябы в отдельный пакет(в отдельный относительно UI)
 
-public class QuoridorCore implements VictoryListener {
+public class QuoridorCore {
 
     private final QuoridorField field = new QuoridorField(9);
     private final GameLogic GL = new GameLogic(new Field(field));
@@ -25,74 +24,28 @@ public class QuoridorCore implements VictoryListener {
 
     private static final int startBarrierNumber = 10;
 
-    public static int getStartBarrierNumber() {
-        return startBarrierNumber;
-    }
+    public int getBarriersNumber(Owner owner) {
 
-    public int getBarriersNumber(PlayerPosition position) {
-        return barrierNumbers.get(position);
+        PlayerPosition playerPosition;
+        try {
+            playerPosition = GL.getPlayerPosition(owner);
+        } catch (IllegalArgumentException e) {
+            return -1;
+        }
+
+        return barrierNumbers.get(playerPosition);
     }
 
     public Field getField() {
         return new Field(field);
     }
 
-    @Override
-    public void setWinner(Owner owner) {
-
-    }
-
     public QuoridorCore(QuoridorQueue queue) {
 
         this.queue = queue;
-
         barrierNumbers = new HashMap<>();
-
     }
 
-    public List<Player> getQueue() {
-
-        List<Player> players = new ArrayList<>();
-
-        for (QuoridorPlayer player : this.queue) {
-            if (player.getOwner() == Owner.FOX) {
-                players.add(new Player(0, Owner.FOX));
-            }
-            players.add(new Player(barrierNumbers.get(GL.getPlayerPosition(player.getOwner())), player.getOwner()));
-        }
-
-        return players;
-    }
-
-
-    public boolean isEnd() {              //TODO возможно следует подумать об использование шаблона Наблюдатель
-
-        for (UsualPlayer player : queue) {
-            if (player.getPosition().getDestinationRow() == player.getCoordinates().getVertical()) {
-                return true;
-            }
-        }
-        return fox != null && fox.getCoordinates().equals(fox.getTarget());
-
-    }
-
-    public Owner getWinner(){   //TODO по-моему, при использование Наблюдателя метод атрофируется
-
-        if (isEnd()) {
-
-            for (UsualPlayer player : queue) {
-                if (player.getPosition().getDestinationRow() == player.getCoordinates().getVertical()) {
-                    return player.getPosition().getOwner();
-                }
-            }
-
-            if (fox.getCoordinates().equals(fox.getTarget())) {
-                return Owner.FOX;
-            }
-        }
-
-        return Owner.NOBODY;
-    }
 
     public void moveMarker(Coordinates destination) throws FieldItemException {
 
@@ -141,6 +94,11 @@ public class QuoridorCore implements VictoryListener {
         }
 
         throw new IllegalArgumentException("cannot spawn Fox on " + spawnCoordinates);
+    }
+
+    public void addBarriers(PlayerPosition playerPosition) {
+
+        barrierNumbers.put(playerPosition, startBarrierNumber);
     }
 
 //    private void changePlayerTurn()  {

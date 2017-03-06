@@ -4,16 +4,20 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.VictoryListener;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.UsualPlayer;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.WinnerListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class QuoridorQueue {
 
     private QuoridorCore core;
     private int currentPlayer = 0;
     private List<QuoridorPlayer> players = new ArrayList<>();
+    private Set<WinnerListener> listeners = new HashSet<>();
 
     private int step = 1;
     private static int foxTime = 2;
@@ -55,11 +59,19 @@ public class QuoridorQueue {
         this.core = core;
     }
 
-    public void addPlayer(QuoridorPlayer player) {
+    public void addPlayer(UsualPlayer player) {
 
-        players.add(player);
-        player.addVictoryListener(core);
+        players.add(player); // нет защиты от добавления игрока уже существующей позиции
+        player.addWinnerListener(listeners);
+        core.addBarriers(player.getPosition());
+    }
 
+    public void addWinnerListener(WinnerListener listener) {
+
+        listeners.add(listener);
+        for (QuoridorPlayer player : players) {
+            player.addWinnerListener(listener);
+        }
     }
 
     public void moveNextPlayer() {
@@ -77,7 +89,9 @@ public class QuoridorQueue {
         }
 
         if (++step == foxTime) {
-            players.add(new Fox(core));
+            Fox fox = new Fox(core);
+            fox.addWinnerListener(listeners);
+            players.add(fox);
         }
 
         currentPlayer = getNextPlayer();

@@ -2,11 +2,15 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 
 public class HumanPlayer extends UsualPlayer {
 
-    public HumanPlayer(QuoridorCore game, PlayerPosition position) {
-        this.game = game;
+    public HumanPlayer(QuoridorCore core, PlayerPosition position) {
+        this.core = core;
         this.position = position;
         owner = position.getOwner();
     }
@@ -14,24 +18,24 @@ public class HumanPlayer extends UsualPlayer {
     @Override
     public void makeMove() {
 
+
     }
 
-//    @Override
-//    public void moveMarker(int vertical, int horizontal) throws FieldItemException {
-//
-//        checkMarkerPlace(vertical, horizontal);
-//        setMarker(new Coordinates(vertical, horizontal), owner);
-//    }
-//
-//    @Override
-//    public void placeBarrier(int vertical, int horizontal, BarrierPosition position) throws FieldItemException, NoBarriersException {
-//
-//        if (barriersNumber == 0) {
-//            throw new NoBarriersException("you have no barriers", this.position);
-//        }
-//
-//        checkBarrierPlace(vertical, horizontal, position);
-//        setBarrier(vertical, horizontal, position);
-//    }
+    public void moveMarker(int vertical, int horizontal) throws FieldItemException {
+
+        core.moveMarker(new Coordinates(vertical, horizontal));
+
+        if (markerCoordinates.getVertical() == position.getDestinationRow()) {
+            for (WinnerListener listener : winnerListeners) {
+                listener.setWinner(owner);
+            }
+        }
+    }
+
+    public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
+            throws FieldItemException, NoBarriersException {
+
+        core.placeBarrier(new Coordinates(vertical, horizontal), position);
+    }
 
 }
