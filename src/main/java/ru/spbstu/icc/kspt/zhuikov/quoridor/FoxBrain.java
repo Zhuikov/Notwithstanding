@@ -20,37 +20,40 @@ public class FoxBrain extends Brain {
         return target;
     }
 
-    public FoxBrain(Field field, Fox fox) {
+    public Coordinates getTargetCoordinates(Field field) {
 
-        this.field = field;
+        for (Coordinates c : field.getMarkers()) {
+            if (field.getItemOwner(c.getVertical(), c.getHorizontal()) == target) {
+                return c;
+            }
+        }
+
+        return
+    }
+
+    public FoxBrain(QuoridorField field, Fox fox) {
+
+        this.quoridorField = field;
         GL = new GameLogic(field);
         this.fox = fox;
 
-        List<Coordinates> playersCoordinates = new ArrayList<>();
-        for (Coordinates c : field.getMarkers()) {
-            if (field.getItemOwner(c.getVertical(), c.getHorizontal()) != Owner.FOX) {
-                playersCoordinates.add(c);
-            }
-        }
-        int rand = (int) (Math.random() * 10) % playersCoordinates.size();
-        System.out.println("fox rand: " + rand);
-        target = field.getItemOwner(playersCoordinates.get(rand).getVertical(), playersCoordinates.get(rand).getHorizontal());
+        List<Coordinates> playersCoordinates = field.getUsualPlayerMarkers();
+
+        int rand = (int) (Math.random() * 10) % playersCoordinates.size(); //todo: size == 0
+        System.out.println("fox rand: " + rand + " " + playersCoordinates.get(rand));
+        target = field.getItem(playersCoordinates.get(rand)).getOwner();
 
     }
 
-    public Command whatToDo(Field field) {
-
-        this.field = field;
-        GL.setField(field);
-
+    public Command whatToDo() {
         return getNextStep();
     }
 
     private Command getNextStep() {
 
         Coordinates targetCoordinates = new Coordinates(-1, -1);
-        for (Coordinates c : field.getMarkers()) {
-            if (field.getItemOwner(c.getVertical(), c.getHorizontal()) == target) {
+        for (Coordinates c : quoridorField.getUsualPlayerMarkers()) {
+            if (quoridorField.getItem(c).getOwner() == target) {
                 targetCoordinates = c;
             }
         }
@@ -62,7 +65,7 @@ public class FoxBrain extends Brain {
             return new Command(CommandType.MARKER, fox.getPossibleMoves().get(rand));
         }
 
-        if (field.getItemType(path.peek().getVertical(), path.peek().getHorizontal()) == ItemType.EMPTY) {
+        if (quoridorField.getItem(path.peek()).getType() == ItemType.EMPTY) {
             return new Command(CommandType.MARKER, path.peek());
         }
 
@@ -70,7 +73,7 @@ public class FoxBrain extends Brain {
             return new Command(CommandType.MARKER, path.peek());
         }
 
-        if (field.getItemType(path.peek().getVertical(), path.peek().getHorizontal()) != ItemType.EMPTY) {
+        if (quoridorField.getItem(path.peek()).getType() != ItemType.EMPTY) {
             path.pop();
             return new Command(CommandType.MARKER, path.peek());
         }

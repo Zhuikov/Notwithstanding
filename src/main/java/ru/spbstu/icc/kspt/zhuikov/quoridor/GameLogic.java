@@ -3,50 +3,52 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
 
 import java.util.*;
 
 public class GameLogic {
 
-    private Field field;
+    private QuoridorField field;
 
-    public GameLogic(Field field) {
+    public GameLogic(QuoridorField field) {
         this.field = field;
     }
 
-    public void setField(Field field) { this.field = field; }
+    //public void setField(QuoridorField field) { this.field = field; }
 
-    public boolean checkMarker(Coordinates from, Coordinates dest) throws FieldItemException {
+    public boolean checkMarker(Coordinates from, Coordinates destination, boolean fox) throws FieldItemException {
 
         try {
-            field.getItemType(dest.getVertical(), dest.getHorizontal());
+            field.getItem(destination).getType();
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new FieldBoundsException("impossible to place marker on " + dest.getVertical() + " " + dest.getHorizontal());
+            throw new FieldBoundsException("impossible to place marker on " +
+                    destination.getVertical() + " " + destination.getHorizontal());
         }
 
-        if (from.equals(dest)) {
+        if (from.equals(destination)) {
             throw new ImpossibleToSetItemException("impossible to move to the same cell");
         }
 
-        if (dest.getVertical() % 2 != 0 || dest.getHorizontal() % 2 != 0) {
+        if (destination.getVertical() % 2 != 0 || destination.getHorizontal() % 2 != 0) {
             throw new ImpossibleToSetItemException("impossible to set marker on this cell");
         }
 
-        if (field.getItemType(dest.getVertical(), dest.getHorizontal()) != ItemType.EMPTY) {
+        if (field.getItem(destination).getType() != ItemType.EMPTY && !fox) {
             throw new CellIsNotEmptyException("cell is not empty");
         }
 
-        if (Coordinates.pathBetween(from, dest) > 2.1) {
+        if (Coordinates.pathBetween(from, destination) > 2.1) {
 
-            if (!jumpOverMarker(from, dest)) {
+            if (!jumpOverMarker(from, destination)) {
                 throw new TooLongDistanceException("you can move just nearby cells");
             }
         }
 
-        if (field.getItemType((from.getVertical() + dest.getVertical()) / 2,
-                (from.getHorizontal() + dest.getHorizontal()) / 2) == ItemType.BARRIER) {
+        if (field.getItem((from.getVertical() + destination.getVertical()) / 2,
+                (from.getHorizontal() + destination.getHorizontal()) / 2).getType() == ItemType.BARRIER) {
             throw new ImpossibleToSetItemException("impossible to jump over the barrier");
         }
 
@@ -62,7 +64,7 @@ public class GameLogic {
         if (position == BarrierPosition.VERTICAL) {                      //todo что-то сделать
             for (int i = dest.getVertical() - Barrier.length + 1; i <= dest.getVertical() + Barrier.length - 1; i++) {
                 try {
-                    if (field.getItemType(i, dest.getHorizontal()) != ItemType.EMPTY) {
+                    if (field.getItem(i, dest.getHorizontal()).getType() != ItemType.EMPTY) {
                         throw new CellIsNotEmptyException("impossible to place barrier here");
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
@@ -73,7 +75,7 @@ public class GameLogic {
         } else if (position == BarrierPosition.HORIZONTAL) {
             for (int i = dest.getHorizontal() - Barrier.length + 1; i <= dest.getHorizontal() + Barrier.length - 1; i++) {
                 try {
-                    if (field.getItemType(dest.getVertical(), i) != ItemType.EMPTY) {
+                    if (field.getItem(dest.getVertical(), i).getType() != ItemType.EMPTY) {
                         throw new CellIsNotEmptyException("impossible to place barrier here");
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
@@ -86,17 +88,41 @@ public class GameLogic {
         Barrier probableBarrier = new Barrier(dest, position);
         field.setBarrier(probableBarrier);
 
-        for (int i = 0; i < field.getRealSize(); i+=2) {
-            for (int j = 0; j < field.getRealSize(); j+=2) {
-                if (field.getItemType(i, j) == ItemType.MARKER && field.getItemOwner(i, j) != Owner.FOX) {
-                    if (getPathToRow(new Coordinates(i, j), getPlayerPosition(field.getItemOwner(i, j)).getDestinationRow()).empty()) {
-                        throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
-                    }
-                }
+        for (Coordinates marker : field.getUsualPlayerMarkers()) {
+
+            if (getPathToRow(marker, getPlayerPosition(field.getItem(marker).getOwner()).getDestinationRow()).empty()) {
+                field.clearCells(probableBarrier.getCoordinates());
+                throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
             }
         }
 
+//        for (int i = 0; i < field.getRealSize(); i+=2) {
+//            for (int j = 0; j < field.getRealSize(); j+=2) {
+//                if (field.getItem(i, j).getType() == ItemType.MARKER && field.getItem(i, j).getOwner() != Owner.FOX) {
+//                    if (getPathToRow(new Coordinates(i, j), getPlayerPosition(field.getItemOwner(i, j)).getDestinationRow()).empty()) {
+//                        field.clearCells(probableBarrier.getCoordinates());
+//                        throw new ImpossibleToSetItemException("you can't place barrier here. Player is locked");
+//                    }
+//                }
+//            }
+//        }
+
+        field.clearCells(probableBarrier.getCoordinates());
+
         return true;
+    }
+
+    public boolean checkVictory(QuoridorPlayer player) {
+
+        if (player.getOwner() != Owner.FOX) {
+            return getPlayerPosition(player.getOwner()).getDestinationRow() == player.getCoordinates().getVertical();
+        }
+
+        return player.getPosition().getDestinationRow() == player.getCoordinates().getVertical();
+    }
+
+    public boolean checkVictory(Fox fox) {
+        return fox.getTargetCoordinates().equals(fox.getCoordinates());
     }
 
     /**
@@ -165,8 +191,8 @@ public class GameLogic {
             for (final Coordinates neighbour : getNeighbours(queue.element().coordinates)) {
                 try {
                     if (!used[neighbour.getVertical()][neighbour.getHorizontal()] &&
-                            field.getItemType((queue.element().coordinates.getVertical() + neighbour.getVertical()) / 2,
-                                    (queue.element().coordinates.getHorizontal() + neighbour.getHorizontal()) / 2) != ItemType.BARRIER &&
+                            field.getItem((queue.element().coordinates.getVertical() + neighbour.getVertical()) / 2,
+                                    (queue.element().coordinates.getHorizontal() + neighbour.getHorizontal()) / 2).getType() != ItemType.BARRIER &&
                             !queue.contains(new Vertex(neighbour, queue.element()))) {
                         queue.add(new Vertex(neighbour, queue.element()));
                     }
@@ -192,7 +218,7 @@ public class GameLogic {
         Stack<Coordinates> path = getPath(start, new Coordinates(destinationRow, 0));
         int min = 10000000;
         for (int i = 0; i <= field.getRealSize(); i+=2) {
-            if (field.getItemType(destinationRow, i)== ItemType.EMPTY) {
+            if (field.getItem(destinationRow, i).getType() == ItemType.EMPTY) {
                 Stack<Coordinates> temp = getPath(start, new Coordinates(destinationRow, i));
                 if (temp.size() < min && temp.size() != 0) {
                     path = temp;
@@ -255,12 +281,12 @@ public class GameLogic {
         Coordinates midCoordinates = new Coordinates( (from.getVertical() + dest.getVertical()) / 2,
                 (from.getHorizontal() + dest.getHorizontal()) / 2);
 
-        if (field.getItemType(midCoordinates.getVertical(), midCoordinates.getHorizontal())== ItemType.MARKER) {
+        if (field.getItem(midCoordinates).getType()== ItemType.MARKER) {
 
-            if ( (field.getItemType( (midCoordinates.getVertical() + from.getVertical()) / 2,
-                    (midCoordinates.getHorizontal() + from.getHorizontal()) / 2) == ItemType.BARRIER) ||
-                    (field.getItemType( (midCoordinates.getVertical() + dest.getVertical()) / 2,
-                            (midCoordinates.getHorizontal() + dest.getHorizontal()) / 2) == ItemType.BARRIER) ) {
+            if ( (field.getItem( (midCoordinates.getVertical() + from.getVertical()) / 2,
+                    (midCoordinates.getHorizontal() + from.getHorizontal()) / 2).getType() == ItemType.BARRIER) ||
+                    (field.getItem( (midCoordinates.getVertical() + dest.getVertical()) / 2,
+                            (midCoordinates.getHorizontal() + dest.getHorizontal()) / 2).getType() == ItemType.BARRIER) ) {
 
                 throw new ImpossibleToSetItemException("impossible to set marker because of barrier");
             }
@@ -275,17 +301,17 @@ public class GameLogic {
 
         Coordinates opponentsMarker;
 
-        if (field.getItemType(from.getVertical(), dest.getHorizontal()) == ItemType.MARKER) {
+        if (field.getItem(from.getVertical(), dest.getHorizontal()).getType() == ItemType.MARKER) {
             opponentsMarker = new Coordinates(from.getVertical(), dest.getHorizontal());
-        } else if (field.getItemType(dest.getVertical(), from.getHorizontal())== ItemType.MARKER) {
+        } else if (field.getItem(dest.getVertical(), from.getHorizontal()).getType() == ItemType.MARKER) {
             opponentsMarker = new Coordinates(dest.getVertical(), from.getHorizontal());
         } else { return false; }
 
-        if ( (field.getItemType( (opponentsMarker.getVertical() + from.getVertical()) / 2,
-                (opponentsMarker.getHorizontal() + from.getHorizontal()) / 2) == ItemType.BARRIER)
+        if ( (field.getItem( (opponentsMarker.getVertical() + from.getVertical()) / 2,
+                (opponentsMarker.getHorizontal() + from.getHorizontal()) / 2).getType() == ItemType.BARRIER)
                 ||
-                (field.getItemType( (opponentsMarker.getVertical() + dest.getVertical()) / 2,
-                        (opponentsMarker.getHorizontal() + dest.getHorizontal()) / 2) == ItemType.BARRIER)) {
+                (field.getItem( (opponentsMarker.getVertical() + dest.getVertical()) / 2,
+                        (opponentsMarker.getHorizontal() + dest.getHorizontal()) / 2).getType() == ItemType.BARRIER)) {
 
             throw new ImpossibleToSetItemException("impossible to set marker because of barrier");
         }

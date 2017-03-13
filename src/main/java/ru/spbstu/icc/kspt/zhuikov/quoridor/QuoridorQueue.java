@@ -12,15 +12,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class QuoridorQueue {
+public class QuoridorQueue implements WinnerListener {
 
     private QuoridorCore core;
     private int currentPlayer = 0;
     private List<QuoridorPlayer> players = new ArrayList<>();
     private Set<WinnerListener> listeners = new HashSet<>();
 
-    private int step = 1;
-    private static int foxTime = 2;
+    private int step = 0;
+    private static int foxTime = 20;
     private static int foxFrequency = 10;
 
     public int getStep() {
@@ -62,39 +62,47 @@ public class QuoridorQueue {
     public void addPlayer(UsualPlayer player) {
 
         players.add(player); // нет защиты от добавления игрока уже существующей позиции
-        player.addWinnerListener(listeners);
-        core.addBarriers(player.getPosition());
+        player.addWinnerListener(this);
+        core.addPlayer(player);
     }
 
     public void addWinnerListener(WinnerListener listener) {
 
         listeners.add(listener);
-        for (QuoridorPlayer player : players) {
-            player.addWinnerListener(listener);
+    }
+
+    @Override
+    public void setWinner(Owner owner) {
+
+        for (WinnerListener listener : listeners) {
+            listener.setWinner(owner);
         }
     }
 
     public void moveNextPlayer() {
 
-        if (players.get(currentPlayer).getOwner() == Owner.FOX) {
-
-            if (step % foxFrequency == 0) {
-                players.get(currentPlayer).makeMove();
-            } else {
-                players.get(getNextPlayer()).makeMove();
-            }
-
-        } else {
-            players.get(currentPlayer).makeMove();
-        }
-
-        if (++step == foxTime) {
+        if (step == foxTime) {
             Fox fox = new Fox(core);
-            fox.addWinnerListener(listeners);
             players.add(fox);
+            fox.addWinnerListener(this);
+            core.addPlayer(fox);
         }
 
-        currentPlayer = getNextPlayer();
+        step++;
+
+        if (players.get(currentPlayer).getOwner() == Owner.FOX && step % foxFrequency == 0) {
+            players.get(currentPlayer).makeMove();
+        } else {
+            players.get(getNextPlayer()).makeMove();
+        }
+
+    }
+
+    public void onWin() {
+
+        for (WinnerListener listener : listeners) {
+            listener.setWinner(players.get(currentPlayer).getOwner());
+        }
     }
 
     private int getNextPlayer() {

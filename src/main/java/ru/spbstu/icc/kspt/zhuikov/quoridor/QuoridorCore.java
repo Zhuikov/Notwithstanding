@@ -3,7 +3,10 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.UsualPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
 import java.util.ArrayList;
@@ -17,10 +20,11 @@ import java.util.Map;
 
 public class QuoridorCore {
 
-    private final QuoridorField field = new QuoridorField(9);
-    private final GameLogic GL = new GameLogic(new Field(field));
+    private final QuoridorField quoridorField = new QuoridorField(9);
+    private final GameLogic GL = new GameLogic(quoridorField);
     private QuoridorQueue queue;
-    private Map<PlayerPosition, Integer> barrierNumbers;
+    private QuoridorPlayer currentPlayer;
+    private Map<PlayerPosition, Integer> barrierNumbers = new HashMap<>();
 
     private static final int startBarrierNumber = 10;
 
@@ -37,22 +41,23 @@ public class QuoridorCore {
     }
 
     public Field getField() {
-        return new Field(field);
+        return new Field(quoridorField);
     }
 
-    public QuoridorCore(QuoridorQueue queue) {
+    public QuoridorCore() {  }
 
+    public void setQueue(QuoridorQueue queue) {
         this.queue = queue;
-        barrierNumbers = new HashMap<>();
     }
-
 
     public void moveMarker(Coordinates destination) throws FieldItemException {
 
-        if (GL.checkMarker(queue.getCurrentPlayer().getCoordinates(), destination)) {
-            field.setItem(new Empty(), queue.getCurrentPlayer().getCoordinates());
-            field.setItem(new Marker(queue.getCurrentPlayer().getOwner()), destination);
-        }
+        GL.checkMarker(currentPlayer.getCoordinates(), destination, currentPlayer.getOwner() == Owner.FOX);
+
+        quoridorField.clearCell(currentPlayer.getCoordinates());
+        quoridorField.setItem(new Marker(currentPlayer.getOwner()), destination);
+
+        // if (win....)
 
         queue.moveNextPlayer();
     }
@@ -60,14 +65,14 @@ public class QuoridorCore {
     public void placeBarrier(Coordinates destination, BarrierPosition position)
             throws FieldItemException, NoBarriersException {
 
-        if (barrierNumbers.get(GL.getPlayerPosition(queue.getCurrentPlayer().getOwner())) == 0) {
-            throw new NoBarriersException("you have no barriers", GL.getPlayerPosition(queue.getCurrentPlayer().getOwner()));
+        if (barrierNumbers.get(GL.getPlayerPosition(currentPlayer.getOwner())) == 0) {
+            throw new NoBarriersException("you have no barriers", GL.getPlayerPosition(currentPlayer.getOwner()));
         }
 
         if (GL.checkBarrier(destination, position)) {
-            field.setBarrier(new Barrier(destination, position));
-            int barrierNumber = barrierNumbers.get(GL.getPlayerPosition(queue.getCurrentPlayer().getOwner()));
-            barrierNumbers.put(GL.getPlayerPosition(queue.getCurrentPlayer().getOwner()), --barrierNumber);
+            quoridorField.setBarrier(new Barrier(destination, position));
+            int barrierNumber = barrierNumbers.get(GL.getPlayerPosition(currentPlayer.getOwner()));
+            barrierNumbers.put(GL.getPlayerPosition(currentPlayer.getOwner()), --barrierNumber);
         }
 
         queue.moveNextPlayer();
@@ -79,9 +84,9 @@ public class QuoridorCore {
         for (int i = initCoordinates.getVertical() - 4; i <= initCoordinates.getVertical() + 4; i+=2) {
             for (int j = initCoordinates.getHorizontal() - 4; j <= initCoordinates.getHorizontal() + 4; j+=2) {
                 try {
-                    GL.checkMarker(initCoordinates, new Coordinates(i, j));
+                    GL.checkMarker(initCoordinates, new Coordinates(i, j), false);
+                    possibleMoves.add(new Coordinates(i, j));
                 } catch (Exception e) {}
-                possibleMoves.add(new Coordinates(i, j));
             }
         }
 
@@ -89,42 +94,22 @@ public class QuoridorCore {
     }
 
     public void spawnFox(Coordinates spawnCoordinates) {
-        if (field.getItem(spawnCoordinates.getVertical(), spawnCoordinates.getHorizontal()).getType() == ItemType.EMPTY) {
-            field.setItem(new Marker(Owner.FOX), spawnCoordinates);
+
+        if (quoridorField.getItem(spawnCoordinates).getType() != ItemType.EMPTY) {
+            throw new IllegalArgumentException("cannot spawn Fox on " + spawnCoordinates);
         }
 
-        throw new IllegalArgumentException("cannot spawn Fox on " + spawnCoordinates);
+        quoridorField.setItem(new Marker(Owner.FOX), spawnCoordinates);
     }
 
-    public void addBarriers(PlayerPosition playerPosition) {
+    public void setCurrentPlayer(QuoridorPlayer quoridorPlayer) {
 
-        barrierNumbers.put(playerPosition, startBarrierNumber);
+        this.currentPlayer = quoridorPlayer;
     }
 
-//    private void changePlayerTurn()  {
-//
-//        if (++step == foxTime) {
-//            queue.addPlayer(new Fox(this));
-//        }
-//
-//        if (isEnd()) return;
-//
-//        if (step % foxFrequency == 0 && fox != null) {
-//            fox.makeMove();
-//            if (isEnd()) return;
-//        }
-//
-//        if (step == foxTime) {
-//            fox = new Fox(field, queue);
-//        }
-//
-//        step++;
-//
-//        if (queue.get(currentPlayer).isBot()) {
-//            queue.get(currentPlayer).makeMove();
-////            if (isEnd()) return;
-//            changePlayerTurn();
-//        }
-//    }
+    public void addPlayer(UsualPlayer usualPlayer) {
 
+        quoridorField.setItem(new Marker(usualPlayer.getOwner()), usualPlayer.getCoordinates());
+        barrierNumbers.put(usualPlayer.getPosition(), startBarrierNumber);
+    }
 }

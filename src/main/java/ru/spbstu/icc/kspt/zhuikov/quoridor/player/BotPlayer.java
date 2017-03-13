@@ -16,7 +16,7 @@ public class BotPlayer extends UsualPlayer {
 
         this.core = core;
         this.position = position;
-        brain = new BotBrain(core.getField(), this);
+        brain = new BotBrain(quoridorField, this);
         owner = position.getOwner();
         markerCoordinates = new Coordinates(position.getInitialVertical(), position.getInitialHorizontal());
 
@@ -25,7 +25,8 @@ public class BotPlayer extends UsualPlayer {
     @Override
     public void makeMove() {
 
-        Command command = brain.whatToDo(core.getField());
+        core.setCurrentPlayer(this);
+        Command command = brain.whatToDo();
 
         switch (command.getCommandType()) {
             case MARKER:
@@ -43,13 +44,6 @@ public class BotPlayer extends UsualPlayer {
                     throw new AssertionError("bot.makeMove()");
                 }
                 break;
-
-        }
-
-        if (markerCoordinates.getVertical() == position.getDestinationRow()) {
-            for (WinnerListener listener : winnerListeners) {
-                listener.setWinner(owner);
-            }
         }
     }
 

@@ -13,13 +13,17 @@ public class Fox extends QuoridorPlayer {
 
     private FoxBrain brain;
 
+    public Coordinates getTargetCoordinates() {
+        return brain.getTargetCoordinates(core.getField());
+    }
+
     public Fox(QuoridorCore core) {
 
         this.core = core;
         owner = Owner.FOX;
 
         Field gameField = core.getField();
-        brain = new FoxBrain(gameField, this);
+        brain = new FoxBrain(quoridorField, this);
 
         int x, y;
         do {
@@ -34,8 +38,9 @@ public class Fox extends QuoridorPlayer {
     @Override
     public void makeMove() {
 
+        core.setCurrentPlayer(this);
         Field field = core.getField();
-        Command command = brain.whatToDo(field);
+        Command command = brain.whatToDo();
 
         if (command.getCommandType() == CommandType.MARKER) {
             try {
@@ -48,6 +53,7 @@ public class Fox extends QuoridorPlayer {
             throw new IllegalArgumentException("the fox can only move marker");
         }
 
+        //todo дичь
         if (field.getItemOwner(markerCoordinates.getVertical(), markerCoordinates.getHorizontal()) == brain.getTarget()) {
             for (WinnerListener listener : winnerListeners) {
                 listener.setWinner(owner);

@@ -19,8 +19,9 @@ public class Quoridor {
 
     public Quoridor(boolean bot) {
 
+        core  = new QuoridorCore();
         queue = new QuoridorQueue(core);
-        core  = new QuoridorCore(queue);
+        core.setQueue(queue);
 
         if (bot) {
             queue.addPlayer(new HumanPlayer(core, PlayerPosition.BOT));
@@ -29,15 +30,19 @@ public class Quoridor {
             queue.addPlayer(new HumanPlayer(core, PlayerPosition.BOT));
             queue.addPlayer(new HumanPlayer(core, PlayerPosition.TOP));
         }
+
+        queue.moveNextPlayer();
     }
 
     public void moveMarker(int vertical, int horizontal) throws FieldItemException {
         core.moveMarker(new Coordinates(vertical, horizontal));
+        queue.moveNextPlayer();
     }
 
     public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
             throws FieldItemException, NoBarriersException {
         core.placeBarrier(new Coordinates(vertical, horizontal), position);
+        queue.moveNextPlayer();
     }
 
     public void addWinnerListener (WinnerListener listener) {

@@ -7,7 +7,6 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.BotPlayer;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
 import java.util.Stack;
 
@@ -15,16 +14,13 @@ public class BotBrain extends Brain {
 
     private BotPlayer player;
 
-    public BotBrain(Field field, BotPlayer player) {
-        this.field = field;
-        GL = new GameLogic(field);
+    public BotBrain(QuoridorField quoridorField, BotPlayer player) {
+        this.quoridorField = quoridorField;
+        GL = new GameLogic(quoridorField);
         this.player = player;
     }
 
-    public Command whatToDo(Field field) {
-
-        this.field = field;
-        GL.setField(field);
+    public Command whatToDo() {
 
         double rand = Math.random();
 
@@ -44,11 +40,10 @@ public class BotBrain extends Brain {
         Coordinates opponentCoordinates = new Coordinates(-1, -1);
         Owner opponentsOwner = Owner.BOTTOM;
 
-        for (Coordinates c : field.getMarkers()) {
-            if (field.getItemOwner(c.getVertical(), c.getHorizontal()) != player.getOwner() &&
-                    field.getItemOwner(c.getVertical(), c.getHorizontal()) != Owner.FOX) {
+        for (Coordinates c : quoridorField.getUsualPlayerMarkers()) {
+            if (quoridorField.getItem(c).getOwner() != player.getOwner()) {
                 opponentCoordinates = c;
-                opponentsOwner = field.getItemOwner(c.getVertical(), c.getHorizontal());
+                opponentsOwner = quoridorField.getItem(c).getOwner(); // todo: убрать бы это
             }
         }
 
@@ -81,7 +76,7 @@ public class BotBrain extends Brain {
 
         Stack<Coordinates> path = GL.getPathToRow(player.getCoordinates(), player.getPosition().getDestinationRow());
 
-        if (field.getItemType(path.peek().getVertical(), path.peek().getHorizontal()) != ItemType.EMPTY) {
+        if (quoridorField.getItem(path.peek()).getType() != ItemType.EMPTY) {
             path.pop();
         }
         return new Command(CommandType.MARKER, path.peek());

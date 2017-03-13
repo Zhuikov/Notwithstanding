@@ -1,6 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 
@@ -11,6 +12,7 @@ import java.util.Set;
 abstract public class QuoridorPlayer {
 
     protected Coordinates markerCoordinates;
+    protected QuoridorField quoridorField;
     protected QuoridorCore core;
     protected Owner owner;
     protected Set<WinnerListener> winnerListeners = new HashSet<>();
@@ -23,10 +25,6 @@ abstract public class QuoridorPlayer {
 
     public List<Coordinates> getPossibleMoves() {
         return core.getPossibleMoves(markerCoordinates);
-    }
-
-    public void addWinnerListener(Set<WinnerListener> listeners) {
-            winnerListeners.addAll(listeners);
     }
 
     public void addWinnerListener(WinnerListener listener) {
