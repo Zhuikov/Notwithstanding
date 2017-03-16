@@ -1,35 +1,27 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Command;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.CommandType;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.FoxBrain;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
 public class Fox extends QuoridorPlayer {
 
     private FoxBrain brain;
-
-    public Coordinates getTargetCoordinates() {
-        return brain.getTargetCoordinates(core.getField());
-    }
 
     public Fox(QuoridorCore core) {
 
         this.core = core;
         owner = Owner.FOX;
 
-        Field gameField = core.getField();
+        QuoridorField gameField = core.getField();
         brain = new FoxBrain(quoridorField, this);
 
         int x, y;
         do {
             x = (int) (Math.random() * 10) % gameField.getSize() * 2;
             y = (int) (Math.random() * 10) % gameField.getSize() * 2;
-        } while (gameField.getItemType(x, y) != ItemType.EMPTY);
+        } while (gameField.getItem(x, y).getType() != ItemType.EMPTY);
         markerCoordinates = new Coordinates(x, y);
         core.spawnFox(markerCoordinates);
 
@@ -39,7 +31,6 @@ public class Fox extends QuoridorPlayer {
     public void makeMove() {
 
         core.setCurrentPlayer(this);
-        Field field = core.getField();
         Command command = brain.whatToDo();
 
         if (command.getCommandType() == CommandType.MARKER) {
@@ -50,15 +41,9 @@ public class Fox extends QuoridorPlayer {
                 throw new AssertionError("fox.makeMove()");
             }
         } else {
-            throw new IllegalArgumentException("the fox can only move marker");
+            throw new AssertionError("the fox can only move marker");
         }
 
-        //todo дичь
-        if (field.getItemOwner(markerCoordinates.getVertical(), markerCoordinates.getHorizontal()) == brain.getTarget()) {
-            for (WinnerListener listener : winnerListeners) {
-                listener.setWinner(owner);
-            }
-        }
 //        Coordinates c = getNextCoordinates();
 //        field.setItem(new Empty(), markerCoordinates);
 //        markerCoordinates = c;

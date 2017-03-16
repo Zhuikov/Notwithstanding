@@ -28,11 +28,6 @@ public class HumanPlayer extends UsualPlayer {
         core.moveMarker(new Coordinates(vertical, horizontal));
         markerCoordinates = new Coordinates(vertical, horizontal);
 
-        if (markerCoordinates.getVertical() == position.getDestinationRow()) {
-            for (WinnerListener listener : winnerListeners) {
-                listener.setWinner(owner);
-            }
-        }
     }
 
     public void placeBarrier(int vertical, int horizontal, BarrierPosition position)

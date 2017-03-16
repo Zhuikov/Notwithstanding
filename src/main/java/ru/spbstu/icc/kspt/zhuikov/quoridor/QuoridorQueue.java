@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class QuoridorQueue implements WinnerListener {
+public class QuoridorQueue {
 
     private QuoridorCore core;
     private int currentPlayer = 0;
@@ -62,7 +62,6 @@ public class QuoridorQueue implements WinnerListener {
     public void addPlayer(UsualPlayer player) {
 
         players.add(player); // нет защиты от добавления игрока уже существующей позиции
-        player.addWinnerListener(this);
         core.addPlayer(player);
     }
 
@@ -71,11 +70,10 @@ public class QuoridorQueue implements WinnerListener {
         listeners.add(listener);
     }
 
-    @Override
-    public void setWinner(Owner owner) {
+    public void onWin() {
 
         for (WinnerListener listener : listeners) {
-            listener.setWinner(owner);
+            listener.setWinner(players.get(currentPlayer).getOwner());
         }
     }
 
@@ -84,8 +82,7 @@ public class QuoridorQueue implements WinnerListener {
         if (step == foxTime) {
             Fox fox = new Fox(core);
             players.add(fox);
-            fox.addWinnerListener(this);
-            core.addPlayer(fox);
+            core.spawnFox(fox.getCoordinates());
         }
 
         step++;
@@ -96,13 +93,6 @@ public class QuoridorQueue implements WinnerListener {
             players.get(getNextPlayer()).makeMove();
         }
 
-    }
-
-    public void onWin() {
-
-        for (WinnerListener listener : listeners) {
-            listener.setWinner(players.get(currentPlayer).getOwner());
-        }
     }
 
     private int getNextPlayer() {

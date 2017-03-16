@@ -5,9 +5,7 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -15,21 +13,6 @@ public class FoxBrain extends Brain {
 
     private Fox fox;
     private Owner target;
-
-    public Owner getTarget() {
-        return target;
-    }
-
-    public Coordinates getTargetCoordinates(Field field) {
-
-        for (Coordinates c : field.getMarkers()) {
-            if (field.getItemOwner(c.getVertical(), c.getHorizontal()) == target) {
-                return c;
-            }
-        }
-
-        return
-    }
 
     public FoxBrain(QuoridorField field, Fox fox) {
 

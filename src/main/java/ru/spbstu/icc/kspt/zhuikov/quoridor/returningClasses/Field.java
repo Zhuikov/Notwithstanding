@@ -1,7 +1,6 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Barrier;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
@@ -56,9 +55,4 @@ public class Field {
         return markers;
     }
 
-    public void setBarrier(Barrier barrier) {
-        for (Coordinates coordinates : barrier.getCoordinates()) {
-            cells[coordinates.getVertical()][coordinates.getHorizontal()] = new Cell(ItemType.BARRIER, Owner.NOBODY);
-        }
-    }
 }

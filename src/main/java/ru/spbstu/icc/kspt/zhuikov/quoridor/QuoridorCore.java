@@ -3,7 +3,6 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.UsualPlayer;
@@ -40,7 +39,11 @@ public class QuoridorCore {
         return barrierNumbers.get(playerPosition);
     }
 
-    public Field getField() {
+    public QuoridorField getField() {
+        return quoridorField;
+    }
+
+    public Field getConstantField() {
         return new Field(quoridorField);
     }
 
@@ -57,9 +60,11 @@ public class QuoridorCore {
         quoridorField.clearCell(currentPlayer.getCoordinates());
         quoridorField.setItem(new Marker(currentPlayer.getOwner()), destination);
 
-        // if (win....)
-
-        queue.moveNextPlayer();
+        if (GL.checkVictory(currentPlayer)) {
+            queue.onWin();
+        } else {
+            queue.moveNextPlayer();
+        }
     }
 
     public void placeBarrier(Coordinates destination, BarrierPosition position)

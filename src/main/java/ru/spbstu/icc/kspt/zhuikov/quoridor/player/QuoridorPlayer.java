@@ -11,11 +11,11 @@ import java.util.Set;
 
 abstract public class QuoridorPlayer {
 
+    // todo: убрать это отсюда
     protected Coordinates markerCoordinates;
     protected QuoridorField quoridorField;
     protected QuoridorCore core;
     protected Owner owner;
-    protected Set<WinnerListener> winnerListeners = new HashSet<>();
 
     public Coordinates getCoordinates() {
         return markerCoordinates;
@@ -25,10 +25,6 @@ abstract public class QuoridorPlayer {
 
     public List<Coordinates> getPossibleMoves() {
         return core.getPossibleMoves(markerCoordinates);
-    }
-
-    public void addWinnerListener(WinnerListener listener) {
-        winnerListeners.add(listener);
     }
 
     abstract public void makeMove();

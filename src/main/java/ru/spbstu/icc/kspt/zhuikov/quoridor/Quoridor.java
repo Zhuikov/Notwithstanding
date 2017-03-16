@@ -66,7 +66,7 @@ public class Quoridor {
         return QuoridorQueue.getFoxFrequency();
     }
 
-    public Field getField() { return core.getField(); }
+    public Field getField() { return core.getConstantField(); }
 
     public List<Coordinates> getPossibleMoves() {
         return core.getPossibleMoves(queue.getCurrentPlayer().getCoordinates());
