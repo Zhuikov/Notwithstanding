@@ -62,6 +62,8 @@ class GamePanel extends JPanel {
         setLayout(null);
         setVisible(true);
 
+        game.launchGame();
+
     }
 
     private void updateStatusLabel() {

@@ -6,7 +6,6 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.Command;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
 public class BotPlayer extends UsualPlayer {
 
@@ -16,10 +15,8 @@ public class BotPlayer extends UsualPlayer {
 
         this.core = core;
         this.position = position;
-        brain = new BotBrain(quoridorField, this);
+        brain = new BotBrain(core.getField(), this);
         owner = position.getOwner();
-        markerCoordinates = new Coordinates(position.getInitialVertical(), position.getInitialHorizontal());
-
     }
 
     @Override
@@ -32,7 +29,6 @@ public class BotPlayer extends UsualPlayer {
             case MARKER:
                 try {
                     core.moveMarker(command.getDestination());
-                    markerCoordinates = command.getDestination();
                 } catch (FieldItemException e) {
                     throw new AssertionError("bot.makeMove()");
                 }

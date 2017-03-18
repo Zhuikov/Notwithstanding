@@ -13,6 +13,7 @@ import java.util.Stack;
 public class BotBrain extends Brain {
 
     private BotPlayer player;
+    private Owner opponent = null;
 
     public BotBrain(QuoridorField quoridorField, BotPlayer player) {
         this.quoridorField = quoridorField;
@@ -21,6 +22,14 @@ public class BotBrain extends Brain {
     }
 
     public Command whatToDo() {
+
+        if (opponent == null) {
+            for (Coordinates c : quoridorField.getUsualPlayerMarkers()) {
+                if (quoridorField.getItem(c).getOwner() != player.getOwner()) {
+                    opponent = quoridorField.getItem(c).getOwner();
+                }
+            }
+        }
 
         double rand = Math.random();
 
@@ -38,17 +47,14 @@ public class BotBrain extends Brain {
     private Command placeBarrier() throws FieldItemException {
 
         Coordinates opponentCoordinates = new Coordinates(-1, -1);
-        Owner opponentsOwner = Owner.BOTTOM;
-
         for (Coordinates c : quoridorField.getUsualPlayerMarkers()) {
-            if (quoridorField.getItem(c).getOwner() != player.getOwner()) {
+            if (quoridorField.getItem(c).getOwner() == opponent) {
                 opponentCoordinates = c;
-                opponentsOwner = quoridorField.getItem(c).getOwner(); // todo: убрать бы это
             }
         }
 
         Stack<Coordinates> opponentsPath = GL.getPathToRow(opponentCoordinates,
-                GL.getPlayerPosition(opponentsOwner).getDestinationRow());
+                GL.getPlayerPosition(opponent).getDestinationRow());
 
         Coordinates between = new Coordinates((opponentsPath.peek().getVertical() + opponentCoordinates.getVertical()) / 2,
                 (opponentsPath.peek().getHorizontal() + opponentCoordinates.getHorizontal()) / 2);
@@ -74,7 +80,8 @@ public class BotBrain extends Brain {
 
     private Command moveMarker() {
 
-        Stack<Coordinates> path = GL.getPathToRow(player.getCoordinates(), player.getPosition().getDestinationRow());
+        Stack<Coordinates> path = GL.getPathToRow(quoridorField.getCoordinates(player.getOwner()),
+                player.getPosition().getDestinationRow());
 
         if (quoridorField.getItem(path.peek()).getType() != ItemType.EMPTY) {
             path.pop();

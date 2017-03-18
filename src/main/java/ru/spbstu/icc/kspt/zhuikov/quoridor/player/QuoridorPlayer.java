@@ -11,20 +11,13 @@ import java.util.Set;
 
 abstract public class QuoridorPlayer {
 
-    // todo: убрать это отсюда
-    protected Coordinates markerCoordinates;
-    protected QuoridorField quoridorField;
     protected QuoridorCore core;
     protected Owner owner;
 
-    public Coordinates getCoordinates() {
-        return markerCoordinates;
-    }
-
     public Owner getOwner() { return owner; }
 
-    public List<Coordinates> getPossibleMoves() {
-        return core.getPossibleMoves(markerCoordinates);
+    public QuoridorCore getCore() {
+        return core;
     }
 
     abstract public void makeMove();

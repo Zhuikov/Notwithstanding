@@ -63,12 +63,24 @@ public class QuoridorField {
     }
 
     public Item getItem(int vertical, int horizontal) {
-
         return field[vertical][horizontal];
     }
 
     public Item getItem(Coordinates coordinates) {
         return field[coordinates.getVertical()][coordinates.getHorizontal()];
+    }
+
+    public Coordinates getCoordinates(Owner owner) {
+
+        if (owner != Owner.FOX) {
+            for (Coordinates c : usualPlayerMarkers) {
+                if (owner == getItem(c).getOwner()) { return c; }
+            }
+        } else {
+            return foxCoordinates;
+        }
+
+        throw new IllegalArgumentException("there is no " + owner );
     }
 
     public void clearCell(Coordinates cell) {

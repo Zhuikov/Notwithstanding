@@ -1,7 +1,6 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.UsualPlayer;
@@ -17,6 +16,7 @@ public class QuoridorQueue {
     private QuoridorCore core;
     private int currentPlayer = 0;
     private List<QuoridorPlayer> players = new ArrayList<>();
+    private Fox fox = null;
     private Set<WinnerListener> listeners = new HashSet<>();
 
     private int step = 0;
@@ -62,11 +62,10 @@ public class QuoridorQueue {
     public void addPlayer(UsualPlayer player) {
 
         players.add(player); // нет защиты от добавления игрока уже существующей позиции
-        core.addPlayer(player);
+        core.addPlayer(player, player.getPosition());
     }
 
     public void addWinnerListener(WinnerListener listener) {
-
         listeners.add(listener);
     }
 
@@ -80,27 +79,24 @@ public class QuoridorQueue {
     public void moveNextPlayer() {
 
         if (step == foxTime) {
-            Fox fox = new Fox(core);
-            players.add(fox);
-            core.spawnFox(fox.getCoordinates());
+            fox = new Fox(core);
+            core.spawnFox();
         }
 
         step++;
 
-        if (players.get(currentPlayer).getOwner() == Owner.FOX && step % foxFrequency == 0) {
-            players.get(currentPlayer).makeMove();
+        if (fox != null && step % foxFrequency == 0) {
+            fox.makeMove();
         } else {
-            players.get(getNextPlayer()).makeMove();
+            players.get(currentPlayer).makeMove();
         }
-
     }
 
-    private int getNextPlayer() {
+    public void updateCurrentPlayer() {
 
-        if (++currentPlayer >= players.size()) {
-            return 0;
+        if (++currentPlayer > players.size()) {
+            currentPlayer = 0;
         }
-        return currentPlayer;
     }
 
 }

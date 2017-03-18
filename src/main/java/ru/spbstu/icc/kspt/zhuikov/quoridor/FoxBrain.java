@@ -22,7 +22,10 @@ public class FoxBrain extends Brain {
 
         List<Coordinates> playersCoordinates = field.getUsualPlayerMarkers();
 
-        int rand = (int) (Math.random() * 10) % playersCoordinates.size(); //todo: size == 0
+        if (playersCoordinates.size() == 0) {
+            throw new IllegalArgumentException("there is no target for fox");
+        }
+        int rand = (int) (Math.random() * 10) % playersCoordinates.size();
         System.out.println("fox rand: " + rand + " " + playersCoordinates.get(rand));
         target = field.getItem(playersCoordinates.get(rand)).getOwner();
 
@@ -41,11 +44,11 @@ public class FoxBrain extends Brain {
             }
         }
 
-        Stack<Coordinates> path = GL.getPath(fox.getCoordinates(), targetCoordinates);
+        Stack<Coordinates> path = GL.getPath(quoridorField.getCoordinates(Owner.FOX), targetCoordinates);
 
         if (path.empty()) {
-            int rand = (int)(Math.random() * 10) % fox.getPossibleMoves().size();
-            return new Command(CommandType.MARKER, fox.getPossibleMoves().get(rand));
+            int rand = (int)(Math.random() * 10) % fox.getCore().getPossibleMoves().size();
+            return new Command(CommandType.MARKER, fox.getCore().getPossibleMoves().get(rand));
         }
 
         if (quoridorField.getItem(path.peek()).getType() == ItemType.EMPTY) {

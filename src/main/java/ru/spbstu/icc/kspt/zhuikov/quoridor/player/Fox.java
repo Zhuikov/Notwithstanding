@@ -14,16 +14,7 @@ public class Fox extends QuoridorPlayer {
         this.core = core;
         owner = Owner.FOX;
 
-        QuoridorField gameField = core.getField();
-        brain = new FoxBrain(quoridorField, this);
-
-        int x, y;
-        do {
-            x = (int) (Math.random() * 10) % gameField.getSize() * 2;
-            y = (int) (Math.random() * 10) % gameField.getSize() * 2;
-        } while (gameField.getItem(x, y).getType() != ItemType.EMPTY);
-        markerCoordinates = new Coordinates(x, y);
-        core.spawnFox(markerCoordinates);
+        brain = new FoxBrain(core.getField(), this);
 
     }
 
@@ -36,7 +27,6 @@ public class Fox extends QuoridorPlayer {
         if (command.getCommandType() == CommandType.MARKER) {
             try {
                 core.moveMarker(command.getDestination());
-                markerCoordinates = command.getDestination();
             } catch (FieldItemException e) {
                 throw new AssertionError("fox.makeMove()");
             }

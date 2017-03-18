@@ -30,19 +30,19 @@ public class Quoridor {
             queue.addPlayer(new HumanPlayer(core, PlayerPosition.BOT));
             queue.addPlayer(new HumanPlayer(core, PlayerPosition.TOP));
         }
+    }
 
+    public void launchGame() {
         queue.moveNextPlayer();
     }
 
     public void moveMarker(int vertical, int horizontal) throws FieldItemException {
         core.moveMarker(new Coordinates(vertical, horizontal));
-        queue.moveNextPlayer();
     }
 
     public void placeBarrier(int vertical, int horizontal, BarrierPosition position)
             throws FieldItemException, NoBarriersException {
         core.placeBarrier(new Coordinates(vertical, horizontal), position);
-        queue.moveNextPlayer();
     }
 
     public void addWinnerListener (WinnerListener listener) {
@@ -69,7 +69,7 @@ public class Quoridor {
     public Field getField() { return core.getConstantField(); }
 
     public List<Coordinates> getPossibleMoves() {
-        return core.getPossibleMoves(queue.getCurrentPlayer().getCoordinates());
+        return core.getPossibleMoves(); //todo переделать аргумент
     }
 
     public int getBarriersNumber(Owner owner) {

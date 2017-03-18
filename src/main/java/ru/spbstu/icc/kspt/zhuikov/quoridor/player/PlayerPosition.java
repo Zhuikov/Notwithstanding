@@ -1,6 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 
 public enum PlayerPosition {
@@ -22,13 +23,7 @@ public enum PlayerPosition {
 
     public Owner getOwner() { return owner; }
 
-    public int getInitialVertical() {
-        return initialVertical;
-    }
-
-    public int getInitialHorizontal() {
-        return initialHorizontal;
-    }
+    public Coordinates getInitialCoordinates() { return new Coordinates(initialVertical, initialHorizontal); }
 
     public int getDestinationRow() {
         return destinationRow;
