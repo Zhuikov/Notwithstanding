@@ -26,7 +26,7 @@ public class FoxBrain extends Brain {
             throw new IllegalArgumentException("there is no target for fox");
         }
         int rand = (int) (Math.random() * 10) % playersCoordinates.size();
-        System.out.println("fox rand: " + rand + " " + playersCoordinates.get(rand));
+        System.out.println("fox rand: " + rand + " " + field.getItem(playersCoordinates.get(rand)).getOwner());
         target = field.getItem(playersCoordinates.get(rand)).getOwner();
 
     }

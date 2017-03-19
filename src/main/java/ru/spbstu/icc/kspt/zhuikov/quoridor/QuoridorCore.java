@@ -63,8 +63,6 @@ public class QuoridorCore {
         quoridorField.setItem(new Marker(currentPlayer.getOwner()), destination);
 
         if (GL.checkVictory(currentPlayer)) {
-
-            // todo: fix it
             System.out.println("true");
             queue.onWin();
         } else {
@@ -88,6 +86,7 @@ public class QuoridorCore {
             barrierNumbers.put(GL.getPlayerPosition(currentPlayer.getOwner()), --barrierNumber);
         }
 
+        queue.updateCurrentPlayer();
         queue.moveNextPlayer();
     }
 

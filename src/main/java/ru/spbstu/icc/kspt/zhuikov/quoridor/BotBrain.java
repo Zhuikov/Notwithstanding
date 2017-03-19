@@ -1,6 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldBoundsException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
@@ -33,15 +34,14 @@ public class BotBrain extends Brain {
 
         double rand = Math.random();
 
-        if (rand > 0.47 && player.getBarriersNumber() > 0) {
+        Command command = moveMarker();
+        if (rand > 0.17 && player.getBarriersNumber() > 0) {
             try {
-                return placeBarrier();
-            } catch (FieldItemException e) {
-                return moveMarker();
-            }
+                command = placeBarrier();
+            } catch (FieldItemException | FieldBoundsException e) { }
         }
 
-        return moveMarker();
+        return command;
     }
 
     private Command placeBarrier() throws FieldItemException {

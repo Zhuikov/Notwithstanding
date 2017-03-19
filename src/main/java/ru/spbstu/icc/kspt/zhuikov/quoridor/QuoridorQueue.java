@@ -94,7 +94,7 @@ public class QuoridorQueue {
 
     public void updateCurrentPlayer() {
 
-        if (++currentPlayer > players.size()) {
+        if (++currentPlayer >= players.size()) {
             currentPlayer = 0;
         }
     }

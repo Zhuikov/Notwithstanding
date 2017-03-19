@@ -114,12 +114,13 @@ public class GameLogic {
 
     public boolean checkVictory(QuoridorPlayer player) {
 
-        for (Coordinates c : field.getUsualPlayerMarkers()) {
-            if (player.getOwner() == Owner.FOX) {
-                if (c.equals(field.getFoxCoordinates())) return true;
-            } else {
-                if (c.getVertical() == getPlayerPosition(player.getOwner()).getDestinationRow()) return true;
+        Coordinates playerCoordinates = field.getCoordinates(player.getOwner());
+        if (player.getOwner() == Owner.FOX) {
+            for (Coordinates c : field.getUsualPlayerMarkers()) {
+                if (playerCoordinates.equals(c)) return true;
             }
+        } else {
+            if (playerCoordinates.getVertical() == getPlayerPosition(player.getOwner()).getDestinationRow()) return true;
         }
 
         return false;

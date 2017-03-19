@@ -51,6 +51,7 @@ class GamePanel extends JPanel {
         add(menuButton);
 
         fieldPanel = new FieldPanel();
+        game.addWinnerListener(fieldPanel);
         barrierPanel = new BarrierPanel();
         foxPanel = new FoxPanel();
 
