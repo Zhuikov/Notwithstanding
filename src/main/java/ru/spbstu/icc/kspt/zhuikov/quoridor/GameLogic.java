@@ -17,8 +17,6 @@ public class GameLogic {
         this.field = field;
     }
 
-    //public void setField(QuoridorField field) { this.field = field; }
-
     public boolean checkMarker(Coordinates from, Coordinates destination, boolean fox) throws FieldItemException {
 
         try {
@@ -28,7 +26,7 @@ public class GameLogic {
                     destination.getVertical() + " " + destination.getHorizontal());
         }
 
-        if (from.equals(destination)) {
+        if (from.equals(destination) && !fox) {
             throw new ImpossibleToSetItemException("impossible to move to the same cell");
         }
 

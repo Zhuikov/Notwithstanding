@@ -10,6 +10,7 @@ public class QuoridorField {
     private final int realSize;
     private final int size;
     private Item[][] field;
+    private Map<Owner, Coordinates> markers = new HashMap<>();
     private List<Coordinates> usualPlayerMarkers = new ArrayList<>();
     private Coordinates foxCoordinates = null;
 
@@ -22,11 +23,14 @@ public class QuoridorField {
     }
 
     public List<Coordinates> getUsualPlayerMarkers() {
-        return usualPlayerMarkers;
-    }
 
-    public Coordinates getFoxCoordinates() {
-        return foxCoordinates;
+        List<Coordinates> usualPlayerMarkers = new ArrayList<>();
+
+        for (Owner owner : markers.keySet()) {
+            if (owner != Owner.FOX) usualPlayerMarkers.add(markers.get(owner));
+        }
+
+        return usualPlayerMarkers;
     }
 
     public QuoridorField(int size) {
@@ -47,13 +51,8 @@ public class QuoridorField {
         field[destination.getVertical()][destination.getHorizontal()] = item;
 
         if (item.getType() == ItemType.MARKER) {
-            if (item.getOwner() != Owner.FOX) {
-                usualPlayerMarkers.add(destination);
-            } else {
-                foxCoordinates = destination;
-            }
+            markers.put(item.getOwner(), destination);
         }
-
     }
 
     public void setBarrier(Barrier barrier) {
@@ -72,21 +71,13 @@ public class QuoridorField {
 
     public Coordinates getCoordinates(Owner owner) {
 
-        if (owner != Owner.FOX) {
-            for (Coordinates c : usualPlayerMarkers) {
-                if (owner == getItem(c).getOwner()) { return c; }
+        for (Owner o : markers.keySet()) {
+            if (o == owner) {
+                return markers.get(o);
             }
-        } else {
-            return foxCoordinates;
         }
 
         throw new IllegalArgumentException("there is no " + owner );
-    }
-
-    public void clearCell(Coordinates cell) {
-
-        usualPlayerMarkers.remove(cell);
-        field[cell.getVertical()][cell.getHorizontal()] = new Empty();
     }
 
     public void clearCells(List<Coordinates> cells) {

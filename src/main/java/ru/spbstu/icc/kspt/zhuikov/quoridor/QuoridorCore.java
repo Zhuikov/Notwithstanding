@@ -3,7 +3,6 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.UsualPlayer;
@@ -59,7 +58,7 @@ public class QuoridorCore {
         GL.checkMarker(quoridorField.getCoordinates(currentPlayer.getOwner()),
                 destination, currentPlayer.getOwner() == Owner.FOX);
 
-        quoridorField.clearCell(quoridorField.getCoordinates(currentPlayer.getOwner()));
+        quoridorField.setItem(new Empty(), quoridorField.getCoordinates(currentPlayer.getOwner()));
         quoridorField.setItem(new Marker(currentPlayer.getOwner()), destination);
 
         if (GL.checkVictory(currentPlayer)) {

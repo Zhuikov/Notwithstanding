@@ -35,7 +35,7 @@ public class BotBrain extends Brain {
         double rand = Math.random();
 
         Command command = moveMarker();
-        if (rand > 0.17 && player.getBarriersNumber() > 0) {
+        if (rand > 0.47 && player.getBarriersNumber() > 0) {
             try {
                 command = placeBarrier();
             } catch (FieldItemException | FieldBoundsException e) { }

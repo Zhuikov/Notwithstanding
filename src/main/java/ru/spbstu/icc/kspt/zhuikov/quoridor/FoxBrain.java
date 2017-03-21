@@ -47,6 +47,9 @@ public class FoxBrain extends Brain {
         Stack<Coordinates> path = GL.getPath(quoridorField.getCoordinates(Owner.FOX), targetCoordinates);
 
         if (path.empty()) {
+            if (fox.getCore().getPossibleMoves().size() == 0) {
+                return new Command(CommandType.MARKER, quoridorField.getCoordinates(Owner.FOX));
+            }
             int rand = (int)(Math.random() * 10) % fox.getCore().getPossibleMoves().size();
             return new Command(CommandType.MARKER, fox.getCore().getPossibleMoves().get(rand));
         }
