@@ -86,13 +86,13 @@ public class BarrierTest {
     @Test (expected = ImpossibleToSetItemException.class)
     public void testPlayerBlock() throws FieldItemException, NoBarriersException {
 
-        QuoridorField field = new QuoridorField(9);
-        HumanPlayer bottom = new HumanPlayer(field, PlayerPosition.BOT);
-        new HumanPlayer(field, PlayerPosition.TOP);
-
-        field.setBarrier(new Barrier(new Coordinates(1, 7), BarrierPosition.VERTICAL));
-        field.setBarrier(new Barrier(new Coordinates(1, 9), BarrierPosition.VERTICAL));
-
-        bottom.placeBarrier(3, 8, BarrierPosition.HORIZONTAL);
+//        QuoridorField field = new QuoridorField(9);
+//        HumanPlayer bottom = new HumanPlayer(field, PlayerPosition.BOT);
+//        new HumanPlayer(field, PlayerPosition.TOP);
+//
+//        field.setBarrier(new Barrier(new Coordinates(1, 7), BarrierPosition.VERTICAL));
+//        field.setBarrier(new Barrier(new Coordinates(1, 9), BarrierPosition.VERTICAL));
+//
+//        bottom.placeBarrier(3, 8, BarrierPosition.HORIZONTAL);
     }
 }

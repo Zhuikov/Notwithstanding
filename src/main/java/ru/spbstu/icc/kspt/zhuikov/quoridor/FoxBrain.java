@@ -9,11 +9,26 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * Класс, реализующий "мозг" для принятия решений, используемый лисой.
+ */
 public class FoxBrain extends Brain {
 
+    /**
+     * Ссылка на лису, использующую мозг.
+     */
     private Fox fox;
+
+    /**
+     * Цель для преследования.
+     */
     private Owner target;
 
+    /**
+     * Конструктор класса.
+     * @param field - игровое поле.
+     * @param fox - лиса, использующая мозг.
+     */
     public FoxBrain(QuoridorField field, Fox fox) {
 
         this.quoridorField = field;
@@ -31,10 +46,17 @@ public class FoxBrain extends Brain {
 
     }
 
+    /**
+     * Возвращает команду, которую необходимо выполнить для следующего хода.
+     * @see Command;
+     */
     public Command whatToDo() {
         return getNextStep();
     }
 
+    /**
+     * Возвращает команду, содержащую информацию о координатах передвижения фишки.
+     */
     private Command getNextStep() {
 
         Coordinates targetCoordinates = new Coordinates(-1, -1);
@@ -48,23 +70,23 @@ public class FoxBrain extends Brain {
 
         if (path.empty()) {
             if (fox.getCore().getPossibleMoves().size() == 0) {
-                return new Command(CommandType.MARKER, quoridorField.getCoordinates(Owner.FOX));
+                return new Command(quoridorField.getCoordinates(Owner.FOX));
             }
             int rand = (int)(Math.random() * 10) % fox.getCore().getPossibleMoves().size();
-            return new Command(CommandType.MARKER, fox.getCore().getPossibleMoves().get(rand));
+            return new Command(fox.getCore().getPossibleMoves().get(rand));
         }
 
         if (quoridorField.getItem(path.peek()).getType() == ItemType.EMPTY) {
-            return new Command(CommandType.MARKER, path.peek());
+            return new Command(path.peek());
         }
 
         if (path.peek().equals(targetCoordinates)) {
-            return new Command(CommandType.MARKER, path.peek());
+            return new Command(path.peek());
         }
 
         if (quoridorField.getItem(path.peek()).getType() != ItemType.EMPTY) {
             path.pop();
-            return new Command(CommandType.MARKER, path.peek());
+            return new Command(path.peek());
         }
 
         throw new IllegalArgumentException("Fox, getNextStep необработанный сценарий"); //todo: убрать это

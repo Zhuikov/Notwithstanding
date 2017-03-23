@@ -5,10 +5,21 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
+/**
+ * Класс, представляющий игрока "лиса" с искуственным элементом.
+ */
 public class Fox extends QuoridorPlayer {
 
+    /**
+     * "Мозг" лисы.
+     * @see Brain;
+     */
     private FoxBrain brain;
 
+    /**
+     * Конструктор класса.
+     * @param core - ядро, которое будет использоваться лисой.
+     */
     public Fox(QuoridorCore core) {
 
         this.core = core;
@@ -33,30 +44,5 @@ public class Fox extends QuoridorPlayer {
         } else {
             throw new AssertionError("the fox can only move marker");
         }
-
-//        Coordinates c = getNextCoordinates();
-//        field.setItem(new Empty(), markerCoordinates);
-//        markerCoordinates = c;
-//        field.setItem(new Marker(owner), markerCoordinates);
-//
-//        return c.equals(target.getCoordinates());
     }
-//
-//
-//    private Coordinates getNextCoordinates() {
-//
-//        Stack<Coordinates> path = field.getPath(markerCoordinates, target.getCoordinates());
-//        Coordinates c = markerCoordinates;
-//
-//        try {
-//            if (field.getItem(path.peek().getVertical(), path.peek().getHorizontal()).getType() != ItemType.EMPTY
-//                    && !path.peek().equals(target.getCoordinates())) {
-//                path.pop();
-//                path.peek();
-//            }
-//            c = path.peek();
-//        } catch (EmptyStackException e) {}
-//
-//        return c;
-//    }
 }

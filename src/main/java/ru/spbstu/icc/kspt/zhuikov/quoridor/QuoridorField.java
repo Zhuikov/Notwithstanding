@@ -5,23 +5,48 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 
 import java.util.*;
 
+/**
+ * Класс, представляющий игровое поле.
+ */
 public class QuoridorField {
 
+    /**
+     * Настоящий размер поля. Необходим для возможности размещения перегородок между клетками.
+     */
     private final int realSize;
-    private final int size;
-    private Item[][] field;
-    private Map<Owner, Coordinates> markers = new HashMap<>();
-    private List<Coordinates> usualPlayerMarkers = new ArrayList<>();
-    private Coordinates foxCoordinates = null;
 
+    /**
+     * Размер поля в клетках, по которым возможно перемещение фишек игроков.
+     */
+    private final int size;
+
+    /**
+     * Двумерный массив, преставляющий поле с установленными элементами.
+     */
+    private Item[][] field;
+
+    /**
+     * Список фишек на поле и их игроков-владельцев.
+     */
+    private Map<Owner, Coordinates> markers = new HashMap<>();
+
+    /**
+     * Возвращает настоящий размер поля.
+     */
     public int getRealSize() {  //TODO не вижу смысла, в слове Real, юезр поля не должен знать, что тут творится (у тебя же нет другого метода получения размера поля), мне бы больше понравился простой getSize()
         return realSize;
     }
 
+    /**
+     * Возвращает размер поля в клетках.
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Возвращает список координат фишек простых игроков.
+     */
     public List<Coordinates> getUsualPlayerMarkers() {
 
         List<Coordinates> usualPlayerMarkers = new ArrayList<>();
@@ -33,6 +58,10 @@ public class QuoridorField {
         return usualPlayerMarkers;
     }
 
+    /**
+     * Конструктор игрового поля.
+     * @param size - размерность поля в клетках.
+     */
     public QuoridorField(int size) {
 
         this.size = size;
@@ -46,6 +75,12 @@ public class QuoridorField {
         }
     }
 
+    /**
+     * Размещает элемент на клетку с заданными координатами.
+     * @param item - элемент для размещения на поле.
+     * @param destination - координаты клетки для размещения элемента.
+     */
+    // todo может сделать класс OneCellItem, отнаследоваться и передавать сюда, чтобы не пытались перегородку ставить
     public void setItem(Item item, Coordinates destination) {
 
         field[destination.getVertical()][destination.getHorizontal()] = item;
@@ -55,20 +90,37 @@ public class QuoridorField {
         }
     }
 
+    /**
+     * Размещает перегородку на поле. Координаты для размещения содержатся в передаваемом объекте.
+     * @param barrier - перегородка для размещения на поле.
+     */
     public void setBarrier(Barrier barrier) {
         for (Coordinates coordinates : barrier.getCoordinates()) {
             field[coordinates.getVertical()][coordinates.getHorizontal()] = barrier;
         }
     }
 
+    /**
+     * Возвращает элемент с клетки с заданными параметрами.
+     * @param vertical - вертикальная координата клетки.
+     * @param horizontal - горизонтальная координата клетки.
+     */
     public Item getItem(int vertical, int horizontal) {
         return field[vertical][horizontal];
     }
 
+    /**
+     * Возвращает элемент с клетки с заданными координатами.
+     * @param coordinates - координаты клетки.
+     */
     public Item getItem(Coordinates coordinates) {
         return field[coordinates.getVertical()][coordinates.getHorizontal()];
     }
 
+    /**
+     * Возвращает координаты фишки заданного владельца.
+     * @param owner - владелец-игрок
+     */
     public Coordinates getCoordinates(Owner owner) {
 
         for (Owner o : markers.keySet()) {
@@ -80,6 +132,10 @@ public class QuoridorField {
         throw new IllegalArgumentException("there is no " + owner );
     }
 
+    /**
+     * Делает пустыми клетки на поле с заданными координатами.
+     * @param cells - список координат клеток.
+     */
     public void clearCells(List<Coordinates> cells) {
         for (Coordinates c : cells) {
             setItem(new Empty(), c);

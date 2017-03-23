@@ -1,20 +1,33 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Класс, представляющий возвращаемое поле.
+ * Не содержит методы, позволяющие размещать элементы.
+ */
 public class Field {
 
+    /**
+     * Двумерный массив клеток поля. Имеет размерность realSize x realSize.
+     * @see Cell;
+     */
     private final Cell[][] cells;
-    private final int realSize;
-    private final int size;
-    private List<Coordinates> markers = new ArrayList<>();
 
+    /**
+     * Настоящий размер поля. Равен (size * 2 - 1), где size - размер поля в клетках.
+     */
+    private final int realSize;
+
+    /**
+     * Размер поля в клетках.
+     */
+    private final int size;
+
+    /**
+     * Конструктор возвращаемого поля.
+     * @param field - настоящее поле игры.
+     */
     public Field(QuoridorField field) {
 
         cells = new Cell[field.getRealSize()][field.getRealSize()];
@@ -24,35 +37,31 @@ public class Field {
         for (int i = 0; i < field.getRealSize(); i++) {
             for (int j = 0; j < field.getRealSize(); j++) {
                 cells[i][j] = new Cell(field.getItem(i, j).getType(), field.getItem(i, j).getOwner());
-                if (field.getItem(i, j).getType() == ItemType.MARKER) {
-                    markers.add(new Coordinates(i, j));
-                }
             }
         }
     }
 
+    /**
+     * Возвращает настоящий размер поля.
+     */
     public int getRealSize() {  //TODO можно мне нереальный размер ( предлагаю переименовать в getSize() )
         return realSize;
     }
 
+    /**
+     * Возвращает размер поля в клетках.
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Возвращает клетку с указанными координатами.
+     * @param vertical - вертикальная координата возвращаемой клетки.
+     * @param horizontal - горизонтальная координата возвращаемой клетки.
+     */
     public Cell getCell(int vertical, int horizontal) {  //TODO возможно некорректное поведение этой структуры, при изменение получаемого объекта
         return cells[vertical][horizontal];
-    }
-
-    public ItemType getItemType(int vertical, int horizontal) {
-        return cells[vertical][horizontal].getType();
-    }
-
-    public Owner getItemOwner(int vertical, int horizontal) {
-        return cells[vertical][horizontal].getOwner();
-    }
-
-    public List<Coordinates> getMarkers() {
-        return markers;
     }
 
 }

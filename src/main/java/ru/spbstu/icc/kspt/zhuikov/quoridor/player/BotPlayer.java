@@ -7,10 +7,22 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 
+/**
+ * Класс, представляющий игрока с искусственным интеллектом (далее "бота").
+ */
 public class BotPlayer extends UsualPlayer {
 
+    /**
+     * "Мозг" бота.
+     * @see ru.spbstu.icc.kspt.zhuikov.quoridor.Brain;
+     */
     private BotBrain brain;
 
+    /**
+     * Конструктор бота.
+     * @param core - ссылка на ядро игры, которое используется ботом.
+     * @param position - начальное расположение фишки бота на игровом поле.
+     */
     public BotPlayer(QuoridorCore core, PlayerPosition position) {
 
         this.core = core;

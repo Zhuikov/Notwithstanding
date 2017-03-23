@@ -68,9 +68,9 @@ class GamePanel extends JPanel {
     }
 
     private void updateStatusLabel() {
-        if (game.getCurrentPlayer().getOwner() == Owner.TOP) {
+        if (game.getCurrentOwner() == Owner.TOP) {
             statusLabel.setText("Blue player's turn");
-        } else if (game.getCurrentPlayer().getOwner() == Owner.BOTTOM) {
+        } else if (game.getCurrentOwner() == Owner.BOTTOM) {
             statusLabel.setText("Red player's turn");
         }
     }
@@ -286,7 +286,7 @@ class GamePanel extends JPanel {
 
         private void pickMarker(Cell marker, Coordinates markerCoordinates) {
 
-            pickedMarker = marker.getOwner() ==  game.getCurrentPlayer().getOwner();
+            pickedMarker = marker.getOwner() ==  game.getCurrentOwner();
             pickedMarkerCoordinates = markerCoordinates;
         }
 

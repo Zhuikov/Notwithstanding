@@ -4,11 +4,28 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor.items;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс, представляющий объект перегородки в игре.
+ */
 public class Barrier extends Item {
 
+    /**
+     * Длина перегородки (в клетках на поле).
+     */
     public final static int length = 2;
+
+    /**
+     * Совокупность координат, занимаемых перегородкой на поле.
+     */
     private List<Coordinates> coordinates = new ArrayList<>();
 
+    /**
+     * Конструктор для перегородки.
+     * @param coordinates - координаты центра перегородки.
+     * Как вертикальная, так и горизонтальная координаты должны быть нечетными.
+     * При указании других координат, перегородка будет создана, но поместить на поле ее будет невозможно.
+     * @param position - позиция, показывающая каким образом перегородка должна размещаться на поле.
+     */
     public Barrier(Coordinates coordinates, BarrierPosition position) {
         this.type = ItemType.BARRIER;
 
@@ -21,12 +38,11 @@ public class Barrier extends Item {
                 this.coordinates.add(new Coordinates(coordinates.getVertical(), i));
             }
         }
-
-//        if (coordinates.size() != realLength) {
-//            throw new IllegalArgumentException("too long barrier. Its size must be equals to " + length);
-//        }
     }
 
+    /**
+     * Возвращает список координат, занимаемых перегородкой на поле.
+     */
     public List<Coordinates> getCoordinates() {
         return coordinates;
     }

@@ -11,17 +11,36 @@ import ru.spbstu.icc.kspt.zhuikov.quoridor.player.BotPlayer;
 
 import java.util.Stack;
 
+/**
+ * Класс, реализующий "мозг" для принятия решений, используемый ботом.
+ */
 public class BotBrain extends Brain {
 
+    /**
+     * Ссылка на игрока, использующего мозг.
+     */
     private BotPlayer player;
+
+    /**
+     * Владелец игрока, являющегося оппонентом.
+     */
     private Owner opponent = null;
 
+    /**
+     * Конструктор класса.
+     * @param quoridorField - игровое поле.
+     * @param player - игрок, использующий мозг.
+     */
     public BotBrain(QuoridorField quoridorField, BotPlayer player) {
         this.quoridorField = quoridorField;
         GL = new GameLogic(quoridorField);
         this.player = player;
     }
 
+    /**
+     * Возвращает команду, которую необходимо выполнить для следующего хода.
+     * @see Command;
+     */
     public Command whatToDo() {
 
         if (opponent == null) {
@@ -44,6 +63,10 @@ public class BotBrain extends Brain {
         return command;
     }
 
+    /**
+     * Возвращает команду, необходимую для размещения перегододки на поле.
+     * @throws FieldItemException при невозможном размещении перегородки на поле.
+     */
     private Command placeBarrier() throws FieldItemException {
 
         Coordinates opponentCoordinates = new Coordinates(-1, -1);
@@ -66,7 +89,7 @@ public class BotBrain extends Brain {
             BarrierPosition barrierPosition = rand > 0.15 ? BarrierPosition.HORIZONTAL : BarrierPosition.VERTICAL;
             GL.checkBarrier(dest, barrierPosition);
 
-            return new Command(CommandType.BARRIER, dest, barrierPosition);
+            return new Command(dest, barrierPosition);
         }
 
         Coordinates dest = new Coordinates(between.getVertical() % 2 == 0 ? between.getVertical() + 1 : between.getVertical(),
@@ -74,10 +97,13 @@ public class BotBrain extends Brain {
         BarrierPosition barrierPosition = rand > 0.65 ? BarrierPosition.HORIZONTAL : BarrierPosition.VERTICAL;
         GL.checkBarrier(dest, barrierPosition);
 
-        return new Command(CommandType.BARRIER, dest, barrierPosition);
+        return new Command(dest, barrierPosition);
 
     }
 
+    /**
+     * Возвращает команду, необходимую для хода фишкой по полю.
+     */
     private Command moveMarker() {
 
         Stack<Coordinates> path = GL.getPathToRow(quoridorField.getCoordinates(player.getOwner()),
@@ -86,7 +112,7 @@ public class BotBrain extends Brain {
         if (quoridorField.getItem(path.peek()).getType() != ItemType.EMPTY) {
             path.pop();
         }
-        return new Command(CommandType.MARKER, path.peek());
+        return new Command(path.peek());
     }
 
 }

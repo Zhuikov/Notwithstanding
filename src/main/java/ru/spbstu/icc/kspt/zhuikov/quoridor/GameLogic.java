@@ -3,20 +3,39 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
 
 import java.util.*;
 
+/**
+ * Класс, представлющий логику игры.
+ * Осуществляет проверку правил.
+ */
 public class GameLogic {
 
+    /**
+     * Игровое поле.
+     */
     private QuoridorField field;
 
+    /**
+     * Конструктор класса.
+     * @param field - игровое поле.
+     */
     public GameLogic(QuoridorField field) {
         this.field = field;
     }
 
+    /**
+     * Проверяет возможность передвижения фишки из одних координат на поле в другие.
+     * Используются различные правила для обычных игроков и лисы.
+     * @param from - начальные координаты фишки.
+     * @param destination - координаты перемещения.
+     * @param fox - флаг, является ли игрок лисой.
+     * @return true, если перемещение фишки возможно.
+     * @throws FieldItemException при невозможном перемещении; исключение содержит причину запрета хода.
+     */
     public boolean checkMarker(Coordinates from, Coordinates destination, boolean fox) throws FieldItemException {
 
         try {
@@ -53,13 +72,20 @@ public class GameLogic {
         return true;
     }
 
+    /**
+     * Проверяет возможность установки перегородки на заданных координатах.
+     * @param dest - координаты центра перегородки.
+     * @param position - позиция перегородки.
+     * @return true при возможной установке.
+     * @throws FieldItemException при невозможной установке; исключение содержит причину запрета хода.
+     */
     public boolean checkBarrier(Coordinates dest, BarrierPosition position) throws FieldItemException {
 
         if (dest.getVertical() % 2 == 0 || dest.getHorizontal() % 2 == 0) {
             throw new ImpossibleToSetItemException("impossible to set barrier here");
         }
 
-        if (position == BarrierPosition.VERTICAL) {                      //todo что-то сделать
+        if (position == BarrierPosition.VERTICAL) {
             for (int i = dest.getVertical() - Barrier.length + 1; i <= dest.getVertical() + Barrier.length - 1; i++) {
                 try {
                     if (field.getItem(i, dest.getHorizontal()).getType() != ItemType.EMPTY) {
@@ -110,6 +136,11 @@ public class GameLogic {
         return true;
     }
 
+    /**
+     * Проверяет, одержал ли игрок победу.
+     * @param player - игрок для проверки.
+     * @return true, если игрок одержал победу; false в обратном случае.
+     */
     public boolean checkVictory(QuoridorPlayer player) {
 
         Coordinates playerCoordinates = field.getCoordinates(player.getOwner());
@@ -126,9 +157,9 @@ public class GameLogic {
 
     /**
      * Возвращает кратчайший путь от одной точки поля до другой.
-     * Если пройти нельзя, вернется пустой стек.
-     * @param from начальные координаты
-     * @param dest конечные координаты
+     * Если пройти невозможно, возвращает пустой стек.
+     * @param from - начальные координаты
+     * @param dest - конечные координаты
      * @return стек координат, по которым нужно пройти.
      */
     public Stack<Coordinates> getPath(Coordinates from, Coordinates dest) {
@@ -167,23 +198,13 @@ public class GameLogic {
 
         while (!queue.isEmpty()) {
 
-//            for (Vertex vertex : queue) {
-//                  System.out.print(vertex.coordinates + " ");
-//            }
-//            System.out.println();
             if (queue.element().coordinates.equals(dest)) {
                 Vertex vertex = queue.element();
                 while (vertex.from != null) {
                     path.add(vertex.coordinates);
                     vertex = vertex.from;
                 }
-//                int i = 0;
-//                for (Coordinates coord : path) {
-//                    System.out.print(i + ") " + coord + " ");
-//                    i++;
-//                }
-//                System.out.println();
-//                System.out.println(path.peek());
+
                 return path;
             }
 
@@ -207,10 +228,10 @@ public class GameLogic {
 
     /**
      * Возвращает кратчайший путь из точки на поле до заданного ряда.
-     * Длина пути всегда больше либо равна двум. // todo: ...
-     * @param start - координаты точки
-     * @param destinationRow - ряд, до которого ищется путь
-     * @return стек координат - кратчайший путь
+     * Длина пути всегда больше нуля.
+     * @param start - координаты точки, от которой происходит поиск пути.
+     * @param destinationRow - ряд, до которого происходит поиск пути.
+     * @return стек координат - кратчайший путь.
      */
     public Stack<Coordinates> getPathToRow(Coordinates start, int destinationRow) {
 
@@ -231,9 +252,8 @@ public class GameLogic {
 
     /**
      * Возвращет позицию игрока по заданному владельцу.
-     * Если для владельца нет определенной позиции, например Fox, будет выброшено исключение.
-     * @param owner - владелец
-     * @return PlayerPosition, соответствующая данному владельцу.
+     * Если для владельца нет определенной позиции (например Fox), будет сгенерировано исключение.
+     * @param owner - владелец.
      */
     public PlayerPosition getPlayerPosition(Owner owner){
 
@@ -246,6 +266,11 @@ public class GameLogic {
         throw new IllegalArgumentException("there is no PlayerPosition for " + owner);
     }
 
+    /**
+     * Возвращает список координат соседних клеток,
+     * в которые допускается совершить ход из клетки с заданными координатами.
+     * @param coordinates - координаты клетки, для которой происходит поиск соседей.
+     */
     private List<Coordinates> getNeighbours(Coordinates coordinates) {
 
         List<Coordinates> neighbours = new ArrayList<>();
@@ -258,6 +283,14 @@ public class GameLogic {
         return neighbours;
     }
 
+    /**
+     * Проверяет возможность передвижения фишки из одних координат на поле в другие.
+     * Используется, если указанные координаты не являются соседними (в них невозможен переход на один ход).
+     * @param from - начальные координаты фишки.
+     * @param dest - координаты для проверки возможности передвижения.
+     * @return true, если возможно совершить ход.
+     * @throws FieldItemException при невозможности передвижения; исключение содержит причину запрета хода.
+     */
     private boolean jumpOverMarker(Coordinates from, Coordinates dest) throws FieldItemException {
 
         // если "прыгают" прямо:

@@ -4,7 +4,6 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor.console;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +59,7 @@ public class ConsoleDrawer {
 
     public void drawTurn() {
 
-        System.out.print(positions.get(game.getCurrentPlayer().getOwner()) + " player turn");
+        System.out.print(positions.get(game.getCurrentOwner()) + " player turn");
     }
 
     public void drawWinner() {

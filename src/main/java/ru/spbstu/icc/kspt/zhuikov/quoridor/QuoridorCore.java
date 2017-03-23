@@ -14,19 +14,45 @@ import java.util.List;
 import java.util.Map;
 
 
-//TODO мне не хватает документации к коду
-//TODO также хотелось бы, чтобы ядро с логикой было выделенно, если не в отдельный модуль, то хотябы в отдельный пакет(в отдельный относительно UI)
-
+/**
+ * Класс, представляющий ядро игры.
+ */
 public class QuoridorCore {
 
+    /**
+     * Игровое поле.
+     */
     private final QuoridorField quoridorField = new QuoridorField(9);
+
+    /**
+     * Логика игры.
+     */
     private final GameLogic GL = new GameLogic(quoridorField);
+
+    /**
+     * Список с игроками.
+     */
     private QuoridorQueue queue;
+
+    /**
+     * Текущий игрок, ход которого будет осуществлен.
+     */
     private QuoridorPlayer currentPlayer;
+
+    /**
+     * Список позиций игроков и их текущего количества перегородок.
+     */
     private Map<PlayerPosition, Integer> barrierNumbers = new HashMap<>();
 
+    /**
+     * Начальное число перегородок у каждого игрока.
+     */
     private static final int startBarrierNumber = 10;
 
+    /**
+     * Возвращает число перегородок у заданного владельца.
+     * @param owner - владелец, для которого необходимо вернуть количество перегородок.
+     */
     public int getBarriersNumber(Owner owner) {
 
         PlayerPosition playerPosition;
@@ -39,20 +65,35 @@ public class QuoridorCore {
         return barrierNumbers.get(playerPosition);
     }
 
+    /**
+     * Возвращает игровое поле.
+     */
     public QuoridorField getField() {
         return quoridorField;
     }
 
+    /**
+     * Возвращает неизменяемое поле игры.
+     */
     public Field getConstantField() {
         return new Field(quoridorField);
     }
 
     public QuoridorCore() {  }
 
+    /**
+     * Устанавливает список с игроками, использующими ядро.
+     * @param queue - список игроков.
+     */
     public void setQueue(QuoridorQueue queue) {
         this.queue = queue;
     }
 
+    /**
+     * Передвигает фишку текущего игрока на клетку поля с указанными координатами.
+     * @param destination - координаты клетки.
+     * @throws FieldItemException при невозможном передвижении фишки; исключение содержит информацию о нарушеных правилах.
+     */
     public void moveMarker(Coordinates destination) throws FieldItemException {
 
         GL.checkMarker(quoridorField.getCoordinates(currentPlayer.getOwner()),
@@ -72,6 +113,13 @@ public class QuoridorCore {
         }
     }
 
+    /**
+     * Устанавливает перегородку текущего игрока на клетку поля с указанными координатами.
+     * @param destination - координаты клетки.
+     * @param position - позиция размещения перегородки.
+     * @throws FieldItemException при невозможном размещении перегородки на поле.
+     * @throws NoBarriersException при отсутствии перегородок у текущего игрока.
+     */
     public void placeBarrier(Coordinates destination, BarrierPosition position)
             throws FieldItemException, NoBarriersException {
 
@@ -89,6 +137,9 @@ public class QuoridorCore {
         queue.moveNextPlayer();
     }
 
+    /**
+     * Возвращает список координат, на которые текущему игроку возможно передвинуть фишку.
+     */
     public List<Coordinates> getPossibleMoves() {
 
         List<Coordinates> possibleMoves = new ArrayList<>();
@@ -105,6 +156,9 @@ public class QuoridorCore {
         return possibleMoves;
     }
 
+    /**
+     * Создает лису на случайной клетке игрового поля.
+     */
     public void spawnFox() {
 
         int x, y;
@@ -116,13 +170,21 @@ public class QuoridorCore {
         quoridorField.setItem(new Marker(Owner.FOX), new Coordinates(x, y));
     }
 
+    /**
+     * Устанавливает текущего игрока.
+     * @param quoridorPlayer - новый текущий игрок.
+     */
     public void setCurrentPlayer(QuoridorPlayer quoridorPlayer) {
         this.currentPlayer = quoridorPlayer;
     }
 
-    public void addPlayer(UsualPlayer usualPlayer, PlayerPosition position) {
+    /**
+     * Добавляет фишку обычного игрока на игровое поле, а также в список с позицией игроков и количеством перегородок.
+     * @param usualPlayer - игрок для добавления.
+     */
+    public void addPlayer(UsualPlayer usualPlayer) {
 
-        quoridorField.setItem(new Marker(usualPlayer.getOwner()), position.getInitialCoordinates());
+        quoridorField.setItem(new Marker(usualPlayer.getOwner()), usualPlayer.getPosition().getInitialCoordinates());
         barrierNumbers.put(usualPlayer.getPosition(), startBarrierNumber);
     }
 }
