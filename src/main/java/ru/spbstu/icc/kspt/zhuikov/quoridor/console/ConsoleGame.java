@@ -1,8 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.console;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.Quoridor;
 
 import java.util.Scanner;
 

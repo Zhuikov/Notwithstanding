@@ -5,8 +5,9 @@ import org.junit.Test;
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.HumanPlayer;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
 
 import static org.junit.Assert.assertEquals;

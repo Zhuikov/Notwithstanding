@@ -1,13 +1,14 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player.AI;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.GameLogic;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldBoundsException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.BotPlayer;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
 
 import java.util.Stack;
 
@@ -39,7 +40,7 @@ public class BotBrain extends Brain {
 
     /**
      * Возвращает команду, которую необходимо выполнить для следующего хода.
-     * @see Command;
+     * @see Command ;
      */
     public Command whatToDo() {
 

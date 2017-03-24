@@ -2,7 +2,6 @@ package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
 
 /**
  * Перечисление, представляющее позицию игрока на поле.

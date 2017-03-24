@@ -1,7 +1,8 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.game;
 
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
 
 import java.util.*;
 

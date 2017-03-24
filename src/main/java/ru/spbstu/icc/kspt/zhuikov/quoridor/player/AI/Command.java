@@ -1,4 +1,4 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player.AI;
 
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;

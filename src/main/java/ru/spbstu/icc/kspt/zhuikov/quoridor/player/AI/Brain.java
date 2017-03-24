@@ -1,4 +1,7 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player.AI;
+
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.GameLogic;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorField;
 
 /**
  * Абстрактный класс, представляющий логику принятия решений игроков, обладающих искуственным интеллектом.
@@ -17,7 +20,7 @@ abstract public class Brain {
 
     /**
      * Возвращает команду, содержащую информацию для выполнения следующего хода.
-     * @see Command;
+     * @see Command ;
      */
     abstract public Command whatToDo();
 }

@@ -1,12 +1,13 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.game;
 
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.*;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.AI.BotPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
 import java.util.List;

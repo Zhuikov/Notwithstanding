@@ -1,7 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorCore;
 
 /**
  * Класс, представляющий игрока-пользователя игры.

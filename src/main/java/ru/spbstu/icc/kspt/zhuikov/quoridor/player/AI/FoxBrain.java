@@ -1,10 +1,11 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player.AI;
 
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.GameLogic;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
 
 import java.util.List;
 import java.util.Stack;
@@ -48,7 +49,7 @@ public class FoxBrain extends Brain {
 
     /**
      * Возвращает команду, которую необходимо выполнить для следующего хода.
-     * @see Command;
+     * @see Command ;
      */
     public Command whatToDo() {
         return getNextStep();

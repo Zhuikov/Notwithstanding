@@ -1,8 +1,8 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.console;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.Quoridor;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
 import java.util.HashMap;

@@ -1,5 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.items;
 
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
+
 /**
  * Класс, представляющий фишку игрока на игровом поле.
  */

@@ -1,7 +1,6 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorCore;
 
 /**
  * Абстрактный класс, представляющий игрока, способного играть в "Коридор".

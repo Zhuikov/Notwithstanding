@@ -1,9 +1,10 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player.AI;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
 
 /**
  * Класс, представляющий игрока "лиса" с искуственным элементом.

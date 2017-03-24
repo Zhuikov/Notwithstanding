@@ -1,12 +1,10 @@
 package ru.sbpstu.icc.kspt.Zhuikov.courseWork;
 
 import org.junit.Test;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.HumanPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorField;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Barrier;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
 

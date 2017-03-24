@@ -1,4 +1,4 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor.items;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
 
 /**
  * Перечисление, представляющее возможных владельцев элемента на игровом поле

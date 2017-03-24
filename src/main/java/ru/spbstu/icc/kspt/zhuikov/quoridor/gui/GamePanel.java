@@ -1,13 +1,13 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.gui;
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.Quoridor;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Coordinates;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.BarrierPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.ItemType;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.WinnerListener;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.WinnerListener;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Cell;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses.Field;
 
@@ -177,6 +177,33 @@ class GamePanel extends JPanel {
             return convertCoordinates(newX, newY);
         }
 
+        private void drawFox(Graphics g, int x, int y) {
+
+            g.setColor(new Color(255, 77, 0));
+            int vertexX[] = {x - cellSize / 3 + 1, x - 2, x + 2, x + cellSize / 3 + 1};
+            int vertexY[] = {y - cellSize / 3 - 2, y + cellSize / 3 + 3, y + cellSize / 3 + 3, y - cellSize / 3 - 2};
+            g.fillPolygon(vertexX, vertexY, 4);
+
+            g.setColor(Color.BLACK);
+            g.fillOval(x - 3, y + cellSize / 3 - 2, 6, 6);
+            g.fillOval(x - 5, y - cellSize / 4, 4, 4);
+            g.fillOval(x + 3, y - cellSize / 4, 4, 4);
+
+            g.setColor(new Color(255, 77, 0));
+            int vertexLeftEarX[] = {vertexX[0], (vertexX[0] + x - 1) / 2 , x - 1};
+            int vertexLeftEarY[] = {vertexY[0], y - cellSize / 2 - 6, vertexY[0]};
+            g.fillPolygon(vertexLeftEarX, vertexLeftEarY, 3);
+
+            int vertexRightEarX[] = {x + 2, (vertexX[3] + x + 2) / 2 , vertexX[3]};
+            int vertexRightEarY[] = {vertexY[3], y - cellSize / 2 - 6, vertexY[3]};
+            g.fillPolygon(vertexRightEarX, vertexRightEarY, 3);
+
+            g.setColor(Color.BLACK);
+            g.fillOval((vertexX[0] + x - 1) / 2 - 2, y - cellSize / 2 - 5, 4, 3);
+            g.fillOval((vertexX[3] + x + 2) / 2 - 2, y - cellSize / 2 - 5, 4, 3);
+
+        }
+
         @Override
         public void paint(Graphics g) {
             super.paint(g);
@@ -184,11 +211,6 @@ class GamePanel extends JPanel {
             g.setColor(new Color(170, 170, 170));
 
             for (int i = 0; i <= field.getSize(); i++ ) {
-//            g.drawLine(i * (cellSize + spaceSize), 0, i * (cellSize + spaceSize), 350);
-//            g.drawLine(i * (cellSize + spaceSize) - spaceSize, 0, i * (cellSize + spaceSize) - spaceSize, 350);
-//
-//            g.drawLine(0, i * (cellSize + spaceSize), 350, i * (cellSize + spaceSize));
-//            g.drawLine(0, i * (cellSize + spaceSize) - spaceSize, 350, i * (cellSize + spaceSize) - spaceSize);
 
                 for (int j = 0; j <= field.getSize(); j++) {
                     g.fillRect(i * (cellSize + spaceSize), j * (cellSize + spaceSize), cellSize, cellSize);
@@ -213,9 +235,7 @@ class GamePanel extends JPanel {
                                         i * (cellSize + spaceSize) / 2 + cellSize / 8,
                                         24, 24);
                             } else if (cell.getOwner() == Owner.FOX) {
-                                g.setColor(new Color(255, 77, 0));
-                                g.fillPolygon(new int [] {j * (cellSize + spaceSize) / 2 + 3, j * (cellSize + spaceSize) / 2 + cellSize / 2, j * (cellSize + spaceSize) / 2 + cellSize - 3 },
-                                        new int [] {i * (cellSize + spaceSize) / 2 + 3, i * (cellSize + spaceSize) / 2 + cellSize - 3, i * (cellSize + spaceSize) / 2 + 3}, 3);
+                                drawFox(g, j * (cellSize + spaceSize) / 2 + cellSize / 2, i * (cellSize + spaceSize) / 2 + cellSize / 2);
                             }
                             break;
                         }

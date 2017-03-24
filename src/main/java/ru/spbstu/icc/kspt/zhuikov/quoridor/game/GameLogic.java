@@ -1,8 +1,9 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.game;
 
 
 import ru.spbstu.icc.kspt.zhuikov.quoridor.items.*;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.*;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
 

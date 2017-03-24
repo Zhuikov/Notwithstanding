@@ -1,6 +1,6 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.game;
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.items.Owner;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Owner;
 
 /**
  * Интерфейс, необходимый "слушателям" окончания игры.

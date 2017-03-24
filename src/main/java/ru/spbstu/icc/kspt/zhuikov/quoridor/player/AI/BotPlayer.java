@@ -1,11 +1,11 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor.player;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.player.AI;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.BotBrain;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Command;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorCore;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorCore;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.FieldItemException;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.exceptions.NoBarriersException;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.PlayerPosition;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.UsualPlayer;
 
 /**
  * Класс, представляющий игрока с искусственным интеллектом (далее "бота").
@@ -14,7 +14,7 @@ public class BotPlayer extends UsualPlayer {
 
     /**
      * "Мозг" бота.
-     * @see ru.spbstu.icc.kspt.zhuikov.quoridor.Brain;
+     * @see Brain ;
      */
     private BotBrain brain;
 

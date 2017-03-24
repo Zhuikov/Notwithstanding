@@ -1,6 +1,6 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.returningClasses;
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.QuoridorField;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.QuoridorField;
 
 /**
  * Класс, представляющий возвращаемое поле.

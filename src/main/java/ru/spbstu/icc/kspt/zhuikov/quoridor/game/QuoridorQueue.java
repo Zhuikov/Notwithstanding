@@ -1,10 +1,9 @@
-package ru.spbstu.icc.kspt.zhuikov.quoridor;
+package ru.spbstu.icc.kspt.zhuikov.quoridor.game;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.Fox;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.player.AI.Fox;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.QuoridorPlayer;
 import ru.spbstu.icc.kspt.zhuikov.quoridor.player.UsualPlayer;
-import ru.spbstu.icc.kspt.zhuikov.quoridor.player.WinnerListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,13 +49,13 @@ public class QuoridorQueue {
     /**
      * Шаг, на котором в игру добавляется лиса.
      */
-    private static int foxTime = 20;
+    private static int foxTime = 2;
 
     /**
      * Частота, с которой лиса совершает ход.
      * Ход совершается один раз в foxFrequency шагов.
      */
-    private static int foxFrequency = 10;
+    private static int foxFrequency = 5;
 
     /**
      * Возвращает текущий шаг игры.

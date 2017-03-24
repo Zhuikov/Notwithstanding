@@ -1,7 +1,7 @@
 package ru.spbstu.icc.kspt.zhuikov.quoridor.gui;
 
 
-import ru.spbstu.icc.kspt.zhuikov.quoridor.Quoridor;
+import ru.spbstu.icc.kspt.zhuikov.quoridor.game.Quoridor;
 
 import javax.swing.*;
 import java.awt.*;
