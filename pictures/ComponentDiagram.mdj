@@ -86,7 +86,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "Quoridor ru.spbstu.icc.kspt.zhuikov.quoridor.core",
+											"text": "Quoridor ru.spbstu.icc.kspt.zhuikov.quoridor.GUI",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5
 										},
@@ -2010,7 +2010,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFXZ4v1NKYYGUY="
 					},
-					"name": "Quoridor ru.spbstu.icc.kspt.zhuikov.quoridor.core",
+					"name": "Quoridor ru.spbstu.icc.kspt.zhuikov.quoridor.GUI",
 					"ownedElements": [
 						{
 							"_type": "UMLInterfaceRealization",

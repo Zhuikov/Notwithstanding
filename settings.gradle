@@ -1,2 +1,3 @@
+include ':gui', ':core'
 rootProject.name = 'quoridor'
 
