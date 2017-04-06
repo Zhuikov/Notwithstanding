@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Quoridor</string>
+    <string name="lbl_start">Start</string>
+    <string name="lbl_settings">Settings</string>
+
+    <string name="one_player">One player</string>
+    <string name="two_player">Two players</string>
+    <string name="back_to_menu">Back</string>
+
+    <string name="fox_appearance">Fox appearance</string>
+    <string name="fox_move_frequency">Fox move frequency</string>
+    <integer name="max_fox_appearance">40</integer>
+    <integer name="max_fox_move_frequency">20</integer>
+
+</resources>
+

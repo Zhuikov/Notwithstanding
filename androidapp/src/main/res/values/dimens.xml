@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_width">200dp</dimen>
+    <dimen name="button_from_button">20dp</dimen>
+    
+    <dimen name="text_from_seek_bar">20dp</dimen>
+    <dimen name="seek_bar_width">200dp</dimen>
+    <dimen name="seek_bar_height">30dp</dimen>
+</resources>

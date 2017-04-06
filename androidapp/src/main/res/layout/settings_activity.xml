@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_fox_appearance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:text="@string/fox_appearance"
+        android:layout_centerHorizontal="true" />
+
+    <SeekBar
+        android:id="@+id/fox_appearance_seekBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="@dimen/seek_bar_width"
+        android:layout_height="@dimen/seek_bar_height"
+        android:max="@integer/max_fox_appearance"
+        android:progress="5"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/text_fox_appearance"
+        android:layout_marginTop="@dimen/text_from_seek_bar" />
+
+    <TextView
+        android:id="@+id/text_fox_move_frequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fox_appearance_seekBar"
+        android:layout_marginTop="50dp"
+        android:text="@string/fox_move_frequency"
+        android:layout_centerHorizontal="true" />
+
+    <SeekBar
+        android:id="@+id/fox_move_frequency_seekBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="@dimen/seek_bar_width"
+        android:layout_height="@dimen/seek_bar_height"
+        android:max="@integer/max_fox_move_frequency"
+        android:progress="5"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/text_fox_move_frequency"
+        android:layout_marginTop="@dimen/text_from_seek_bar" />
+
+    <Button
+        android:id="@+id/settings_back_button"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:text="@string/back_to_menu"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/fox_move_frequency_seekBar"
+        android:layout_marginTop="25dp"
+        android:onClick="backToMenu"/>
+
+
+</RelativeLayout>
