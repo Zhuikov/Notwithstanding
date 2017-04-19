@@ -12,7 +12,7 @@ public class StartScreenActivity extends Activity {
         setContentView(R.layout.activity_start_screen);
     }
 
-    public void startGame(View view) {
+    public void chooseGameMode(View view) {
         setContentView(R.layout.activity_choose_game_mode);
     }
 
@@ -22,5 +22,9 @@ public class StartScreenActivity extends Activity {
 
     public void showSettings(View view) {
         setContentView(R.layout.settings_activity);
+    }
+
+    public void onePlayerGame(View view) {
+        setContentView(R.layout.activity_game);
     }
 }

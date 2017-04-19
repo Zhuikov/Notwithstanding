@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <Button
         android:id="@+id/one_player"
         android:layout_width="@dimen/button_width"
@@ -21,7 +20,8 @@
         android:layout_below="@+id/one_player"
         android:layout_alignStart="@+id/one_player"
         android:text="@string/two_player"
-        android:layout_marginTop="@dimen/button_from_button" />
+        android:layout_marginTop="@dimen/button_from_button"
+        android:onClick="onePlayerGame"/>
 
     <Button
         android:id="@+id/choose_game_mode_back_button"
