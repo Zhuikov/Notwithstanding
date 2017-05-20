@@ -1,6 +1,7 @@
 package com.example.androidapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -13,18 +14,12 @@ public class StartScreenActivity extends Activity {
     }
 
     public void chooseGameMode(View view) {
-        setContentView(R.layout.activity_choose_game_mode);
-    }
-
-    public void backToMenu(View view) {
-        setContentView(R.layout.activity_start_screen);
+        Intent intent = new Intent(this, ChooseGameModeActivity.class);
+        startActivity(intent);
     }
 
     public void showSettings(View view) {
-        setContentView(R.layout.settings_activity);
-    }
-
-    public void onePlayerGame(View view) {
-        setContentView(R.layout.activity_game);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 }

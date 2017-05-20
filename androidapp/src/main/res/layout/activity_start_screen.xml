@@ -8,10 +8,12 @@
         android:id="@+id/button_start"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
-        android:text="@string/lbl_start"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="180dp"
-        android:onClick="chooseGameMode"/>
+        android:background="@mipmap/ic_launcher"
+        android:elevation="0dp"
+        android:onClick="chooseGameMode"
+        android:text="@string/lbl_start" />
 
     <Button
         android:id="@+id/button_settings"

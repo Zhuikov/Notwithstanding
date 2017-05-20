@@ -4,18 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.androidapp.MyView
-        android:id="@+id/my_view"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"/>
-
     <Button
         android:id="@+id/game_back_button"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:text="@string/back_to_menu"
-        android:layout_centerHorizontal="true"
-        android:onClick="chooseGameMode" />
+        android:onClick="backToMenu" />
+
+
+    <com.example.androidapp.MyView
+        android:id="@+id/my_view"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/game_back_button"
+        android:layout_marginTop="@dimen/field_from_button"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
