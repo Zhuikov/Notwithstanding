@@ -22,6 +22,13 @@ public class ChooseGameModeActivity extends Activity {
         startActivity(intent);
     }
 
+    public void twoPlayerGame(View view) {
+        Intent intent = new Intent(this, GameActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("players", 2);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
     public void backToMenu(View view) {
         Intent intent = new Intent(this, StartScreenActivity.class);

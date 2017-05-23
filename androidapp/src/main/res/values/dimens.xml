@@ -8,7 +8,7 @@
     <dimen name="seek_bar_height">30dp</dimen>
 
     <dimen name="field_from_button">10dp</dimen>
-
+    <dimen name="text_from_text">20dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
 </resources>

@@ -11,7 +11,8 @@
         android:layout_marginTop="144dp"
         android:text="@string/one_player"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="onePlayerGame"/>
 
     <Button
         android:id="@+id/two_players"
@@ -21,7 +22,7 @@
         android:layout_alignStart="@+id/one_player"
         android:text="@string/two_player"
         android:layout_marginTop="@dimen/button_from_button"
-        android:onClick="onePlayerGame"/>
+        android:onClick="twoPlayerGame"/>
 
     <Button
         android:id="@+id/choose_game_mode_back_button"

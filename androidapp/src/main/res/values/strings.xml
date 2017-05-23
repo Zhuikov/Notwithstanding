@@ -11,7 +11,11 @@
     <string name="fox_move_frequency">Fox move frequency</string>
     <integer name="max_fox_appearance">40</integer>
     <integer name="max_fox_move_frequency">20</integer>
-    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="vertical_barrier">Set vertical barrier</string>
+    <string name="horizontal_barrier">Set horizontal barrier</string>
+    <string name="top_barriers">Top barriers</string>
+    <string name="bottom_barriers">Bottom barriers</string>
 
 </resources>
 
